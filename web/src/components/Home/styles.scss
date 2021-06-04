@@ -1,0 +1,57 @@
+.title {
+  background: rgb(141, 141, 172);
+  color: black;
+  text-align: center;
+  font-family: MyFont;
+}
+
+.wrapper {
+  background: rgb(243, 243, 247);
+  display:flex;
+  color: black;
+} 
+
+.flagWrapper {
+  border: 1px solid silver;
+  padding: 40px;
+}
+
+.leftRail {
+  width:90%;
+  text-align: left;
+}
+
+.rightRail {
+  width: 10%;
+  min-width: 100px;
+  button {
+    width: 100%;
+    padding: 5px;
+    cursor: pointer;
+  }
+}
+
+button {
+  border-radius: 5px;  
+  margin-bottom: 5px;
+}
+
+button:hover {
+  border-radius: 5px;
+  background-color: darkgray;
+  color: white;
+  font-weight: 800;
+}
+
+.addButtonVisible {
+  border-radius: 5px;
+}
+
+.addButtonHidden {
+  display: none;
+}
+
+
+.flagValue {
+  float: right;
+}
