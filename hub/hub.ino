@@ -111,6 +111,8 @@ void fetchServerData() {
 struct controllerModules {
   int id;
   int mode; // 0 - off, 1 - fan , 2 - 
+  int data1;
+  int data2;
 };
 
 void loop() {
@@ -119,13 +121,13 @@ void loop() {
   if (client.connected()) {
     fetchServerData();
   }
-  else {
-    requestDataFromServer();    
+  else {  
     Serial.println();
     Serial.println("client disconnected. The response string is:");
     Serial.println("================================================");
     Serial.println(serverBodyResponse[0]);
     Serial.println("================================================");  
+    requestDataFromServer();  
 
     if(serverBodyResponse == "1") {
       digitalWrite(2, HIGH); 
