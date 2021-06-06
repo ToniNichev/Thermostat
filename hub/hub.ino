@@ -42,7 +42,6 @@ void setup() {
   
   //set the address
   radio.openWritingPipe(address);
-  
   //Set module as transmitter
   radio.stopListening();
 
@@ -55,7 +54,6 @@ void setup() {
     //Ethernet.begin(mac, ip);
   }
   requestDataFromServer();
-
 }
 
 int startWritingData = 0;
@@ -115,35 +113,72 @@ struct controllerModules {
   int data2;
 };
 
+int mode = 0;
+
 void loop() {
-
+ 
   
-  if (client.connected()) {
-    fetchServerData();
-  }
-  else {  
-    Serial.println();
-    Serial.println("client disconnected. The response string is:");
-    Serial.println("================================================");
-    Serial.println(serverBodyResponse[0]);
-    Serial.println("================================================");  
-    requestDataFromServer();  
 
-    if(serverBodyResponse == "1") {
-      digitalWrite(2, HIGH); 
-      const char text[] = "1";      
-      radio.write(&text, sizeof(text));
+  if(mode == 0) {
+    // Send mode
+    if (client.connected()) {
+      fetchServerData();
     }
-    else {
-      digitalWrite(2, LOW); 
-      const char text[] = "0";      
-      radio.write(&text, sizeof(text));      
+    else {  
+      Serial.println();
+      Serial.println("client disconnected. The response string is:");
+      Serial.println("================================================");
+      Serial.println(serverBodyResponse[0]);
+      Serial.println("================================================");  
+      requestDataFromServer();  
+  
+      if(serverBodyResponse == "1") {
+        digitalWrite(2, HIGH); 
+        const char text[] = "1";      
+        radio.write(&text, sizeof(text));
+      }
+      else {
+        digitalWrite(2, LOW); 
+        const char text[] = "0";      
+        radio.write(&text, sizeof(text));      
+      }
+          
+      // clear params
+      serverBodyResponse = "";  
+      tempServerResponse = "";
+      BodyStarted = false;
+  
+      mode = 1; // switch to receiving mode 
+      
+      delay(1000);
+    }
+  }
+  else if(mode == 1) {
+    Serial.println("Prepare for Receiving mode ... ");
+    // prepare receiving mode 
+    //Set module as receiver
+    radio.startListening();    
+    radio.openReadingPipe(0, address);
+    mode = 2;
+    delay(500);
+  }
+  else if(mode == 2) {
+    // receive data from controlers
+    //Read the data if available in buffer
+    if (radio.available())
+    {
+      Serial.println("Receiving mode Radio available ... ");      
+      char text[32] = {0};
+      radio.read(&text, sizeof(text));
+      Serial.println("Received text !");
+      Serial.println(text);
+
+      radio.openWritingPipe(address);
+      //Set module as transmitter
+      radio.stopListening();      
+      mode = 0;
     }
     
-    // clear params
-    serverBodyResponse = "";  
-    tempServerResponse = "";
-    BodyStarted = false;
-    delay(10);
+    
   }
 }
