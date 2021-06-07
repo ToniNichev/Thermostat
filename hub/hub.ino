@@ -148,9 +148,7 @@ void loop() {
       tempServerResponse = "";
       BodyStarted = false;
   
-      mode = 1; // switch to receiving mode 
-      
-      delay(1000);
+      mode = 1; // switch to receiving mode       
     }
   }
   else if(mode == 1) {
