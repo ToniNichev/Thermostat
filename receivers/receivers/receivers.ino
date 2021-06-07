@@ -41,20 +41,9 @@ int mode = 0;
 void loop()
 {
   if(mode == 0) {
-
-    hum = dht.readHumidity();
-    temp= dht.readTemperature();    
-    char msg[] = "TEST123456789";
-    char t[] = "     ";
-    dtostrf(hum, 4, 2, t); 
-    msg[0] = t[0];
-    msg[1] = t[1];
-    msg[2] = t[2];
-    msg[3] = t[3];
-    msg[4] = t[4];
-    msg[5] = '|';
-    Serial.println(msg);
-  //Read the data if available in buffer    
+    /*
+     * Read the data if available from the hub
+     */
     Serial.println("mode 0");
     if (radio.available())
     {
@@ -73,7 +62,9 @@ void loop()
       delay(2000);
     }
   }else if(mode == 1) {
-    //Set module as transmitter
+    /*
+     * Set module as transmitter
+     */
     radio.stopListening(); 
     //set the address
     radio.openWritingPipe(address);       
@@ -81,33 +72,32 @@ void loop()
     delay(5000);
     mode = 2;       
   }else if(mode == 2) {
-        hum = dht.readHumidity();
-        temp= dht.readTemperature();
+    /*
+     * Set module as transmitter
+     */
+    hum = dht.readHumidity();
+    temp= dht.readTemperature();  
+    char msg[] = "TEST123456789";
+    char t[] = "     ";
+    dtostrf(hum, 4, 2, t); 
+    msg[0] = t[0];
+    msg[1] = t[1];
+    msg[2] = t[2];
+    msg[3] = t[3];
+    msg[4] = t[4];
+    msg[5] = '|';
+    Serial.println(msg);
 
-
-        hum = dht.readHumidity();
-        temp= dht.readTemperature();    
-        char msg[] = "TEST123456789";
-        char t[] = "     ";
-        dtostrf(hum, 4, 2, t); 
-        msg[0] = t[0];
-        msg[1] = t[1];
-        msg[2] = t[2];
-        msg[3] = t[3];
-        msg[4] = t[4];
-        msg[5] = '|';
-        Serial.println(msg);
-
-        radio.write(&msg, sizeof(msg));
-        //const char text[] = "Test text ...";      
-        //radio.write(&text, sizeof(text));    
-        Serial.println("Sending data ...");
-        //set the address
-        //set the address
-        radio.openReadingPipe(0, address);  
-        //Set module as receiver
-        radio.startListening();
-        mode = 0;
+    radio.write(&msg, sizeof(msg));
+    //const char text[] = "Test text ...";      
+    //radio.write(&text, sizeof(text));    
+    Serial.println("Sending data ...");
+    //set the address
+    //set the address
+    radio.openReadingPipe(0, address);  
+    //Set module as receiver
+    radio.startListening();
+    mode = 0;
   }
 
   /*
