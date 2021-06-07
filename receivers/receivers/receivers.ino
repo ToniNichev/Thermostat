@@ -59,7 +59,6 @@ void loop()
         digitalWrite(2, LOW);      
       }
       mode = 1;      
-      delay(2000);
     }
   }else if(mode == 1) {
     /*
@@ -69,16 +68,16 @@ void loop()
     //set the address
     radio.openWritingPipe(address);       
     Serial.println("Switching to sending data ...");
-    delay(5000);
+    delay(2000);
     mode = 2;       
   }else if(mode == 2) {
     /*
      * Set module as transmitter
      */
     hum = dht.readHumidity();
-    temp= dht.readTemperature();  
-    char msg[] = "TEST123456789";
-    char t[] = "     ";
+    temp = dht.readTemperature();  
+    char msg[] = "----------------";
+    char t[4] = {};
     dtostrf(hum, 4, 2, t); 
     msg[0] = t[0];
     msg[1] = t[1];
@@ -86,6 +85,14 @@ void loop()
     msg[3] = t[3];
     msg[4] = t[4];
     msg[5] = '|';
+    dtostrf(temp, 4, 2, t); 
+    msg[6] = t[0];
+    msg[7] = t[1];
+    msg[8] = t[2];
+    msg[9] = t[3];
+    msg[10] = t[4];
+    msg[11] = '|';
+
     Serial.println(msg);
 
     radio.write(&msg, sizeof(msg));
