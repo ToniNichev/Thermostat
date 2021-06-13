@@ -39,9 +39,7 @@ const Html = ({ content, cssBundles, jsBundles, apiData }) => (
 
     <script dangerouslySetInnerHTML={{
           __html: `window.__API_DATA__=${JSON.stringify(apiData)}`}} />    
-
-<script dangerouslySetInnerHTML={{
-          __html: `window.__API_DATA__=${JSON.stringify(apiData)}`}} />        
+       
   </head>
   <body cz-shortcut-listen="true">
     <div id="root" dangerouslySetInnerHTML={{ __html: content }} />  

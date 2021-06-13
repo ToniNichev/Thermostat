@@ -1,7 +1,7 @@
 
 import mongoDB  from'../connectors/database/mongodb';
 
-const collectionName = 'feature-flags';
+const collectionName = 'thermostat';
 
 export default {
 
@@ -38,9 +38,9 @@ export default {
      mongoDB.dropDB();
      const obj = [
       {
-        "flagName" : "thermostat",
-        "value": "on",
-        "group": "switches"
+        "flagName" : "LivingRoom",
+        "value": "c|27",
+        "group": "thermostats"
       }                 
      ]
     mongoDB.add(obj, collectionName, () => {}); 

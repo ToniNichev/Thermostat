@@ -108,7 +108,7 @@ void fetchServerData() {
 
 struct controllerModules {
   int id;
-  int mode; // 0 - off, 1 - fan , 2 - 
+  int mode; // 0: fetch data, 1: listening for data from thermostats, 2: receiving data from thermostats
   int data1;
   int data2;
 };
@@ -128,7 +128,7 @@ void loop() {
       Serial.println();
       Serial.println("client disconnected. The response string is:");
       Serial.println("================================================");
-      Serial.println(serverBodyResponse[0]);
+      Serial.println(serverBodyResponse);
       Serial.println("================================================");  
       requestDataFromServer();  
   
@@ -153,7 +153,7 @@ void loop() {
   }
   else if(mode == 1) {
     Serial.println("Prepare for Receiving mode ... ");
-    // prepare receiving mode 
+    // prepare for receiving mode 
     //Set module as receiver
     radio.startListening();    
     radio.openReadingPipe(0, address);

@@ -6,7 +6,6 @@ const url = `mongodb://localhost:${process.env.DB_DATABASE_PORT}`;
 // Database Name
 const dbName = process.env.DB_DATABASE_NAME;
 
-console.log("!!!!!>>>", dbName);
 
 const connect = async () => {
   let db = null;

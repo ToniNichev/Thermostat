@@ -166,13 +166,11 @@ app.post('/services/dropdb', async (req, res) => {
 
 // All page requests
 app.get('/services/data', async (req, res) => {
-  const result = await queries.findFeatureFlagByName('thermostat');
+  //const result = await queries.findFeatureFlagByName('thermostat');
+  //console.log(">>>", result);
 
-  console.log("!@!@!@!@!");
-  console.log(result[0].value);
-
-  const val = result[0].value == 'on' ? '1' : '0';
-  const response = '#@$' + val;
+  //const val = result[0].value == 'on' ? '1' : '0';
+  const response = `#@$|01|28|`;
 
   res
   .status(200)
