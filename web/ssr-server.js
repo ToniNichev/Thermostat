@@ -170,7 +170,7 @@ app.get('/services/data', async (req, res) => {
   //console.log(">>>", result);
 
   //const val = result[0].value == 'on' ? '1' : '0';
-  const response = `#@$|01|28|`;
+  const response = `#@$|01|01|28|`;
 
   res
   .status(200)
@@ -180,6 +180,22 @@ app.get('/services/data', async (req, res) => {
   .send(response);  
 });
 
+
+// All page requests
+app.get('/services/setup', async (req, res) => {
+  //const result = await queries.findFeatureFlagByName('thermostat');
+  //console.log(">>>", result);
+
+  //const val = result[0].value == 'on' ? '1' : '0';
+  const response = `#@$|01|`;
+
+  res
+  .status(200)
+  .set('Content-Type', 'application/json')
+  .set('Access-Control-Allow-Origin', '*')
+  .set('Access-Control-Allow-Headers', '*')
+  .send(response);  
+});
 
 // All page requests
 app.get('/*', 

@@ -2,12 +2,13 @@
 #include <Ethernet.h>
 #include <nRF24L01.h>
 #include <RF24.h>
+#include "string_to_float.h"
+
 
 //create an RF24 object``
 RF24 radio(9, 8);  // CE, CSN
 //address through which two modules communicate.
 const byte address[6] = "00001";
-
 
 /*
  * continuosly pooling for data from the server
@@ -33,6 +34,17 @@ EthernetClient client;
 String serverBodyResponse = "";
 String tempServerResponse = "";
 char serverName[] = "toni-develops.com";
+
+struct ControllerModules {
+  int id;
+  int mode; // 0: fetch data, 1: listening for data from thermostats, 2: receiving data from thermostats
+  int data1;
+  int data2;
+};
+
+ControllerModules * controllerModules;
+
+
 
 void setup() {
   pinMode(2, OUTPUT);
@@ -64,19 +76,13 @@ void requestDataFromServer() {
   Serial.println("connecting to server...");
   if (client.connect(serverName, 8061)) {
     Serial.println("making HTTP request...");
-    // make HTTP GET request to twitter:
-    //client.println("GET /1/statuses/user_timeline.xml?screen_name=RandyMcTester&count=1 HTTP/1.1");
-    //client.println("GET /external-files/thermostat-test/data.txt HTTP/1.1");
-
     client.println("GET /services/data HTTP/1.1");
     client.println("HOST: toni-develops.com");
     client.println();
   }
 }
 
-
 bool BodyStarted = false;
-
 
 void fetchServerData() {
     if (client.available()) {
@@ -85,9 +91,6 @@ void fetchServerData() {
       tempServerResponse += inChar;
       char tmp[] = "test";
       int l = tempServerResponse.length();
-      //Serial.print(">>>>");
-      //Serial.print(tempServerResponse);
-      //Serial.println();
       if(BodyStarted == false) {
         if(inChar == '$' && tempServerResponse[l - 2] == '@' && tempServerResponse[l - 3] == '#') {
           BodyStarted = true;       
@@ -96,7 +99,6 @@ void fetchServerData() {
       else {
         serverBodyResponse += inChar;
       }
-
     }  
 }
 
@@ -105,13 +107,6 @@ void fetchServerData() {
 /**
  * Main Loop
  */
-
-struct controllerModules {
-  int id;
-  int mode; // 0: fetch data, 1: listening for data from thermostats, 2: receiving data from thermostats
-  int data1;
-  int data2;
-};
 
 int mode = 0;
 
@@ -125,10 +120,12 @@ void loop() {
       fetchServerData();
     }
     else {  
+      float *serverResponse = parseToValues(serverBodyResponse);
+      //parseServerData(serverBodyResponse);
       Serial.println();
       Serial.println("client disconnected. The response string is:");
       Serial.println("================================================");
-      Serial.println(serverBodyResponse);
+      Serial.println(serverResponse[1]);
       Serial.println("================================================");  
       requestDataFromServer();  
   
