@@ -19,6 +19,20 @@ import bodyParser from 'body-parser';
 
 const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 
+
+const ThermostatData = (id, curentTemp, requiredTemp) => ({
+  id,
+  curentTemp,
+  requiredTemp,
+});
+
+let thermostatsData = [];
+
+for(let i = 0; i < 10; i ++) {
+  ThermostatData.id = i;
+  thermostatsData.push(ThermostatData(0,0,0));
+}
+
 console.log("SERVER_PORT: ", SERVER_PORT);
 const app = new express();
 
@@ -165,13 +179,8 @@ app.post('/services/dropdb', async (req, res) => {
 });
 
 // All page requests
-app.get('/services/data', async (req, res) => {
-  //const result = await queries.findFeatureFlagByName('thermostat');
-  //console.log(">>>", result);
-
-  //const val = result[0].value == 'on' ? '1' : '0';
-  const response = `#@$|01|01|28|`;
-
+app.get('/services/thermostats-data', async (req, res) => {
+  const response = JSON.stringify(thermostatsData);
   res
   .status(200)
   .set('Content-Type', 'application/json')
@@ -179,16 +188,25 @@ app.get('/services/data', async (req, res) => {
   .set('Access-Control-Allow-Headers', '*')
   .send(response);  
 });
-
 
 // All page requests
-app.get('/services/setup', async (req, res) => {
-  //const result = await queries.findFeatureFlagByName('thermostat');
-  //console.log(">>>", result);
+app.get('/services/data', async (req, res) => {
+  const response = `#@$|01|01|28|`;
+  const data = JSON.parse(req.query.data);
+  const thermostats = data[0];
+  let offset = 1;
 
-  //const val = result[0].value == 'on' ? '1' : '0';
-  const response = `#@$|01|`;
+  for(let i = 0; i < thermostats; i ++) {
+    offset = i * 3;
+    const id = data[offset + 1];
+    const curentTemp = data[offset + 2];
+    const requiredTemp = data[offset + 3];
+    thermostatsData[i].id = id;
+    thermostatsData[i].curentTemp = curentTemp;
+    thermostatsData[i].requiredTemp = requiredTemp;
+  }
 
+  //const response = JSON.stringify(thermostatsData);
   res
   .status(200)
   .set('Content-Type', 'application/json')
@@ -196,6 +214,7 @@ app.get('/services/setup', async (req, res) => {
   .set('Access-Control-Allow-Headers', '*')
   .send(response);  
 });
+
 
 // All page requests
 app.get('/*', 

@@ -79,19 +79,20 @@ void loop()
     char msg[] = "----------------";
     char t[4] = {};
     dtostrf(hum, 4, 2, t); 
-    msg[0] = t[0];
-    msg[1] = t[1];
-    msg[2] = t[2];
-    msg[3] = t[3];
-    msg[4] = t[4];
-    msg[5] = '|';
+    msg[0] = '|';
+    msg[1] = t[0];
+    msg[2] = t[1];
+    msg[3] = t[2];
+    msg[4] = t[3];
+    msg[5] = t[4];
+    msg[6] = '|';
     dtostrf(temp, 4, 2, t); 
-    msg[6] = t[0];
-    msg[7] = t[1];
-    msg[8] = t[2];
-    msg[9] = t[3];
-    msg[10] = t[4];
-    msg[11] = '|';
+    msg[7] = t[0];
+    msg[8] = t[1];
+    msg[9] = t[2];
+    msg[10] = t[3];
+    msg[11] = t[4];
+    msg[12] = '|';
 
     Serial.println(msg);
 

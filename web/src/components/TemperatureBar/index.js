@@ -9,13 +9,13 @@ const handleTemperatureChange = (event) => {
 }
 
 
-const RangeSlider = ({onChangeCallback}) => {
+const TemperatureBar = ({temp}) => {
   return (    
     <div>
-      <label>Set Temperature: </label>
-      <input type="range" min="1" max="100" defaultValue="50" onChange={onChangeCallback}  />
+      <label>Curent Temperature: </label>
+      {temp}
     </div>
   );
 }
 
-export default RangeSlider;
+export default TemperatureBar;

@@ -4,6 +4,9 @@
 #include <RF24.h>
 #include "string_to_float.h"
 
+int startWritingData = 0;
+bool BodyStarted = false;
+
 
 //create an RF24 object``
 RF24 radio(9, 8);  // CE, CSN
@@ -36,14 +39,12 @@ String tempServerResponse = "";
 char serverName[] = "toni-develops.com";
 
 struct ControllerModules {
-  int id;
-  int mode; // 0: fetch data, 1: listening for data from thermostats, 2: receiving data from thermostats
-  int data1;
-  int data2;
+  int id = 0;
+  int mode = 0; // 0: fetch data, 1: listening for data from thermostats, 2: receiving data from thermostats
+  float curentTemp;
 };
 
-ControllerModules * controllerModules;
-
+ControllerModules controllerModules[10];
 
 
 void setup() {
@@ -68,41 +69,6 @@ void setup() {
   requestDataFromServer();
 }
 
-int startWritingData = 0;
-
-
-void requestDataFromServer() {
-    // attempt to connect, and wait a millisecond:
-  Serial.println("connecting to server...");
-  if (client.connect(serverName, 8061)) {
-    Serial.println("making HTTP request...");
-    client.println("GET /services/data HTTP/1.1");
-    client.println("HOST: toni-develops.com");
-    client.println();
-  }
-}
-
-bool BodyStarted = false;
-
-void fetchServerData() {
-    if (client.available()) {
-      // read incoming bytes:
-      char inChar = client.read();
-      tempServerResponse += inChar;
-      char tmp[] = "test";
-      int l = tempServerResponse.length();
-      if(BodyStarted == false) {
-        if(inChar == '$' && tempServerResponse[l - 2] == '@' && tempServerResponse[l - 3] == '#') {
-          BodyStarted = true;       
-        }
-      }
-      else {
-        serverBodyResponse += inChar;
-      }
-    }  
-}
-
-
 
 /**
  * Main Loop
@@ -112,7 +78,6 @@ int mode = 0;
 
 void loop() {
  
-  
 
   if(mode == 0) {
     // Send mode
@@ -121,12 +86,13 @@ void loop() {
     }
     else {  
       float *serverResponse = parseToValues(serverBodyResponse);
-      //parseServerData(serverBodyResponse);
+      /*
       Serial.println();
       Serial.println("client disconnected. The response string is:");
       Serial.println("================================================");
-      Serial.println(serverResponse[1]);
+      Serial.println(serverResponse[2]);
       Serial.println("================================================");  
+      */
       requestDataFromServer();  
   
       if(serverBodyResponse == "1") {
@@ -149,7 +115,7 @@ void loop() {
     }
   }
   else if(mode == 1) {
-    Serial.println("Prepare for Receiving mode ... ");
+    //Serial.println("Prepare for Receiving mode ... ");
     // prepare for receiving mode 
     //Set module as receiver
     radio.startListening();    
@@ -162,12 +128,17 @@ void loop() {
     //Read the data if available in buffer
     if (radio.available())
     {
-      Serial.println("Receiving mode Radio available ... ");      
+      //Serial.println("Receiving mode Radio available ... ");      
       char text[32] = {0};
       radio.read(&text, sizeof(text));
-      Serial.println("Received text !");
-      Serial.println(text);
 
+      float *thermostatData = parseToValues(text);
+      //Serial.println("Received text :");
+      //Serial.println(text);
+      //Serial.println();
+      
+
+      // set it back to transmitting mode
       radio.openWritingPipe(address);
       //Set module as transmitter
       radio.stopListening();      
@@ -176,4 +147,40 @@ void loop() {
     
     
   }
+}
+
+
+/**
+ * HELPER METHODS
+ * 
+ */
+
+
+void requestDataFromServer() {
+    // attempt to connect, and wait a millisecond:
+  //Serial.println("connecting to server...");
+  if (client.connect(serverName, 8061)) {
+    //Serial.println("making HTTP request...");
+    client.println("GET /services/data HTTP/1.1");
+    client.println("HOST: toni-develops.com?data=|1|24|");
+    client.println();
+  }
+}
+
+void fetchServerData() {
+    if (client.available()) {
+      // read incoming bytes:
+      char inChar = client.read();
+      tempServerResponse += inChar;
+      char tmp[] = "test";
+      int l = tempServerResponse.length();
+      if(BodyStarted == false) {
+        if(inChar == '$' && tempServerResponse[l - 2] == '@' && tempServerResponse[l - 3] == '#') {
+          BodyStarted = true;       
+        }
+      }
+      else {
+        serverBodyResponse += inChar;
+      }
+    }  
 }
