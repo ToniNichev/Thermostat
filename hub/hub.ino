@@ -42,6 +42,7 @@ struct ControllerModules {
   int id = 0;
   int mode = 0; // 0: fetch data, 1: listening for data from thermostats, 2: receiving data from thermostats
   float curentTemp;
+  String stringResponse;
 };
 
 ControllerModules controllerModules[10];
@@ -85,15 +86,13 @@ void loop() {
       fetchServerData();
     }
     else {  
-      float *serverResponse = parseToValues(serverBodyResponse);
-      /*
+      float *serverResponse = parseToValues(serverBodyResponse);      
       Serial.println();
-      Serial.println("client disconnected. The response string is:");
+      Serial.println("client disconnected from server. The response string is:");
       Serial.println("================================================");
-      Serial.println(serverResponse[2]);
+      Serial.println(serverBodyResponse);
       Serial.println("================================================");  
-      */
-      requestDataFromServer();  
+      
   
       if(serverBodyResponse == "1") {
         digitalWrite(2, HIGH); 
@@ -105,6 +104,8 @@ void loop() {
         const char text[] = "0";      
         radio.write(&text, sizeof(text));      
       }
+
+      requestDataFromServer();        
           
       // clear params
       serverBodyResponse = "";  
@@ -133,9 +134,9 @@ void loop() {
       radio.read(&text, sizeof(text));
 
       float *thermostatData = parseToValues(text);
-      //Serial.println("Received text :");
-      //Serial.println(text);
-      //Serial.println();
+      Serial.println("Received text :");
+      Serial.println(text);
+      Serial.println();
       
 
       // set it back to transmitting mode
@@ -159,10 +160,11 @@ void loop() {
 void requestDataFromServer() {
     // attempt to connect, and wait a millisecond:
   //Serial.println("connecting to server...");
+  Serial.println("!");
   if (client.connect(serverName, 8061)) {
     //Serial.println("making HTTP request...");
-    client.println("GET /services/data HTTP/1.1");
-    client.println("HOST: toni-develops.com?data=|1|24|");
+    client.println("GET /services/data?data=[1,2,3] HTTP/1.1");
+    client.println("HOST: toni-develops.com");
     client.println();
   }
 }

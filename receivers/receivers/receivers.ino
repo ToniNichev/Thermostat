@@ -68,7 +68,7 @@ void loop()
     //set the address
     radio.openWritingPipe(address);       
     Serial.println("Switching to sending data ...");
-    delay(2000);
+    delay(1000);
     mode = 2;       
   }else if(mode == 2) {
     /*
@@ -80,19 +80,22 @@ void loop()
     char t[4] = {};
     dtostrf(hum, 4, 2, t); 
     msg[0] = '|';
-    msg[1] = t[0];
-    msg[2] = t[1];
-    msg[3] = t[2];
-    msg[4] = t[3];
-    msg[5] = t[4];
-    msg[6] = '|';
+    msg[1] = '0';    
+    msg[2] = '1';    
+    msg[3] = '|';
+    msg[4] = t[0];
+    msg[5] = t[1];
+    msg[6] = t[2];
+    msg[7] = t[3];
+    msg[8] = t[4];
+    msg[9] = '|';
     dtostrf(temp, 4, 2, t); 
-    msg[7] = t[0];
-    msg[8] = t[1];
-    msg[9] = t[2];
-    msg[10] = t[3];
-    msg[11] = t[4];
-    msg[12] = '|';
+    msg[10] = t[0];
+    msg[11] = t[1];
+    msg[12] = t[2];
+    msg[13] = t[3];
+    msg[14] = t[4];
+    msg[15] = '|';
 
     Serial.println(msg);
 
