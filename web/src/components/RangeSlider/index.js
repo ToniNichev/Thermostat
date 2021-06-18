@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styles from './styles.scss';
 
 
-const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetValue, myRef}) => {  
+const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {  
 
   let beginDrag = false;
   let val = 0;
@@ -12,14 +12,18 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetValue, myRef}) =>
   
 
   const setValue = (v) => {
+    console.log(">> setValue called:", v);
     const m = parseFloat(min);
     //const a = Math.round(((angle / ratio) * 100) / 100);
 
     const rotateAngle = 360 / (360 / v);
     val = v;    
+    if(typeof document == 'undefined') return;
     document.querySelectorAll('.label')[SliderId].innerText = val;      
     document.querySelectorAll('.circle > .dot')[SliderId].style.transform = `rotate(${rotateAngle}deg)`;
   }
+
+  SetRangeValue(setValue); // pass setValue to be accessed from parent component.
 
 
   const mouseMoveAction = (e) => {
@@ -79,7 +83,7 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetValue, myRef}) =>
       mouseMoveAction(e);
     });  
     
-    setValue(28);
+    //setValue(28);
   });
 
 
