@@ -20,8 +20,9 @@ import bodyParser from 'body-parser';
 const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 
 
-const ThermostatData = (id, curentTemp, requiredTemp) => ({
+const ThermostatData = (id, humidity, curentTemp, requiredTemp) => ({
   id,
+  humidity,
   curentTemp,
   requiredTemp,
 });
@@ -191,19 +192,19 @@ app.get('/services/thermostats-data', async (req, res) => {
 
 // All page requests
 app.get('/services/data', async (req, res) => {
-  const response = `#@$|01|01|28|`;
+  const response = `#@$[1,4,68.54,28.56]`;
   const data = JSON.parse(req.query.data);
   const thermostats = data[0];
   let offset = 1;
 
   for(let i = 0; i < thermostats; i ++) {
     offset = i * 3;
-    const id = data[offset + 1];
+    const id = data[offset];
+    const humidity = data[offset + 1];
     const curentTemp = data[offset + 2];
-    const requiredTemp = data[offset + 3];
     thermostatsData[i].id = id;
+    thermostatsData[i].humidity = humidity;
     thermostatsData[i].curentTemp = curentTemp;
-    thermostatsData[i].requiredTemp = requiredTemp;
   }
 
   //const response = JSON.stringify(thermostatsData);
