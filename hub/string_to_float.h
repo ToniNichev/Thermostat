@@ -4,4 +4,5 @@
 
 
 float *parseToValues(String serverBodyResponse);
+String valuesToString(double valueAray[], short int count);
 #endif

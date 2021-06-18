@@ -40,9 +40,9 @@ char serverName[] = "toni-develops.com";
 
 struct ControllerModules {
   int id = 0;
-  int mode = 0; // 0: fetch data, 1: listening for data from thermostats, 2: receiving data from thermostats
-  float curentTemp;
-  String stringResponse;
+  float humidity = 0;
+  float curentTemp = 0;
+  float desiredTemp = 0;
 };
 
 ControllerModules controllerModules[10];
@@ -53,12 +53,10 @@ void setup() {
   pinMode(3, OUTPUT);
 
   radio.begin();
-  
   //set the address
   radio.openWritingPipe(address);
   //Set module as transmitter
   radio.stopListening();
-
  
   // Open serial communications and wait for port to open:
   Serial.begin(9600);
@@ -90,7 +88,9 @@ void loop() {
       Serial.println();
       Serial.println("client disconnected from server. The response string is:");
       Serial.println("================================================");
-      Serial.println(serverBodyResponse);
+      Serial.println(serverResponse[0]);
+      Serial.println(serverResponse[1]);
+      Serial.println(serverResponse[2]);
       Serial.println("================================================");  
       
   
@@ -134,8 +134,14 @@ void loop() {
       radio.read(&text, sizeof(text));
 
       float *thermostatData = parseToValues(text);
+      short int id = thermostatData[0];
+      float humidity = thermostatData[1];
+      float curentTemp = thermostatData[2];
+      controllerModules[id].id = id;
+      controllerModules[id].humidity = humidity;
+      controllerModules[id].curentTemp = curentTemp;
       Serial.println("Received text :");
-      Serial.println(text);
+      Serial.println(controllerModules[1].humidity);
       Serial.println();
       
 
@@ -158,12 +164,26 @@ void loop() {
 
 
 void requestDataFromServer() {
-    // attempt to connect, and wait a millisecond:
-  //Serial.println("connecting to server...");
-  Serial.println("!");
+  // connect to the web server
+  String request = "[";
+  for(short int i = 1; i < 10; i ++) {
+    Serial.println("controllerModules >>>>");
+    Serial.println(controllerModules[1].humidity);
+    Serial.println();
+    if(controllerModules[i].id == 0)
+      break;
+    String singleModuleQuery = String(controllerModules[i].id) + "," + String(controllerModules[i].humidity) + ',' + controllerModules[i].curentTemp;
+    request += singleModuleQuery;    
+  }
+
+   request += "]";
+
+    Serial.println("!@!@!@");
+    Serial.println(request);
+    Serial.println();
   if (client.connect(serverName, 8061)) {
     //Serial.println("making HTTP request...");
-    client.println("GET /services/data?data=[1,2,3] HTTP/1.1");
+    client.println("GET /services/data?data=" + request + " HTTP/1.1");
     client.println("HOST: toni-develops.com");
     client.println();
   }

@@ -14,7 +14,9 @@ class Home extends Component {
   
   constructor(props) {
     super(props);
-    this.getFlags();
+    this.getThermostatsSettings();
+
+
     this.addFlagVisible = false;
     this.state = {
       addFlagVisible: false,
@@ -31,10 +33,10 @@ class Home extends Component {
 
   closePopup() {
     this.setState({addFlagVisible: false});    
-    this.getFlags();
+    this.getThermostatsSettings();
   }  
 
-  async getFlags() { 
+  async getThermostatsSettings() { 
     // run this only on client side
     if(typeof window == 'undefined')
       return;
@@ -59,7 +61,9 @@ class Home extends Component {
     fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/services/thermostats-data`)
       .then(response => response.json())
       .then(data => { 
-        this.setState({thermostats: data});
+        //this.setState({thermostats: data});
+        
+
         setTimeout( () => {
           this.fetchData();
         }, 2000);
@@ -80,8 +84,8 @@ class Home extends Component {
                   <span className={styles.flagName}>{flag.flagName}</span>
                   <hr/>
                   <span className={styles.flagValue}><ToggleSwitch featureFlagName={flag.flagName} val={flag.value} /></span>
-                  <RangeSlider sliderId="1" onChangeCallback={ this.onChangeCallback }/>
-                  <RangeSlider sliderId="2" onChangeCallback={ this.onChangeCallback }/>
+                  <RangeSlider SliderId='0' Min='16' Max='40' myRef={this.exampleRef} SetValue={this.setThermostatsValue} onChangeCallback={ this.onChangeCallback }/>
+                  <RangeSlider SliderId='1' Min='0' Max='50' myRef={null} onChangeCallback={ this.onChangeCallback }/>
                   <TemperatureBar temp={ typeof this.state.thermostats[id] == 'undefined' ? 0 : this.state.thermostats[id].curentTemp} />
                   ID: {id}
                 </div>
