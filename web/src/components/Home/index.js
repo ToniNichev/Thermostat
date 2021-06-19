@@ -53,7 +53,6 @@ class Home extends Component {
   }
 
 
-
   setThermostatsValue = (e) => {
     this.changeRange = e;
     //console.log("@@@#@#@#:",e );
