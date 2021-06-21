@@ -15,7 +15,7 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.getThermostatsSettings();
-    this.changeRange = null;
+    this.changeRange = [];
 
     this.addFlagVisible = false;
     this.state = {
@@ -60,11 +60,16 @@ class Home extends Component {
 
 
   fetchData = () => {
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/services/thermostats-data`)
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-data`)
       .then(response => response.json())
       .then(data => { 
         //this.setState({thermostats: data});
-        this.changeRange(31);
+        console.log(data);
+        for(let i = 0; i < 10; i ++) {
+          const id = data[i].id;
+          const curentTemp = data[i].curentTemp;
+          this.changeRange[i](id, curentTemp);
+        }
 
         setTimeout( () => {
           this.fetchData();
@@ -86,8 +91,8 @@ class Home extends Component {
                   <span className={styles.flagName}>{flag.flagName}</span>
                   <hr/>
                   <span className={styles.flagValue}><ToggleSwitch featureFlagName={flag.flagName} val={flag.value} /></span>
-                  <RangeSlider SliderId='0' Min='16' Max='40' SetRangeValue={this.setThermostatsValue} />
-                  <RangeSlider SliderId='1' Min='0' Max='50' SetRangeValue={ () => {} }  onChangeCallback={ this.onChangeCallback }/>
+                  <RangeSlider SliderId='1' Min='16' Max='40' SetRangeValue={this.setThermostatsValue} />
+                  <RangeSlider SliderId='2' Min='0' Max='50' SetRangeValue={ () => {} }  onChangeCallback={ this.onChangeCallback }/>
                   <TemperatureBar temp={ typeof this.state.thermostats[id] == 'undefined' ? 0 : this.state.thermostats[id].curentTemp} />
                   ID: {id}
                 </div>

@@ -30,7 +30,7 @@ const Header = ( {title} ) => (
       <h2>{ title } { process.env.APP_NAME } </h2>
       <ul>
         <li><Link to='/home'>FLAGS</Link></li>
-        <li><Link to='/greetings'>SETTINGS</Link></li>       
+        <li><Link to='/setup'>SETTINGS</Link></li>       
         <li><Link to='/about'>ABOUT</Link></li>
       </ul>
     </div>

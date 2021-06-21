@@ -10,9 +10,14 @@ export default {
       return result;
     },
 
+    getThermostatData: async (url) => {
+      const result = await mongoDB.find({}, collectionName);
+      return result;     
+     },    
     
-   getFeatureFlags: async (url) => {
+   getFeatureFlags: async () => {
     const result = await mongoDB.find({}, collectionName);
+    console.log(result);
     return result;     
    },
 
@@ -38,10 +43,24 @@ export default {
      mongoDB.dropDB();
      const obj = [
       {
-        "flagName" : "LivingRoom",
-        "value": "c|27",
-        "group": "thermostats"
+        "ThermostatName" : "Living Room",
+        "group": "My home",        
+        "id": "1",
+        "humidity": "0",
+        "curentTemp": "0",
+        "requiredTemp": "0",
+        "mode": "0"
+      },
+      {
+        "ThermostatName" : "Bedroom",
+        "group": "My home",        
+        "id": "2",
+        "humidity": "0",
+        "curentTemp": "0",
+        "requiredTemp": "0",
+        "mode": "0"
       }                 
+
      ]
     mongoDB.add(obj, collectionName, () => {}); 
    }   

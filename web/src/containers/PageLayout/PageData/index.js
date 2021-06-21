@@ -45,7 +45,7 @@ export default {
       },        
     ]
   },
-  '/greetings' : {
+  '/setup' : {
     template: "Html",    
     layout: [ 
       {

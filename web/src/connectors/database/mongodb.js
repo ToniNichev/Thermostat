@@ -11,10 +11,10 @@ const connect = async () => {
   let db = null;
   try {
     const client = await MongoClient.connect(url);
-    console.log("Connected correctly to server");
-    db = client.db(dbName);    
+    db = client.db(dbName);  
   } 
   catch (err) {
+    console.log("Error connectiong to Mongo DB!");
     console.log(err.stack);
   }     
   return db;
@@ -40,17 +40,12 @@ export default {
     let result;
 
     try  {
-      client = await MongoClient.connect(url);
-      console.log("Connected correctly to server");
-  
-      const db = client.db(dbName);
-
+      const db = await connect();
       result = await db.collection(collectionName).find(searchObject).toArray();
     }
     catch (err) {
       console.log(err.stack);
     }    
-    // Close connection
     if(client)
       client.close();
     return result;

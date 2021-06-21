@@ -14,25 +14,33 @@ import cookiesManagement from './expressMiddlewares/cookiesManagement';
 import requestDataFromAPI from './expressMiddlewares/requestDataFromAPI';
 const publicPath = `${process.env.APP_HOST}:${process.env.ASSETS_SERVER_PORT}/dist/`;
 // import pageData from './expressMiddlewares/pageData';
+import thermostatServices from './expressMiddlewares/thermostatServices';
 import queries from './src/queries';
 import bodyParser from 'body-parser';
 
 const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 
 
-const ThermostatData = (id, humidity, curentTemp, requiredTemp) => ({
+const ThermostatData = (id, thermostatName, group, humidity, curentTemp, mode, requiredTemp) => ({
   id,
+  thermostatName,
+  group,
   humidity,
   curentTemp,
   requiredTemp,
+  mode,
 });
 
 let thermostatsData = [];
 
+
+/*
 for(let i = 0; i < 10; i ++) {
-  ThermostatData.id = i;
-  thermostatsData.push(ThermostatData(0,0,0));
+  ThermostatData.id = i + 1;
+  thermostatsData.push(ThermostatData(0, '', '', 0, 0, 0, 0));
 }
+*/
+
 
 console.log("SERVER_PORT: ", SERVER_PORT);
 const app = new express();
@@ -113,6 +121,12 @@ app.get('/Robots.txt', (req, res) => {
   `)
 });
 
+
+app.get('/thermostat-services/*', async (req, res) => {
+  await thermostatServices(req, res);
+});
+
+
 app.post('/services/get', 
   async (req, res) => {
 
@@ -180,21 +194,12 @@ app.post('/services/dropdb', async (req, res) => {
 });
 
 // All page requests
-app.get('/services/thermostats-data', async (req, res) => {
-  const response = JSON.stringify(thermostatsData);
-  res
-  .status(200)
-  .set('Content-Type', 'application/json')
-  .set('Access-Control-Allow-Origin', '*')
-  .set('Access-Control-Allow-Headers', '*')
-  .send(response);  
-});
-
-// All page requests
 app.get('/services/data', async (req, res) => {
   const response = `#@$[1,4,68.54,28.56]`;
   const data = JSON.parse(req.query.data);
   const thermostats = data[0];
+
+  console.log(">>>", data);
   let offset = 1;
 
   for(let i = 0; i < thermostats; i ++) {
@@ -218,9 +223,11 @@ app.get('/services/data', async (req, res) => {
 
 
 // All page requests
+
 app.get('/*', 
   requestDataFromAPI, 
   function (req, res, next) {
+    console.log("@@#@#@@");
    response(req, res, req.apiData, req.templateName);
 });
 
