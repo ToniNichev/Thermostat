@@ -182,7 +182,8 @@ void requestDataFromServer() {
     Serial.println(request);
     Serial.println();
   if (client.connect(serverName, 8061)) {
-    //Serial.println("making HTTP request...");
+    Serial.println("making HTTP request...");
+    Serial.println(request);
     client.println("GET /services/data?data=" + request + " HTTP/1.1");
     client.println("HOST: toni-develops.com");
     client.println();

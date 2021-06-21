@@ -52,23 +52,15 @@ class Home extends Component {
     this.setState({flagEditable: !this.state.flagEditable});     
   }
 
-
-  setThermostatsValue = (e) => {
-    this.changeRange = e;
-    //console.log("@@@#@#@#:",e );
-  }
-
-
   fetchData = () => {
     fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-data`)
       .then(response => response.json())
       .then(data => { 
-        //this.setState({thermostats: data});
-        console.log(data);
-        for(let i = 0; i < 10; i ++) {
+        //this.setState({thermostats: data});        
+        for(let i = 0; i < data.length; i ++) {
           const id = data[i].id;
           const curentTemp = data[i].curentTemp;
-          this.changeRange[i](id, curentTemp);
+          this.changeRange[i](curentTemp);
         }
 
         setTimeout( () => {
@@ -80,18 +72,12 @@ class Home extends Component {
 
   render() {
     const Thermostats = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
-
-    console.log("=================");
-    console.log(Thermostats);
-    console.log("=================");
-    
     return (
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>
             <div className={styles.title}>Thermostats</div>
               {Thermostats.map( (flag, flagId) => {
                 const id = parseInt(flag.id);
-                console.log(">˘˘˘˘˘˘>>", id);
                 return(
                 <div key={flag.flagName} className={styles.flagWrapper}>
                   <BulletPoint flagName={flag.flagName} status={this.state.flagEditable} />
@@ -99,7 +85,6 @@ class Home extends Component {
                   <hr/>
                   <span className={styles.flagValue}><ToggleSwitch featureFlagName={flag.flagName} val={flag.value} /></span>
                   <RangeSlider SliderId={id} Min='16' Max='40' SetRangeValue={ (func) => { this.changeRange[id] = func;  } } />                  
-                  <TemperatureBar temp={ typeof this.state.thermostats[id] == 'undefined' ? 0 : this.state.thermostats[id].curentTemp} />
                   ID: {id}
                 </div>);}
               )}

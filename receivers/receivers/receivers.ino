@@ -80,7 +80,7 @@ void loop()
     char t[4] = {};
     dtostrf(hum, 4, 2, t); 
     msg[0] = '[';
-    msg[1] = '1';    
+    msg[1] = '0';    
     msg[2] = ',';
     msg[3] = t[0];
     msg[4] = t[1];
