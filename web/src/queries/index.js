@@ -45,7 +45,7 @@ export default {
       {
         "ThermostatName" : "Living Room",
         "group": "My home",        
-        "id": "1",
+        "id": "0",
         "humidity": "0",
         "curentTemp": "0",
         "requiredTemp": "0",
@@ -54,7 +54,7 @@ export default {
       {
         "ThermostatName" : "Bedroom",
         "group": "My home",        
-        "id": "2",
+        "id": "1",
         "humidity": "0",
         "curentTemp": "0",
         "requiredTemp": "0",

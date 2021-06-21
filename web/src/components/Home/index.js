@@ -81,21 +81,27 @@ class Home extends Component {
   render() {
     const Thermostats = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
 
+    console.log("=================");
+    console.log(Thermostats);
+    console.log("=================");
+    
     return (
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>
             <div className={styles.title}>Thermostats</div>
-              {Thermostats.map( (flag, id) => 
+              {Thermostats.map( (flag, flagId) => {
+                const id = parseInt(flag.id);
+                console.log(">˘˘˘˘˘˘>>", id);
+                return(
                 <div key={flag.flagName} className={styles.flagWrapper}>
                   <BulletPoint flagName={flag.flagName} status={this.state.flagEditable} />
                   <span className={styles.flagName}>{flag.flagName}</span>
                   <hr/>
                   <span className={styles.flagValue}><ToggleSwitch featureFlagName={flag.flagName} val={flag.value} /></span>
-                  <RangeSlider SliderId='1' Min='16' Max='40' SetRangeValue={this.setThermostatsValue} />
-                  <RangeSlider SliderId='2' Min='0' Max='50' SetRangeValue={ () => {} }  onChangeCallback={ this.onChangeCallback }/>
+                  <RangeSlider SliderId={id} Min='16' Max='40' SetRangeValue={ (func) => { this.changeRange[id] = func;  } } />                  
                   <TemperatureBar temp={ typeof this.state.thermostats[id] == 'undefined' ? 0 : this.state.thermostats[id].curentTemp} />
                   ID: {id}
-                </div>
+                </div>);}
               )}
           </div>      
           <div className={styles.rightRail}>
