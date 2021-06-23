@@ -6,7 +6,7 @@ const sendResponse = (res, responseString) => {
   .status(200)
   .set('Content-Type', 'application/json')
   .set('Access-Control-Allow-Origin', '*')
-  .set('Access-Control-Allow-Headers', '*')
+  .set('Access-Control-Allow-Headers', '*')  
   .send(responseString);  
 }
 

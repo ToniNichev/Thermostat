@@ -49,7 +49,7 @@ export default {
         "humidity": "0",
         "curentTemp": "0",
         "requiredTemp": "0",
-        "mode": "0"
+        "mode": "1"
       },
       {
         "ThermostatName" : "Bedroom",
@@ -58,7 +58,7 @@ export default {
         "humidity": "0",
         "curentTemp": "0",
         "requiredTemp": "0",
-        "mode": "0"
+        "mode": "1"
       }                 
 
      ]

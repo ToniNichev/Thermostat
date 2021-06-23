@@ -20,6 +20,7 @@ const byte address[6] = "00001";
 // Enter a MAC address for your controller below.
 // Newer Ethernet shields have a MAC address printed on a sticker on the shield
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+char serverName[] = "toni-develops.com";
 
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
@@ -34,15 +35,18 @@ byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 // with the IP address and port of the server
 // that you want to connect to (port 80 is default for HTTP):
 EthernetClient client;
-String serverBodyResponse = "";
+String serverBodyResponse = "                                                                                                                                                        ";
 String tempServerResponse = "";
-char serverName[] = "toni-develops.com";
+
 
 struct ControllerModules {
   int id = 0;
+  int mode = 0;  
+  String ThermostatName = "";
+  String group = "";
   float humidity = 0;
   float curentTemp = 0;
-  float desiredTemp = 0;
+  float requiredTemp = 0;
 };
 
 ControllerModules controllerModules[10];
@@ -52,10 +56,9 @@ void setup() {
   pinMode(2, OUTPUT);
   pinMode(3, OUTPUT);
 
+  // set the hub as transmetter
   radio.begin();
-  //set the address
   radio.openWritingPipe(address);
-  //Set module as transmitter
   radio.stopListening();
  
   // Open serial communications and wait for port to open:
@@ -70,7 +73,14 @@ void setup() {
 
 
 /**
+ * 
+ * 
+ * 
+ * 
  * Main Loop
+ * 
+ * 
+ * 
  */
 
 int mode = 0;
@@ -79,19 +89,24 @@ void loop() {
  
 
   if(mode == 0) {
+
+      //String test = "[1,23,34.43]";
+      //float *thermostatData = parseToValues(test);
+      //Serial.println(thermostatData[2]);
+      
     // Send mode
     if (client.connected()) {
       fetchServerData();
     }
     else {  
-      float *serverResponse = parseToValues(serverBodyResponse);      
+      //float *serverResponse = parseToValues(serverBodyResponse);      
+      
       Serial.println();
-      Serial.println("client disconnected from server. The response string is:");
-      Serial.println("================================================");
-      Serial.println(serverResponse[0]);
-      Serial.println(serverResponse[1]);
-      Serial.println(serverResponse[2]);
-      Serial.println("================================================");  
+      Serial.println("==================================================");      
+      Serial.println("HTTP client disconnected. `serverBodyResponse` is:");
+      Serial.println("==================================================");
+      Serial.println(serverBodyResponse);
+      Serial.println("==================== END ==============================");  
       
   
       if(serverBodyResponse == "1") {
@@ -116,33 +131,50 @@ void loop() {
     }
   }
   else if(mode == 1) {
-    //Serial.println("Prepare for Receiving mode ... ");
     // prepare for receiving mode 
     //Set module as receiver
+        
+    Serial.println("Prepare for Receiving data from thermostats ... ");
     radio.startListening();    
     radio.openReadingPipe(0, address);
     mode = 2;
-    delay(500);
   }
   else if(mode == 2) {
     // receive data from controlers
-    //Read the data if available in buffer
+    // Read the data if available in buffer
+    
+
     if (radio.available())
-    {
-      //Serial.println("Receiving mode Radio available ... ");      
-      char text[32] = {0};
+    { 
+      char text[128] = {0};
       radio.read(&text, sizeof(text));
 
-      float *thermostatData = parseToValues(text);
-      short int id = thermostatData[0];
-      float humidity = thermostatData[1];
-      float curentTemp = thermostatData[2];
+      // Hub receives data from single thermostat
+      String test = "[1]";
+      float *thermostatDataa = parseToValues(test);
+
+      Serial.println("Received text >>> :");
+      Serial.println("--------- text -----------");
+      Serial.println(text);
+      Serial.println("--------------------");
+      Serial.println( thermostatDataa[1], 4 );
+      Serial.println("--------------------");
+      Serial.println();      
+
+      /*
+      short int id = (int)thermostatData[0];
+      short int controlerMode = (int)thermostatData[1];
+      float humidity = (float)thermostatData[2];
+      float curentTemp = (float)thermostatData[3];
+      //String ThermostatName = (String)thermostatData[3];
+      
       controllerModules[id].id = id;
       controllerModules[id].humidity = humidity;
       controllerModules[id].curentTemp = curentTemp;
-      Serial.println("Received text :");
-      Serial.println(controllerModules[1].humidity);
-      Serial.println();
+      controllerModules[id].mode = controlerMode;
+      */
+      
+
       
 
       // set it back to transmitting mode
@@ -150,52 +182,83 @@ void loop() {
       //Set module as transmitter
       radio.stopListening();      
       mode = 0;
+      delay(300);
     }
-    
-    
   }
 }
 
 
 /**
+ * ################################################
  * HELPER METHODS
- * 
+ * ################################################
  */
 
-
+/**
+ * Requests data from web server
+ */
 void requestDataFromServer() {
   // connect to the web server
+
+  Serial.println("############ requestDataFromServer ##########");
   String request = "[";
-  for(short int i = 1; i < 10; i ++) {
+  for(short int i = 0; i < 2; i ++) {
+    /*
     Serial.println("controllerModules >>>>");
-    Serial.println(controllerModules[1].humidity);
+    Serial.println(controllerModules[i].id);
+    Serial.println(controllerModules[i].humidity);
+    Serial.println(controllerModules[i].ThermostatName);
+    Serial.println("------------");
+    Serial.println(i);
+    Serial.println("------------");
+    */
+    //if(controllerModules[i].ThermostatName == "")
+    //  break;
+    String singleModuleQuery = String(controllerModules[i].id) + "," + String(controllerModules[i].mode) + "," + String(controllerModules[i].humidity) + ',' + controllerModules[i].curentTemp;
+
+    /*
+    Serial.println("######### requestDataFromServer ############");
+    Serial.println("# controllerModules #");
+    Serial.println(controllerModules[i].id);
+    Serial.println("#############################################");
     Serial.println();
-    if(controllerModules[i].id == 0)
-      break;
-    String singleModuleQuery = String(controllerModules[i].id) + "," + String(controllerModules[i].humidity) + ',' + controllerModules[i].curentTemp;
+    */
+        
     request += singleModuleQuery;    
   }
+  
+  request = "[]";
 
-   request += "]";
-
-    Serial.println("!@!@!@");
-    Serial.println(request);
-    Serial.println();
+    
+  Serial.println("############################");
+  Serial.println("# request data from server #");
+  Serial.println(request); 
+  Serial.println();
+    
+    
   if (client.connect(serverName, 8061)) {
     Serial.println("making HTTP request...");
-    Serial.println(request);
-    client.println("GET /services/data?data=" + request + " HTTP/1.1");
+    //Serial.println(request);
+    client.println("GET /thermostat-services/get-data?data=[] HTTP/1.1");
     client.println("HOST: toni-develops.com");
+    //client.println("Connection: close");
     client.println();
   }
 }
 
+/**
+ * fetching data from web server
+ */
 void fetchServerData() {
     if (client.available()) {
       // read incoming bytes:
       char inChar = client.read();
+      serverBodyResponse += inChar;
+      /*
+      
       tempServerResponse += inChar;
-      char tmp[] = "test";
+      BodyStarted = true;
+      
       int l = tempServerResponse.length();
       if(BodyStarted == false) {
         if(inChar == '$' && tempServerResponse[l - 2] == '@' && tempServerResponse[l - 3] == '#') {
@@ -204,6 +267,9 @@ void fetchServerData() {
       }
       else {
         serverBodyResponse += inChar;
+        //Serial.println(inChar);
       }
+      */
+      
     }  
 }
