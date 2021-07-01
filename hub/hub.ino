@@ -9,18 +9,21 @@ short int programMode = 0;
 
 void setup() {
   Serial.begin(9600);
+  RFCommunicatorSetup();
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }  
   Serial.println("================== PROGRAM STARTED ======================");
+  delay(200);
 }
 
 void loop() {
   switch(programMode) {
     case 0:
       if( setupEthernetWebClient("GET /thermostat-services/get-data?data=[] HTTP/1.1", "toni-develops.com", 8061, serverData, len) == true) {
-        Serial.println(">>>");
-        Serial.println(serverData);
+        Serial.print("server data:");
+        Serial.print(serverData);
+        Serial.println();
         programMode = 1;
       }
       break;
@@ -30,6 +33,14 @@ void loop() {
         data[i] = serverData[i];
         if(serverData[i] == ']') {
           RFCommunicatorSend(data);
+          delay(1000);
+          char temp[32] = "";
+          while(RFCommunicatorListen(temp)!= true) {
+            
+          }
+          Serial.print("temperature:");
+          Serial.print(temp);
+          Serial.println();
           break;
         }
       }
@@ -37,8 +48,6 @@ void loop() {
     case 2:
       //RFCommunicatorSend(serverData);
       Serial.println("delaying 3 sec ...");
-      delay(3000);
-      RFCommunicatorSend("### 123445");
       delay(3000);
       programMode = 0;
       break;
