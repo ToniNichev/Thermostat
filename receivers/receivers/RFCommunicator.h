@@ -5,6 +5,7 @@
 #include <RF24.h>
 
 
+void RFCommunicatorSetup();
 bool RFCommunicatorListen(char data[]);
 void RFCommunicatorSend(char sendText[]);
 
