@@ -24,6 +24,7 @@ void loop() {
         Serial.print("server data:");
         Serial.print(serverData);
         Serial.println();
+        Serial.println();
         programMode = 1;
       }
       break;
@@ -35,12 +36,15 @@ void loop() {
           RFCommunicatorSend(data);
           delay(1000);
           char temp[32] = "";
+          Serial.print("waiting for thermostat data...");
+          Serial.println();
           while(RFCommunicatorListen(temp)!= true) {
             
           }
-          Serial.print("temperature:");
+          Serial.print("thermostat data: ");
           Serial.print(temp);
           Serial.println();
+          Serial.println();          
           break;
         }
       }
