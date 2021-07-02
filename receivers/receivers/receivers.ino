@@ -31,7 +31,7 @@ void loop() {
   delay(50);
   switch(programMode) {
     case 0:
-      if(RFCommunicatorListen(serverData)) {
+      if(RFCommunicatorListen(serverData, 0)) {
         Serial.print("serverData: ");
         Serial.print(serverData);
         Serial.println();
@@ -71,7 +71,7 @@ void loop() {
       break;
     case 2:    
         Serial.println("sending data ... ");
-        RFCommunicatorSend(msg);
+        RFCommunicatorSend(msg, 0);
         delay(2000);
         programMode = 0;
       break;
