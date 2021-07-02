@@ -5,6 +5,7 @@
 char serverData[100] = {0};
 int len;
 short int programMode = 0;
+int loops = 0;
 
 
 void setup() {
@@ -33,13 +34,14 @@ void loop() {
       for(int i = 0; i < 100; i ++) {
         data[i] = serverData[i];
         if(serverData[i] == ']') {
-          RFCommunicatorSend(data);
+          RFCommunicatorSend(data, 0);
           delay(1000);
           char temp[32] = "";
           Serial.print("waiting for thermostat data...");
           Serial.println();
-          while(RFCommunicatorListen(temp)!= true) {
-            
+          while(RFCommunicatorListen(temp, 0)!= true) {
+            loops ++;
+            Serial.println(loops);
           }
           Serial.print("thermostat data: ");
           Serial.print(temp);
@@ -54,6 +56,7 @@ void loop() {
       Serial.println("delaying 3 sec ...");
       delay(3000);
       programMode = 0;
+      loops = 0;
       break;
   }
 }
