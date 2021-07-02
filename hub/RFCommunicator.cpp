@@ -2,7 +2,7 @@
 
 RF24 RFCommunicatorRadio(9, 8);  // CE, CSN
 //address through which two modules communicate.
-const byte RFCommunicatorAddress[6] = "00001";
+const byte RFCommunicatorAddress[][6] = {"00001", "00002"};
 const byte RFCommunicatorAddressNewDevice[6] = "00002";
 short int RFCommunicatorMode = 0;
 
@@ -10,10 +10,10 @@ void RFCommunicatorSetup() {
   RFCommunicatorRadio.begin();
 }
 
-bool RFCommunicatorListen(char data[]) {
+bool RFCommunicatorListen(char data[], short int channel) {
   if(RFCommunicatorMode == 0) {
     //RFCommunicatorRadio.begin();
-    RFCommunicatorRadio.openReadingPipe(0, RFCommunicatorAddress);
+    RFCommunicatorRadio.openReadingPipe(0, RFCommunicatorAddress[channel]);
     RFCommunicatorRadio.startListening();   
     Serial.println("Listening ...");
     RFCommunicatorMode = 1; // listen
@@ -32,10 +32,10 @@ bool RFCommunicatorListen(char data[]) {
   }
 }
 
-void RFCommunicatorSend(char sendText[]) {
+void RFCommunicatorSend(char sendText[], short int channel) {
   //RFCommunicatorRadio.begin();
   RFCommunicatorRadio.stopListening();  
-  RFCommunicatorRadio.openWritingPipe(RFCommunicatorAddress);
+  RFCommunicatorRadio.openWritingPipe(RFCommunicatorAddress[channel]);
   //delay(100);
 
   const char text[32] = {0};
