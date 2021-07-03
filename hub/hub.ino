@@ -30,16 +30,19 @@ void loop() {
       }
       break;
     case 1:
-    char data[32] = "";
+      char data[32] = "";
+      short int thermostatId = 0;
+      int pos = 0;
       for(int i = 0; i < 100; i ++) {
-        data[i] = serverData[i];
+        data[pos] = serverData[i];
+        pos ++;
         if(serverData[i] == ']') {
-          RFCommunicatorSend(data, 0);
+          RFCommunicatorSend(data, thermostatId);
           delay(1000);
           char temp[32] = "";
           Serial.print("waiting for thermostat data...");
           Serial.println();
-          while(RFCommunicatorListen(temp, 0)!= true) {
+          while(RFCommunicatorListen(temp, thermostatId)!= true) {
             loops ++;
             Serial.println(loops);
           }
@@ -47,6 +50,8 @@ void loop() {
           Serial.print(temp);
           Serial.println();
           Serial.println();          
+          thermostatId ++;
+          pos = 0;
           break;
         }
       }
