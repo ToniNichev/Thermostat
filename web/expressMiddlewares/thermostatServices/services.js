@@ -21,11 +21,18 @@ const getFullReadings = async (req, res) => {
   sendResponse(res, response);
 }
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 const getReadings = async (req, res) => {
+
+  console.log("###############", req.query.data);
   const response = await queries.getThermostatData();
   let result = '[';
   for(let i = 0; i < response.length; i ++) {
-    console.log(">>>", response[i])
+    //console.log(">>>", response[i])
     result += response[i].id + ',' + response[i].curentTemp + ',' + response[i].requiredTemp + ','; 
   }
   result += '0]';

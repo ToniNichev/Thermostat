@@ -21,7 +21,7 @@ void setup() {
 void loop() {
   switch(programMode) {
     case 0:
-      if( setupEthernetWebClient("GET /thermostat-services/get-data?data=[] HTTP/1.1", "toni-develops.com", 8061, serverData, len) == true) {
+      if( setupEthernetWebClient("GET /thermostat-services/get-data?data=[1,2,4] HTTP/1.1", "toni-develops.com", 8061, serverData, len) == true) {
         Serial.print("server data:");
         Serial.print(serverData);
         Serial.println();
