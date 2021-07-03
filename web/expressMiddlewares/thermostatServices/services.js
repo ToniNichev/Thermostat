@@ -30,7 +30,8 @@ const getReadings = async (req, res) => {
   }
   result += '0]';
 
-  result = '[0,' + new Date().getSeconds() + ',28.00],[1,30.21,28.25][' + new Date().getSeconds() + ']';
+  //result = '[0,' + new Date().getSeconds() + ',28.00],[1,30.21,28.25][' + new Date().getSeconds() + ']';
+  result = '[0,' + new Date().getSeconds() + ',28.00],[1,30.21,28.25]';
   sendResponse(res, result);
 }
 

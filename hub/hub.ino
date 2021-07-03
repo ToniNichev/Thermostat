@@ -26,6 +26,7 @@ void loop() {
         Serial.print(serverData);
         Serial.println();
         Serial.println();
+        Serial.println();
         programMode = 1;
       }
       break;
@@ -33,26 +34,37 @@ void loop() {
       char data[32] = "";
       short int thermostatId = 0;
       int pos = 0;
-      for(int i = 0; i < 100; i ++) {
+      for(int i = 0; i < 50; i ++) {
+        if(serverData[i] == '\0')
+          break;
         data[pos] = serverData[i];
         pos ++;
         if(serverData[i] == ']') {
           RFCommunicatorSend(data, thermostatId);
+          
+          Serial.print(">>>>>>>>>> data : ");
+          Serial.print(data);
+          Serial.println();
+          Serial.println();
+
           delay(1000);
           char temp[32] = "";
-          Serial.print("waiting for thermostat data...");
+          //Serial.print("waiting for thermostat data...");
           Serial.println();
           while(RFCommunicatorListen(temp, thermostatId)!= true) {
             loops ++;
-            Serial.println(loops);
+            //Serial.println(loops);
           }
-          Serial.print("thermostat data: ");
+          Serial.print("thermostat ");
+          Serial.print(thermostatId);
+          Serial.print(" data: ");
           Serial.print(temp);
           Serial.println();
           Serial.println();          
           thermostatId ++;
           pos = 0;
-          break;
+          i += 1;
+          //break;
         }
       }
       programMode = 2;
@@ -62,6 +74,5 @@ void loop() {
       delay(3000);
       programMode = 0;
       loops = 0;
-      break;
   }
 }
