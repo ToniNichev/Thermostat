@@ -16,8 +16,15 @@ const sendResponse = (res, responseString) => {
   res.send(responseString);  
 }
 
-const getFullReadings = async (req, res) => {
-  const response = await queries.getThermostatData();
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} thermostatData 
+ */
+const getFullReadings = async (req, res, thermostatData) => {
+  // const response = await queries.getThermostatData();
+  const response = JSON.stringify(thermostatData);
   sendResponse(res, response);
 }
 
@@ -26,13 +33,22 @@ const getFullReadings = async (req, res) => {
  * @param {*} req 
  * @param {*} res 
  */
-const getReadings = async (req, res) => {
+const getReadings = async (req, res, thermostatData) => {
 
-  console.log("###############", req.query.data);
+
+  console.log("^^^^^");
+  console.log(thermostatData);
+
+  const thermostatString = '[' + req.query.data.split('][').join('],[') + ']';
+  const thermostatReadings = JSON.parse(thermostatString);
   const response = await queries.getThermostatData();
+
   let result = '[';
   for(let i = 0; i < response.length; i ++) {
-    //console.log(">>>", response[i])
+    // feed thermostatData with the real data from thermostats
+    thermostatData[i].humidity = thermostatReadings[i][1];
+    thermostatData[i].curentTemp = thermostatReadings[i][2];
+    // get the desired temperature
     result += response[i].id + ',' + response[i].curentTemp + ',' + response[i].requiredTemp + ','; 
   }
   result += '0]';

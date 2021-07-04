@@ -53,14 +53,15 @@ class Home extends Component {
   }
 
   fetchData = () => {
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-data`)
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-full-data`)
       .then(response => response.json())
       .then(data => { 
         //this.setState({thermostats: data});        
         for(let i = 0; i < data.length; i ++) {
           const id = data[i].id;
           const curentTemp = data[i].curentTemp;
-          this.changeRange[i](curentTemp);
+          if(typeof this.changeRange[i] != 'undefined')
+            this.changeRange[i](curentTemp);
         }
 
         setTimeout( () => {

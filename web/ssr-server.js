@@ -31,16 +31,15 @@ const ThermostatData = (id, thermostatName, group, humidity, curentTemp, mode, r
   mode,
 });
 
-let thermostatsData = [];
+let thermostatData = [];
 
 
-/*
-for(let i = 0; i < 10; i ++) {
-  ThermostatData.id = i + 1;
-  thermostatsData.push(ThermostatData(0, '', '', 0, 0, 0, 0));
+for(let i = 0; i < 3; i ++) {
+  thermostatData.push(ThermostatData(0, '', '', 0, 0, 0, 0));
 }
-*/
 
+console.log("###$#$##$#$");
+console.log(thermostatData);
 
 console.log("SERVER_PORT: ", SERVER_PORT);
 const app = new express();
@@ -123,7 +122,7 @@ app.get('/Robots.txt', (req, res) => {
 
 
 app.get('/thermostat-services/*', async (req, res) => {
-  await thermostatServices(req, res);
+  await thermostatServices(req, res, thermostatData);
 });
 
 
