@@ -6,7 +6,7 @@ char serverData[100] = {0};
 int len;
 short int programMode = 0;
 int loops = 0;
-char thermostatsData[100] = "[]";
+char thermostatsData[100] = "";
 char ethernetURL[100] = "";      
 
 void setup() {
@@ -39,6 +39,7 @@ void loop() {
         programMode = 2;
       }
       ethernetURL[120] = "";
+      thermostatsData[0] = '\0';
       break;
     case 2:
         Serial.print("programMode:");
@@ -69,7 +70,7 @@ void loop() {
             loops ++;
             //Serial.println(loops);
           }
-          strcpy(thermostatsData, temp);
+          strcat(thermostatsData, temp);
           Serial.print("thermostat ");
           Serial.print(thermostatId);
           Serial.print(" data: ");
@@ -89,5 +90,6 @@ void loop() {
       delay(3000);
       programMode = 0;
       loops = 0;
+      ethernetURL[0] = '\0';
   }
 }
