@@ -38,7 +38,7 @@ void loop() {
         Serial.println();
         programMode = 2;
       }
-      ethernetURL[120] = "";
+      ethernetURL[0] = '\0';
       thermostatsData[0] = '\0';
       break;
     case 2:
