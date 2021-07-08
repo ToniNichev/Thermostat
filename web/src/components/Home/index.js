@@ -16,6 +16,7 @@ class Home extends Component {
     super(props);
     this.getThermostatsSettings();
     this.changeRange = [];
+    this.setDialersForTheFirstTime = false;
 
     this.addFlagVisible = false;
     this.state = {
@@ -56,20 +57,30 @@ class Home extends Component {
     fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-full-data`)
       .then(response => response.json())
       .then(data => { 
-        //this.setState({thermostats: data});        
+
         for(let i = 0; i < data.length; i ++) {
           const id = data[i].id;
-          const curentTemp = data[i].curentTemp;
-          if(typeof this.changeRange[i] != 'undefined')
-            this.changeRange[i](curentTemp);
+          //const curentTemp = data[i].curentTemp;
+          const requiredTemp = data[i].requiredTemp;
+
+            if(typeof this.changeRange[i] != 'undefined') 
+              this.changeRange[i](requiredTemp);
         }
 
+        /*
         setTimeout( () => {
           this.fetchData();
         }, 2000);
+        */
       });
   }
 
+  onChangeTemperatureCallback = (thermostatId, requiredTemperature) => {
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-desired-temperature?data=[${thermostatId},${requiredTemperature}]`)
+      .then(response => response.json())
+      .then(data => { 
+      });
+  }
 
   render() {
     const Thermostats = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
@@ -85,7 +96,7 @@ class Home extends Component {
                   <span className={styles.flagName}>{flag.flagName}</span>
                   <hr/>
                   <span className={styles.flagValue}><ToggleSwitch featureFlagName={flag.flagName} val={flag.value} /></span>
-                  <RangeSlider SliderId={id} Min='16' Max='40' SetRangeValue={ (func) => { this.changeRange[id] = func;  } } />                  
+                  <RangeSlider onChangeCallback={this.onChangeTemperatureCallback} SliderId={id} Min='0' Max='50' SetRangeValue={ (func) => { this.changeRange[id] = func;  } } />                  
                   ID: {id}
                 </div>);}
               )}

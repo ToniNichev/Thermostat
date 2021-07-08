@@ -17,7 +17,7 @@ const sendResponse = (res, responseString) => {
 }
 
 /**
- * 
+ * getFullReadings - returns all thermostat data
  * @param {*} req 
  * @param {*} res 
  * @param {*} thermostatData 
@@ -29,36 +29,45 @@ const getFullReadings = async (req, res, thermostatData) => {
 }
 
 /**
- * 
+ * getReadings returns desired temperature and receive thermostat curent humidity and temperature.
  * @param {*} req 
  * @param {*} res 
  */
 const getReadings = async (req, res, thermostatData) => {
 
-
-  console.log("^^^^^");
-  console.log(thermostatData);
-
-  const thermostatString = '[' + req.query.data.split('][').join('],[') + ']';
+  // get curent humidity and temperature from thermostats
+  const thermostatString = req.query.data == '' ? '[]' : '[' + req.query.data.split('][').join('],[') + ']';
   const thermostatReadings = JSON.parse(thermostatString);
-  const response = await queries.getThermostatData();
+
+  // get thermostat object from DB
+  // const response = await queries.getThermostatData();
 
   let result = '[';
-  for(let i = 0; i < response.length; i ++) {
-    // feed thermostatData with the real data from thermostats
-    thermostatData[i].humidity = thermostatReadings[i][1];
-    thermostatData[i].curentTemp = thermostatReadings[i][2];
+  for(let i = 0; i < thermostatData.length; i ++) {
+    // set up thermostatData with the real data from thermostats
+    if(typeof thermostatReadings[i] != 'undefined') {
+      thermostatData[i].humidity = thermostatReadings[i][1];
+      thermostatData[i].curentTemp = thermostatReadings[i][2];
+    }
     // get the desired temperature
-    result += response[i].id + ',' + response[i].curentTemp + ',' + response[i].requiredTemp + ','; 
+    result += thermostatData[i].id + ',' + thermostatData[i].requiredTemp + ',' + thermostatData[i].mode + ','; 
   }
   result += '0]';
+  sendResponse(res, result);
+}
 
-  //result = '[0,' + new Date().getSeconds() + ',28.00],[1,30.21,28.25][' + new Date().getSeconds() + ']';
-  result = '[0,' + new Date().getSeconds() + ',28.00],[1,30.21,28.25]';
+const setDesiredTemperature = async (req, res, thermostatData) => {
+  const tempDataString = req.query.data;
+  const tempData = JSON.parse(tempDataString);
+  const id = tempData[0];
+  const temp = tempData[1];
+  thermostatData[id].requiredTemp = temp;
+  const result = `{'status': 'success'}`;
   sendResponse(res, result);
 }
 
 export { 
   getFullReadings,
-  getReadings 
+  getReadings,
+  setDesiredTemperature
 };

@@ -1,10 +1,8 @@
-- Run for development:
 
-- start with express SSR server and webpack-dev-server
-$ yarn start-dev
 
-access it: http://localhost:8081/home
 
-- Run production server
-$ yarn start-prod
-access it: https://localhost:8081/home# projects-feature-flag-manager
+* thermostat-services/get-data?data=[...]
+
+    * [id, humidity, temperature][id, humidity, temperature]
+    * example url
+        thermostat-services/get-data?data=[0,49.60,48.55,0][1,51.20,27.63,0]

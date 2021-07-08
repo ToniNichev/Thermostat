@@ -34,19 +34,19 @@ void loop() {
       while(setupEthernetWebClient(ethernetURL, "toni-develops.com", 8061, serverData, len) == false) {
         ; // wait untill get server data
       }
-        Serial.print("server data:");
-        Serial.print(serverData);
-        Serial.println();
-        Serial.println();
-        Serial.println();
-        programMode = 1;
-        thermostatsData[0] = '\0';
+      Serial.print("server data:");
+      Serial.print(serverData);
+      Serial.println();
+      Serial.println();
+      Serial.println();
+      programMode = 1;
+      thermostatsData[0] = '\0';
       break;
     case 1:
-        Serial.print("programMode:");
-        Serial.print(programMode);
-        Serial.println(); 
-        Serial.println();    
+      Serial.print("programMode:");
+      Serial.print(programMode);
+      Serial.println(); 
+      Serial.println();    
       char data[32] = "";
       short int thermostatId = 0;
       int pos = 0;

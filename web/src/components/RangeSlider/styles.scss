@@ -55,11 +55,16 @@
     left: 44%;
   }
 
-  .label {
+  .labelPrimary, .labelSecondary {
     position: relative;
     top: 50%;
     text-align: center;
   }  
+
+  .labelSecondary {
+    top: 56%;
+  }
+
 }
 
 

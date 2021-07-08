@@ -15,14 +15,14 @@ bool RFCommunicatorListen(char data[], short int channel) {
     //RFCommunicatorRadio.begin();
     RFCommunicatorRadio.openReadingPipe(0, RFCommunicatorAddress[channel]);
     RFCommunicatorRadio.startListening();   
-    Serial.println("Listening ...");
+    //Serial.println("Listening ...");
     RFCommunicatorMode = 1; // listen
     return false;
   }
   else {
     if (RFCommunicatorRadio.available())
     {
-      Serial.println("Data coming ...");
+      //Serial.println("Data coming ...");
       char text[32] = {0};
       RFCommunicatorRadio.read(&text, sizeof(text));
       strcpy(data, text);

@@ -9,7 +9,11 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {
   const min = parseFloat(Min);
   const max = parseFloat(Max);
   const ratio = 360 / (max - min);
-  
+
+  const rangeSelectorValueChanged = () => {
+    const val = document.querySelectorAll('.labelPrimary')[SliderId].innerText;
+    onChangeCallback(SliderId, val);
+  }  
 
   const setValue = (v) => {
     console.log(">> setValue called:", v);
@@ -19,7 +23,7 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {
     const rotateAngle = 360 / (360 / v);
     val = v;    
     if(typeof document == 'undefined') return;
-    document.querySelectorAll('.label')[SliderId].innerText = val;      
+    document.querySelectorAll('.labelPrimary')[SliderId].innerText = val;      
     document.querySelectorAll('.circle > .dot')[SliderId].style.transform = `rotate(${rotateAngle}deg)`;
   }
 
@@ -28,6 +32,7 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {
 
   const mouseMoveAction = (e) => {
     if(beginDrag == false) return;
+
     const center_x = ( document.querySelectorAll('.circle')[SliderId].offsetWidth / 2) + document.querySelectorAll('.circle')[SliderId].offsetLeft;
     const center_y = ( document.querySelectorAll('.circle')[SliderId].offsetHeight / 2) + document.querySelectorAll('.circle')[SliderId].offsetTop;
     let eventObj;
@@ -54,7 +59,7 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {
     const a = Math.round(((angle / ratio) * 100) / 100);
 
     val = m + a;
-    document.querySelectorAll('.label')[SliderId].innerText = val;  
+    document.querySelectorAll('.labelPrimary')[SliderId].innerText = val;  
   }
 
   useEffect(() => {
@@ -64,15 +69,16 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {
 
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('touchend', e => {
       beginDrag = false;
+      rangeSelectorValueChanged();
     });    
 
-    console.log("TEST   : ", SliderId);
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('mousedown', e => {
       beginDrag = true;
     });
 
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('mouseup', e => {
         beginDrag = false;
+        rangeSelectorValueChanged();
     });
 
     document.addEventListener('mousemove', e => {
@@ -82,16 +88,15 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {
     document.addEventListener('touchmove', e => {
       mouseMoveAction(e);
     });  
-    
-    //setValue(28);
   });
 
 
   return (    
     <div className={styles.wrapper}>
-      <div className={styles.temperatureText}>128.34</div>
+
       <div className={[styles.circle, 'circle'].join(' ')}>
-        <div className={[styles.label, 'label'].join(' ')}> -- </div>
+        <div className={[styles.labelPrimary, 'labelPrimary'].join(' ')}> -- </div>
+        <div className={[styles.labelSecondary, 'labelSecondary'].join(' ')}> -- </div>
         <div className={[styles.dot, 'dot'].join(' ')}></div>
       </div>
     </div>

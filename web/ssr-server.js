@@ -20,26 +20,17 @@ import bodyParser from 'body-parser';
 
 const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 
-
-const ThermostatData = (id, thermostatName, group, humidity, curentTemp, mode, requiredTemp) => ({
-  id,
-  thermostatName,
-  group,
-  humidity,
-  curentTemp,
-  requiredTemp,
-  mode,
-});
-
 let thermostatData = [];
 
-
-for(let i = 0; i < 3; i ++) {
-  thermostatData.push(ThermostatData(0, '', '', 0, 0, 0, 0));
+const getInitialDataFromDb = async () => {
+  const result = await queries.getThermostatData();
+  return result;
 }
 
-console.log("###$#$##$#$");
-console.log(thermostatData);
+const result = getInitialDataFromDb().then((data) => {
+  thermostatData = data;
+});
+
 
 console.log("SERVER_PORT: ", SERVER_PORT);
 const app = new express();
@@ -125,52 +116,6 @@ app.get('/thermostat-services/*', async (req, res) => {
   await thermostatServices(req, res, thermostatData);
 });
 
-
-app.post('/services/get', 
-  async (req, res) => {
-
-  const result = await queries.getFeatureFlags();
-  res
-  .status(200)
-  .set('Content-Type', 'application/json')
-  .set('Access-Control-Allow-Origin', '*')
-  .set('Access-Control-Allow-Headers', '*')
-  .send(result);  
-});
-
-app.post('/services/find', 
-  async (req, res) => {
-  const flagData = JSON.parse(req.body);
-  const result = await queries.findFeatureFlagByName(flagData.flagName);
-  res
-  .status(200)
-  .set('Content-Type', 'application/json')
-  .set('Access-Control-Allow-Origin', '*')
-  .set('Access-Control-Allow-Headers', '*')
-  .send(result);  
-});
-
-app.post('/services/update', async (req, res) => {
-  const flagData = JSON.parse(req.body);
-  const result = await queries.updateFeatureFlag(flagData.updateFlag, flagData.newFlagData);
-  res
-  .status(200)
-  .set('Content-Type', 'application/json')
-  .set('Access-Control-Allow-Origin', '*')
-  .set('Access-Control-Allow-Headers', '*')
-  .send(" 12345 ");  
-});
-
-app.post('/services/add', async (req, res) => {
-  const flagData = JSON.parse(req.body);
-  const result = await queries.addFeatureFlag(flagData);
-  res
-  .status(200)
-  .set('Content-Type', 'application/json')
-  .set('Access-Control-Allow-Origin', '*')
-  .set('Access-Control-Allow-Headers', '*')
-  .send(" 12345 ");  
-});
 
 app.post('/services/setup', async (req, res) => {
   queries.setup();

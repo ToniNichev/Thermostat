@@ -1,6 +1,7 @@
 import { 
     getReadings,
-    getFullReadings 
+    getFullReadings,
+    setDesiredTemperature
 } from './services';
 
 const dispatch = async (req, res, thermostatData) => {
@@ -11,7 +12,10 @@ const dispatch = async (req, res, thermostatData) => {
             break;
         case 'get-data':
             await getReadings(req, res, thermostatData);
-            break;            
+            break;   
+        case 'set-desired-temperature': 
+            await setDesiredTemperature(req, res, thermostatData);
+            break;
     }
 }
 
