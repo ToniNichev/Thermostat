@@ -57,12 +57,14 @@
 
   .labelPrimary, .labelSecondary {
     position: relative;
-    top: 50%;
+    top: 40%;
     text-align: center;
+    font-size: 22px;
   }  
 
   .labelSecondary {
-    top: 56%;
+    top: 50%;
+    font-size: 18px;    
   }
 
 }

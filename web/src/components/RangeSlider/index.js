@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styles from './styles.scss';
 
 
-const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {  
+const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue, setTempAndHumidity}) => {  
 
   let beginDrag = false;
   let val = 0;
@@ -23,8 +23,14 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {
     document.querySelectorAll('.circle > .dot')[SliderId].style.transform = `rotate(${rotateAngle}deg)`;
   }
 
-  SetRangeValue(setValue); // pass setValue to be accessed from parent component.
+  const _setTempAndHumidity = (humidity, temperature) => {
+    document.querySelectorAll('.labelSecondary')[SliderId].innerText = temperature;
+  }
 
+  setTempAndHumidity(_setTempAndHumidity);
+
+  SetRangeValue(setValue); // pass setValue to be accessed from parent component.
+  
 
   const mouseMoveAction = (e) => {
     if(beginDrag == false) return;
