@@ -15,13 +15,9 @@ const RangeSlider = ({onChangeCallback, SliderId, Min, Max, SetRangeValue}) => {
     onChangeCallback(SliderId, val);
   }  
 
-  const setValue = (v) => {
-    console.log(">> setValue called:", v);
-    const m = parseFloat(min);
-    //const a = Math.round(((angle / ratio) * 100) / 100);
-
-    const rotateAngle = 360 / (360 / v);
-    val = v;    
+  const setValue = (val) => {
+    const v = parseFloat(val);
+    const rotateAngle = (360 / max) * val;
     if(typeof document == 'undefined') return;
     document.querySelectorAll('.labelPrimary')[SliderId].innerText = val;      
     document.querySelectorAll('.circle > .dot')[SliderId].style.transform = `rotate(${rotateAngle}deg)`;

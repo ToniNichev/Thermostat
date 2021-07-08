@@ -62,7 +62,6 @@ class Home extends Component {
           const id = data[i].id;
           //const curentTemp = data[i].curentTemp;
           const requiredTemp = data[i].requiredTemp;
-
             if(typeof this.changeRange[i] != 'undefined') 
               this.changeRange[i](requiredTemp);
         }
@@ -96,7 +95,7 @@ class Home extends Component {
                   <span className={styles.flagName}>{flag.flagName}</span>
                   <hr/>
                   <span className={styles.flagValue}><ToggleSwitch featureFlagName={flag.flagName} val={flag.value} /></span>
-                  <RangeSlider onChangeCallback={this.onChangeTemperatureCallback} SliderId={id} Min='0' Max='50' SetRangeValue={ (func) => { this.changeRange[id] = func;  } } />                  
+                  <RangeSlider onChangeCallback={this.onChangeTemperatureCallback} SliderId={id} Min='0' Max='90' SetRangeValue={ (func) => { this.changeRange[id] = func;  } } />                  
                   ID: {id}
                 </div>);}
               )}
