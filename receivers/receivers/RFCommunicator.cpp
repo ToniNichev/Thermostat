@@ -7,7 +7,7 @@ const byte RFCommunicatorAddressNewDevice[6] = "00002";
 short int RFCommunicatorMode = 0;
 
 void RFCommunicatorSetup() {
-      RFCommunicatorRadio.begin();
+  RFCommunicatorRadio.begin();
 }
 
 bool RFCommunicatorListen(char data[], short int channel) {
@@ -15,7 +15,7 @@ bool RFCommunicatorListen(char data[], short int channel) {
     //RFCommunicatorRadio.begin();
     RFCommunicatorRadio.openReadingPipe(0, RFCommunicatorAddress[channel]);
     RFCommunicatorRadio.startListening();   
-    Serial.println("Listening ...");
+    //Serial.println("Listening ...");
     RFCommunicatorMode = 1; // listen
     return false;
   }
@@ -23,7 +23,7 @@ bool RFCommunicatorListen(char data[], short int channel) {
     if (RFCommunicatorRadio.available())
     {
       //Serial.println("Data coming ...");
-      char text[100] = {0};
+      char text[32] = {0};
       RFCommunicatorRadio.read(&text, sizeof(text));
       strcpy(data, text);
       RFCommunicatorMode = 0;

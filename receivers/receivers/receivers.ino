@@ -4,13 +4,13 @@
 
 
 // thermostat settings
-short int thermostatId = 0;
+short int thermostatId = 1;
 
 // program variables
 char serverData[100] = {0};
 int len;
 short int programMode = 0;
-short int communicationChannel = 0;
+short int communicationChannel = thermostatId;
 
 //Constants
 #define DHTPIN 4     // what pin we're connected to
@@ -37,19 +37,27 @@ void loop() {
   Serial.println();
   delay(50);
 
-  if(RFCommunicatorListen(serverData, communicationChannel)) {
-    Serial.print("serverData: ");
-    Serial.print(serverData);
-    Serial.println();
-    Serial.println();
-    delay(2000);  
+  Serial.print("Waiting for data from the HUB on channel :");
+  Serial.print("1");
+  Serial.println();
+  Serial.println();  
+
+  while(RFCommunicatorListen(serverData, communicationChannel)!=true) {
+    delay(1);
   }
+  
+  Serial.print("Received data from HUB: ");
+  Serial.print(serverData);
+  Serial.println();
+  Serial.println();
+  delay(2000);  
+
   hum = dht.readHumidity();
   temp = dht.readTemperature();  
 
   dtostrf(hum, 4, 2, t); 
   msg[0] = '[';
-  msg[1] = '0';    
+  msg[1] = '0' + thermostatId;    
   msg[2] = ',';
   msg[3] = t[0];
   msg[4] = t[1];
@@ -67,11 +75,10 @@ void loop() {
   msg[15] = '0';
   msg[16] = ']';       
 
-  Serial.print("msg: ");
+  Serial.print("Sending data to the HUB: ");
   Serial.print(msg);
   Serial.println();
 
-  Serial.println("sending data ... ");
   RFCommunicatorSend(msg, communicationChannel);
   delay(2000);
 }
