@@ -85,7 +85,7 @@ bool setupEthernetWebClient(char url[100], char Server[100], int ethernetWebClie
     // if the server's disconnected, stop the client:
     if (!client.connected()) {
       Serial.println("disconnecting.");
-      Serial.println();      
+      //Serial.println();      
       client.stop();
 
       ethernetDataBufferLen = 0;

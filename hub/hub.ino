@@ -21,16 +21,12 @@ void setup() {
 
 void loop() {
   char ethernetURL[100] = "";
-
-  Serial.println(" -------------------------------------------------------- ");
   Serial.println();
+  Serial.println(" -------------------------------------------------------- ");
 
   strcpy(ethernetURL, "GET /thermostat-services/get-data?data=");
   strcat(ethernetURL, thermostatsData);
   strcat(ethernetURL, " HTTP/1.1");
-  //Serial.print("url:");
-  //Serial.print(ethernetURL);
-  //Serial.println(); 
          
   while(setupEthernetWebClient(ethernetURL, "toni-develops.com", 8061, serverData, len) == false) {
     ; // wait untill get server data
@@ -38,7 +34,8 @@ void loop() {
   Serial.print("Received WEB server data:");
   Serial.print(serverData);
   Serial.println();
-  Serial.println();  
+  Serial.println(" -------------------------------------------------------- ");
+  Serial.println();
   
   thermostatsData[0] = '\0';
       
@@ -54,7 +51,7 @@ void loop() {
       RFCommunicatorSend(data, thermostatId);          
       Serial.print("send data to thermostat (");
       Serial.print(thermostatId);
-      Serial.print(") : ");
+      Serial.println(") : ");
       Serial.print(data);
       Serial.println();
       Serial.println();      
@@ -88,11 +85,9 @@ void loop() {
       thermostatId ++;
       pos = 0;
       loops = 0;
-      //i += 1;
-      //break;
     }
   }
 
-  Serial.println("delaying 3 sec before the next cycle ...");
-  delay(3000);
+  Serial.println("delaying 2 sec before the next cycle ...");
+  delay(2000);
 }
