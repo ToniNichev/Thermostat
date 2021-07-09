@@ -2,7 +2,7 @@
 
 RF24 RFCommunicatorRadio(9, 8);  // CE, CSN
 //address through which two modules communicate.
-const byte RFCommunicatorAddress[][6] = {"00001", "00002"};
+const byte RFCommunicatorAddress[][6] = {"00001", "00002", "00003", "00004", "00005"};
 const byte RFCommunicatorAddressNewDevice[6] = "00002";
 short int RFCommunicatorMode = 0;
 
@@ -22,7 +22,7 @@ bool RFCommunicatorListen(char data[], short int channel) {
   else {
     if (RFCommunicatorRadio.available())
     {
-      Serial.println("Data coming ...");
+      //Serial.println("Data coming ...");
       char text[100] = {0};
       RFCommunicatorRadio.read(&text, sizeof(text));
       strcpy(data, text);
