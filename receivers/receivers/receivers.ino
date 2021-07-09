@@ -38,7 +38,7 @@ void loop() {
   delay(50);
 
   Serial.print("Waiting for data from the HUB on channel :");
-  Serial.print("1");
+  Serial.print(thermostatId);
   Serial.println();
   Serial.println();  
 
@@ -50,7 +50,7 @@ void loop() {
   Serial.print(serverData);
   Serial.println();
   Serial.println();
-  delay(2000);  
+  delay(3000);  
 
   hum = dht.readHumidity();
   temp = dht.readTemperature();  
