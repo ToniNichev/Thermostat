@@ -4,9 +4,9 @@
 
 char serverData[100] = {0};
 int len;
-int loops = 0;
 char thermostatsData[100] = "";      
-
+      char temp[32] = "";
+      
 void setup() {
   Serial.begin(9600);
   RFCommunicatorSetup();
@@ -49,9 +49,9 @@ void loop() {
     pos ++;
     if(serverData[i] == ']') {      
       RFCommunicatorSend(data, thermostatId);          
-      Serial.print("send data to thermostat (");
+      Serial.print(">>> (");
       Serial.print(thermostatId);
-      Serial.println(") : ");
+      Serial.print(") : ");
       Serial.print(data);
       Serial.println();
       Serial.println();      
@@ -60,34 +60,41 @@ void loop() {
       }
       
       delay(1000);
-      char temp[32] = "";
-      Serial.print("waiting for thermostat data...");
+
+      Serial.print("waiting for thermostat (");
+      Serial.print(thermostatId);
+      Serial.print(") data ...");
       Serial.println();
+      int loops = 0;
       while(RFCommunicatorListen(temp, thermostatId)!= true) {
         loops ++;
-        delay(1);
-        if(loops > 5000) {
+        delay(100);
+
+        if(loops > 50) {
           Serial.print("Hub didn't hear from thermostat (");
           Serial.print(thermostatId);
           Serial.print(") for more than ");
           Serial.print(loops);
-          Serial.print(" cycles. Skipping ..."); 
+          Serial.println(" cycles. Skipping ..."); 
+          RFCommunicatorReset();
           break;
         }
       }
-      strcat(thermostatsData, temp);
-      Serial.print("Received data from thermostat (");
-      Serial.print(thermostatId);
-      Serial.print(") : ");
-      Serial.print(temp);
-      Serial.println();
-      Serial.println();          
+      if(loops < 50) {
+        strcat(thermostatsData, temp);
+        Serial.print("<<< (");
+        Serial.print(thermostatId);
+        Serial.print(") : ");
+        Serial.print(temp);
+        Serial.println();
+        Serial.println();          
+      }
       thermostatId ++;
       pos = 0;
       loops = 0;
     }
   }
 
-  Serial.println("delaying 2 sec before the next cycle ...");
-  delay(2000);
+  Serial.println("delaying 4 sec before the next cycle ...");
+  delay(4000);
 }
