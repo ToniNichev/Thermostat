@@ -4,7 +4,6 @@
 
 char serverData[100] = {0};
 int len;
-short int programMode = 0;
 int loops = 0;
 char thermostatsData[100] = "";      
 
