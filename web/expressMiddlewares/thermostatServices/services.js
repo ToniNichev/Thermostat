@@ -42,7 +42,7 @@ const getReadings = async (req, res, thermostatData) => {
   // get thermostat object from DB
   // const response = await queries.getThermostatData();
 
-  let result = '[';
+  let result = '';
   for(let i = 0; i < thermostatData.length; i ++) {
     // set up thermostatData with the real data from thermostats
     if(typeof thermostatReadings[i] != 'undefined') {
@@ -50,9 +50,9 @@ const getReadings = async (req, res, thermostatData) => {
       thermostatData[i].curentTemp = thermostatReadings[i][2];
     }
     // get the desired temperature
-    result += thermostatData[i].id + ',' + thermostatData[i].requiredTemp + ',' + thermostatData[i].mode + ','; 
+
+    result += '[' + thermostatData[i].id + ',' + thermostatData[i].requiredTemp + ',' + thermostatData[i].mode + ']'; 
   }
-  result += '0]';
   sendResponse(res, result);
 }
 

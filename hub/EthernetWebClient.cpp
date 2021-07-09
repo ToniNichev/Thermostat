@@ -19,7 +19,7 @@ bool setupEthernetWebClient(char url[100], char Server[100], int ethernetWebClie
     
     //server = *Server;
     // start the Ethernet connection:
-    Serial.println("Initialize Ethernet with DHCP:");
+    Serial.print("Initialize Ethernet with DHCP:");
     if (Ethernet.begin(mac) == 0) {
       Serial.println("Failed to configure Ethernet using DHCP");
       // Check for Ethernet hardware present

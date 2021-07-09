@@ -29,17 +29,18 @@ void loop() {
   strcpy(ethernetURL, "GET /thermostat-services/get-data?data=");
   strcat(ethernetURL, thermostatsData);
   strcat(ethernetURL, " HTTP/1.1");
-  Serial.print("url:");
-  Serial.print(ethernetURL);
-  Serial.println(); 
+  //Serial.print("url:");
+  //Serial.print(ethernetURL);
+  //Serial.println(); 
          
   while(setupEthernetWebClient(ethernetURL, "toni-develops.com", 8061, serverData, len) == false) {
     ; // wait untill get server data
   }
-  Serial.print("server data:");
+  Serial.print("Received WEB server data:");
   Serial.print(serverData);
   Serial.println();
-  programMode = 1;
+  Serial.println();  
+  
   thermostatsData[0] = '\0';
       
   char data[32] = "";
@@ -50,26 +51,45 @@ void loop() {
       break;
     data[pos] = serverData[i];
     pos ++;
-    if(serverData[i] == ']') {
+    if(serverData[i] == ']') {      
       RFCommunicatorSend(data, thermostatId);          
+      Serial.print("send data to thermostat (");
+      Serial.print(thermostatId);
+      Serial.print(") : ");
+      Serial.print(data);
+      Serial.println();
+      Serial.println();      
+      for(short int c = 0; c < 32; c ++) {
+        data[c] = '\0';
+      }
+      
       delay(1000);
       char temp[32] = "";
-      //Serial.print("waiting for thermostat data...");
+      Serial.print("waiting for thermostat data...");
       Serial.println();
       while(RFCommunicatorListen(temp, thermostatId)!= true) {
         loops ++;
-        //Serial.println(loops);
+        delay(1);
+        if(loops > 5000) {
+          Serial.print("Hub didn't hear from thermostat (");
+          Serial.print(thermostatId);
+          Serial.print(") for more than ");
+          Serial.print(loops);
+          Serial.print(" cycles. Skipping ..."); 
+          break;
+        }
       }
       strcat(thermostatsData, temp);
-      Serial.print("thermostat ");
+      Serial.print("Received data from thermostat (");
       Serial.print(thermostatId);
-      Serial.print(" data: ");
+      Serial.print(") : ");
       Serial.print(temp);
       Serial.println();
       Serial.println();          
       thermostatId ++;
       pos = 0;
-      i += 1;
+      loops = 0;
+      //i += 1;
       //break;
     }
   }
