@@ -1,11 +1,6 @@
 #include <Ethernet.h>
 #include "EthernetWebClient.h"
 #include "RFCommunicator.h"
-
-char serverData[100] = {0};
-int len;
-char thermostatsData[100] = "";      
-      char temp[32] = "";
       
 void setup() {
   Serial.begin(9600);
@@ -21,13 +16,16 @@ void setup() {
 
 void loop() {
   char ethernetURL[100] = "";
+  char thermostatsData[100] = ""; 
   Serial.println();
   Serial.println(" -------------------------------------------------------- ");
 
   strcpy(ethernetURL, "GET /thermostat-services/get-data?data=");
   strcat(ethernetURL, thermostatsData);
   strcat(ethernetURL, " HTTP/1.1");
-         
+  
+  char serverData[100] = {0};  
+  int len;       
   while(setupEthernetWebClient(ethernetURL, "toni-develops.com", 8061, serverData, len) == false) {
     ; // wait untill get server data
   }
@@ -36,7 +34,7 @@ void loop() {
   Serial.println();
   Serial.println(" -------------------------------------------------------- ");
   Serial.println();
-  
+
   thermostatsData[0] = '\0';
       
   char data[32] = "";
@@ -54,10 +52,10 @@ void loop() {
       Serial.print(") : ");
       Serial.print(data);
       Serial.println();
-      Serial.println();      
-      for(short int c = 0; c < 32; c ++) {
-        data[c] = '\0';
-      }
+      Serial.println(); 
+
+      // clead data
+      memset(data, 0, 32);
       
       delay(1000);
 
@@ -66,6 +64,7 @@ void loop() {
       Serial.print(") data ...");
       Serial.println();
       int loops = 0;
+      char temp[32] = "";
       while(RFCommunicatorListen(temp, thermostatId)!= true) {
         loops ++;
         delay(100);
@@ -95,6 +94,6 @@ void loop() {
     }
   }
 
-  Serial.println("delaying 4 sec before the next cycle ...");
-  delay(4000);
+  Serial.println("delaying 3 sec before the next cycle ...");
+  delay(3000);
 }
