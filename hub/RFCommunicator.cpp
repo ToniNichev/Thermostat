@@ -18,9 +18,6 @@ bool RFCommunicatorListen(char data[], short int channel) {
   //Serial.println("........RFCommunicatorListen ...........");
   //Serial.println(RFCommunicatorMode );
   if(RFCommunicatorMode == 0) {
-    //Serial.println("...................");
-    //Serial.println(channel);
-    //RFCommunicatorRadio.begin();
     RFCommunicatorRadio.openReadingPipe(0, RFCommunicatorAddress[channel]);
     RFCommunicatorRadio.startListening();   
     //Serial.println("Listening ...");
