@@ -3,10 +3,8 @@
 
 char ethernetWebClientServerName[100]; // name address for Google (using DNS)
 
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+
 // Set the static IP address to use if the DHCP fails to assign
-IPAddress ip(192, 168, 0, 177);
-IPAddress myDns(192, 168, 0, 1);
 EthernetClient client;
 
 unsigned int ethernetDataBufferLen = 0;
@@ -15,6 +13,10 @@ short int ethernetMode = 0;
 
 bool setupEthernetWebClient(char url[100], char Server[100], int ethernetWebClientPort, char ethernetServerData[], int serverDataLen) {
   if(ethernetMode == 0) {
+    byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+    IPAddress ip(192, 168, 0, 177);
+    IPAddress myDns(192, 168, 0, 1);
+    
     strcpy(ethernetWebClientServerName,Server);
     
     //server = *Server;
