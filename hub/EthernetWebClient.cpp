@@ -50,8 +50,7 @@ bool setupEthernetWebClient(char url[100], char Server[100], int ethernetWebClie
     if (client.connect(ethernetWebClientServerName, ethernetWebClientPort)) {
       Serial.print("connected to ");
       Serial.println(client.remoteIP());
-      // Make a HTTP request:
-      //client.println("GET /thermostat-services/get-data?data=[] HTTP/1.1");
+
       client.println(url);
       //client.println("Host: www.google.com");
       client.println("Connection: close");

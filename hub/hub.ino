@@ -1,6 +1,8 @@
 #include <Ethernet.h>
 #include "EthernetWebClient.h"
 #include "RFCommunicator.h"
+
+char thermostatsData[100] = ""; 
       
 void setup() {
   Serial.begin(9600);
@@ -16,19 +18,25 @@ void setup() {
 
 void loop() {
   char ethernetURL[100] = "";
-  char thermostatsData[100] = ""; 
   Serial.println();
   Serial.println(" -------------------------------------------------------- ");
 
   strcpy(ethernetURL, "GET /thermostat-services/get-data?data=");
   strcat(ethernetURL, thermostatsData);
   strcat(ethernetURL, " HTTP/1.1");
-  
+
+  Serial.println();
+  Serial.print("Request to Web server :");
+  Serial.print(ethernetURL);
+  Serial.println();
+  Serial.println("- - -");
+    
   char serverData[100] = {0};  
   int len;       
   while(setupEthernetWebClient(ethernetURL, "toni-develops.com", 8061, serverData, len) == false) {
     ; // wait untill get server data
   }
+
   Serial.print("Received WEB server data:");
   Serial.print(serverData);
   Serial.println();
@@ -40,7 +48,7 @@ void loop() {
   char data[32] = "";
   short int thermostatId = 0;
   int pos = 0;
-  for(int i = 0; i < 50; i ++) {
+  for(int i = 0; i < 100; i ++) {
     if(serverData[i] == '\0')
       break;
     data[pos] = serverData[i];

@@ -47,6 +47,7 @@ app.use('/dist', express.static('dist')); // to serve frontent prod static files
 app.use('/favicon.ico', express.static('./static-assets/favicon.ico'));
 
 function response(req, res, apiData, templateName) {
+  console.log(">>>>>>>>>>>>>>>>>>>>>> response");
   // make APP data available for SSR and browser.
   global.__API_DATA__ = apiData;
   const Html = templateList[templateName];
@@ -60,7 +61,6 @@ function response(req, res, apiData, templateName) {
   );
 
   
-  console.log(">>> Extract CSS and JS bundles");
   // Extract CSS and JS bundles
   const bundles = getBundles(manifest, modules); 
   const cssBundles = bundles.filter(bundle => bundle && bundle.file.split('.').pop() === 'css');
@@ -171,7 +171,6 @@ app.get('/services/data', async (req, res) => {
 app.get('/*', 
   requestDataFromAPI, 
   function (req, res, next) {
-    console.log("@@#@#@@");
    response(req, res, req.apiData, req.templateName);
 });
 

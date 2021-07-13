@@ -1,6 +1,3 @@
-import queries from '../../src/queries';
-
-
 const sendResponse = (res, responseString) => {
 
   //res

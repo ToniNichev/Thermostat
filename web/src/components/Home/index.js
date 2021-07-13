@@ -92,13 +92,23 @@ class Home extends Component {
             <div className={styles.title}>Thermostats</div>
               {Thermostats.map( (flag, flagId) => {
                 const id = parseInt(flag.id);
+                const key = `thermostat-control-${id}`;
                 return(
-                <div key={flag.flagName} className={styles.flagWrapper}>
-                  <BulletPoint flagName={flag.flagName} status={this.state.flagEditable} />
+                <div key={key} className={styles.flagWrapper}>
+                  <p>{key}</p>
+                  <BulletPoint flagName={flag.ThermostatName} status={this.state.flagEditable} />
                   <span className={styles.flagName}>{flag.flagName}</span>
                   <hr/>
-                  <span className={styles.flagValue}><ToggleSwitch featureFlagName={flag.flagName} val={flag.value} /></span>
-                  <RangeSlider onChangeCallback={this.onChangeTemperatureCallback} SliderId={id} Min='0' Max='90' SetRangeValue={ (func) => { this.changeRange[id] = func;  } } setTempAndHumidity={ (func) => { this.setTempAndHumidity[id] = func;  } } />                  
+                  <span className={styles.flagValue}>
+                    <ToggleSwitch featureFlagName={flag.ThermostatName} val={flag.value} />
+                  </span>
+                  <RangeSlider 
+                    onChangeCallback={this.onChangeTemperatureCallback} 
+                    SliderId={id} 
+                    Min='0' 
+                    Max='90' 
+                    SetRangeValue={ (func) => { this.changeRange[id] = func;  } } 
+                    setTempAndHumidity={ (func) => { this.setTempAndHumidity[id] = func;  } } />                  
                   ID: {id}
                 </div>);}
               )}
