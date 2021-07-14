@@ -7,7 +7,6 @@
 
 .wrapper {
   background: rgb(243, 243, 247);
-  display:flex;
   color: black;
 } 
 
@@ -17,7 +16,6 @@
 }
 
 .leftRail {
-  width:90%;
   text-align: left;
 }
 
@@ -49,9 +47,4 @@ button:hover {
 
 .addButtonHidden {
   display: none;
-}
-
-
-.flagValue {
-  float: right;
 }

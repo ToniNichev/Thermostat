@@ -47,7 +47,6 @@ app.use('/dist', express.static('dist')); // to serve frontent prod static files
 app.use('/favicon.ico', express.static('./static-assets/favicon.ico'));
 
 function response(req, res, apiData, templateName) {
-  console.log(">>>>>>>>>>>>>>>>>>>>>> response");
   // make APP data available for SSR and browser.
   global.__API_DATA__ = apiData;
   const Html = templateList[templateName];
@@ -143,7 +142,6 @@ app.get('/services/data', async (req, res) => {
   const data = JSON.parse(req.query.data);
   const thermostats = data[0];
 
-  console.log(">>>", data);
   let offset = 1;
 
   for(let i = 0; i < thermostats; i ++) {

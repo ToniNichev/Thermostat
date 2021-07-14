@@ -1,83 +1,42 @@
 .wrapper {
+  
 
-  .circle {
-    position: relative;
-    top: 10px;
-    left: 10px;
-    background-color: #abecd3;
-    border-radius: 50%;
-    width: 200px;
-    height: 200px;
-    /* padding-bottom: 25%;
-    transform: translate3d(-50%, -50%, 0);
-    */
-    box-shadow: 0 0 10px grrgb(0,0, 0 / 50%);
+  .labels {
+    width: 100%;
+
+    padding-right: 10%;
+
+    span {
+      padding-left: 25%;
+    }
   }
 
-  .circle:before {
-    content: "";
-    position: absolute;
-    width: 90%;
-    height: 90%;
-    background-color: #ecf0f1;
-    border-radius: 50%;
-    top: 5%;
-    left: 5%;
-    box-shadow: inset 0 0 10px rgb(0,0,0 / 50%);
+  input[type=range] {
+    height: 45px;
+    -webkit-appearance: none;
+    margin: 10px 0;
+    width: 100%;
   }
-  
-  .circle .dot {
-    position: absolute;
-    width: 5%;
-    height: 50%;
-    left: 47.5%;
-    top: 0;
-    transform: rotate(0deg);
-    transform-origin: center bottom;
-  } 
-  
-  .circle .dot:before {
-    content: "";
-    position: absolute;
-    background-color: #fff;
-    box-shadow: 0 0 10px #000;
-    width: 300%;
-    transform: translate3d(-25%, -25%, 0);
-    height: 0;
-    padding-bottom: 300%;
-    border-radius: 80%;
+
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 27px;
     cursor: pointer;
-  }  
-
-  .circle .dot:active {
-    width: 10%;
-    padding-bottom: 10%;
-    left: 44%;
+    animate: 1.2s;
+    box-shadow: 0px 0px 0px #000000;
+    background: #B6B6B6;
+    border-radius: 5px;
+    border: 1px solid #8A8A8A;
   }
-
-  .labelPrimary, .labelSecondary {
-    position: relative;
-    top: 40%;
-    text-align: center;
-    font-size: 22px;
+  input[type=range]::-webkit-slider-thumb {
+    box-shadow: 1px 1px 1px #828282;
+    border: 1px solid #8A8A8A;
+    height: 37px;
+    width: 46px;
+    border-radius: 4px;
+    background: #DADADA;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -6px;
   }  
-
-  .labelSecondary {
-    top: 50%;
-    font-size: 18px;    
-  }
-
-}
-
-
-*, *:before, *:after {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  outline: 0;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }

@@ -6,6 +6,7 @@ import AddFlagPopup from '../AddFlagPopup';
 import {Poster} from '../../utils/Poster';
 import EditDelete from '../EditDelete';
 import { apiUrl } from '../../utils/getParams';
+import Dialer from '../Dialer';
 import RangeSlider from '../RangeSlider';
 import TemperatureBar from '../TemperatureBar';
 
@@ -62,13 +63,13 @@ class Home extends Component {
         for(let i = 0; i < data.length; i ++) {
           const id = data[i].id;
           const curentTemp = data[i].curentTemp;
+          const curentHumidity = data[0].humidity;
           const requiredTemp = data[i].requiredTemp;
             if(typeof this.changeRange[i] != 'undefined') {
               this.changeRange[i](requiredTemp);
-              this.setTempAndHumidity[i](55.55, curentTemp);
+              this.setTempAndHumidity[i](curentHumidity, curentTemp);
             }
         }
-
         
         setTimeout( () => {
           this.fetchData();
@@ -84,6 +85,23 @@ class Home extends Component {
       });
   }
 
+
+  onChangeThermostatModeCallback = (thermostatId, requiredMode) => {
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-thermostat-mode?data=[${thermostatId},${requiredMode}]`)
+      .then(response => response.json())
+      .then(data => { 
+      });
+  }  
+  
+
+  onChangeThermostatFanCallback = (thermostatId, requiredMode) => {
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-thermostat-fan-mode?data=[${thermostatId},${requiredMode}]`)
+      .then(response => response.json())
+      .then(data => { 
+      });
+  }  
+  
+
   render() {
     const Thermostats = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
     return (
@@ -93,23 +111,34 @@ class Home extends Component {
               {Thermostats.map( (flag, flagId) => {
                 const id = parseInt(flag.id);
                 const key = `thermostat-control-${id}`;
+                const thermostatModeKey = "thermostat-mode-${id}";
+                const thermostatFanModeKey = "thermostat-fan-mode-${id}";
+                const thermostatName = flag.ThermostatName;
                 return(
                 <div key={key} className={styles.flagWrapper}>
-                  <p>{key}</p>
                   <BulletPoint flagName={flag.ThermostatName} status={this.state.flagEditable} />
-                  <span className={styles.flagName}>{flag.flagName}</span>
-                  <hr/>
-                  <span className={styles.flagValue}>
-                    <ToggleSwitch featureFlagName={flag.ThermostatName} val={flag.value} />
-                  </span>
+                  <span>{thermostatName}</span>                  
+                  
+
                   <RangeSlider 
+                    key={thermostatModeKey}
+                    onChangeCallback={this.onChangeThermostatModeCallback}  
+                    SetRangeValue={ (func) => { this.setThermostatSliderMode[id] = func;  } } 
+                    SliderId={id} labels={['OFF', 'COOL', 'HOT' ]} />
+
+                  <p>FAN MODE</p>
+                  <RangeSlider 
+                    key={thermostatFanModeKey}
+                    onChangeCallback={this.onChangeThermostatFanCallback}  
+                    SliderId={id} labels={['AUTO', 'HIGH', 'LOW' ]} />
+
+                  <Dialer 
                     onChangeCallback={this.onChangeTemperatureCallback} 
                     SliderId={id} 
                     Min='0' 
                     Max='90' 
                     SetRangeValue={ (func) => { this.changeRange[id] = func;  } } 
                     setTempAndHumidity={ (func) => { this.setTempAndHumidity[id] = func;  } } />                  
-                  ID: {id}
                 </div>);}
               )}
           </div>      

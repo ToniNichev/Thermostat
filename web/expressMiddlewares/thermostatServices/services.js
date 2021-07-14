@@ -63,8 +63,30 @@ const setDesiredTemperature = async (req, res, thermostatData) => {
   sendResponse(res, result);
 }
 
+const setThermostatMode = async (req, res, thermostatData) => {
+  const tempDataString = req.query.data;
+  const tempData = JSON.parse(tempDataString);
+  const id = tempData[0];
+  const mode = tempData[1];
+  thermostatData[id].mode = mode;
+  const result = `{'status': 'success'}`;
+  sendResponse(res, result);
+}
+
+const setThermostatFanMode = async (req, res, thermostatData) => {
+  const tempDataString = req.query.data;
+  const tempData = JSON.parse(tempDataString);
+  const id = tempData[0];
+  const mode = tempData[1];
+  thermostatData[id].fanMode = mode;
+  const result = `{'status': 'success'}`;
+  sendResponse(res, result);
+}
+
 export { 
   getFullReadings,
   getReadings,
-  setDesiredTemperature
+  setDesiredTemperature,
+  setThermostatMode,
+  setThermostatFanMode
 };
