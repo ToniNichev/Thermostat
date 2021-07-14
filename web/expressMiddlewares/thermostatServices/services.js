@@ -48,7 +48,7 @@ const getReadings = async (req, res, thermostatData) => {
     }
     // get the desired temperature
 
-    result += '[' + thermostatData[i].id + ',' + thermostatData[i].requiredTemp + ',' + thermostatData[i].mode + ']'; 
+    result += '[' + thermostatData[i].id + ',' + thermostatData[i].requiredTemp + ',' + thermostatData[i].mode + ',' + thermostatData[i].fanMode + ']'; 
   }
   sendResponse(res, result);
 }
