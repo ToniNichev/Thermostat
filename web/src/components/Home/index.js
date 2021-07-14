@@ -124,7 +124,7 @@ class Home extends Component {
     return (
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>
-            <div className={styles.title}>Thermostats</div>
+            <div className={styles.title} id="test">Thermostats</div>
               {Thermostats.map( (flag, flagId) => {
                 const id = parseInt(flag.id);
                 const key = `thermostat-control-${id}`;

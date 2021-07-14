@@ -66,14 +66,14 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, SetRangeValue, setTempAnd
   const dialerPressed = () => {
     beginDrag = true;
     onEditingMode(true);
-    document.querySelector('body').style.overflow = 'hidden';    
+    document.querySelector('body').classList.add('preventScrolling');
   }
 
   const dialerReleased = () => {
     beginDrag = false;
     rangeSelectorValueChanged();
     onEditingMode(false);
-    document.querySelector('body').style.overflow = '';    
+    document.querySelector('body').classList.remove('preventScrolling');
   }
 
   useEffect(() => {

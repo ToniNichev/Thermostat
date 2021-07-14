@@ -14,6 +14,15 @@ const client = (props) => (
 
 const context = {};
 
+if(typeof document != 'undefined') {
+  // disable scrolling whern body contains `preventScrolling` class.
+  document.addEventListener("touchmove", (e) => {
+    if(document.querySelector('body').classList.contains('preventScrolling'))
+      e.preventDefault(); 
+  }, {passive: false});  
+}
+
+
 const server = (props) => {
  return (
   <StaticRouter location={ props.url } context={context}>

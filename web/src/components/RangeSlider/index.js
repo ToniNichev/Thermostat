@@ -31,6 +31,7 @@ const RangeSlider = ({name, SliderId, labels, onChangeCallback, SetRangeValue, m
         <input 
           className={[inputId].join(' ')}
           onMouseUp={ (e) => { modeChanged(e) } }
+          onTouchEnd={ (e) => { modeChanged(e) } }
           type="range" 
           min={min} max={max} />  
     </div>
