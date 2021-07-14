@@ -59,7 +59,7 @@ const setDesiredTemperature = async (req, res, thermostatData) => {
   const id = tempData[0];
   const temp = tempData[1];
   thermostatData[id].requiredTemp = temp;
-  const result = `{'status': 'success'}`;
+  const result = `{"status": "success"}`;
   sendResponse(res, result);
 }
 
@@ -69,7 +69,7 @@ const setThermostatMode = async (req, res, thermostatData) => {
   const id = tempData[0];
   const mode = tempData[1];
   thermostatData[id].mode = mode;
-  const result = `{'status': 'success'}`;
+  const result = `{"status": "success"}`;
   sendResponse(res, result);
 }
 
@@ -79,7 +79,7 @@ const setThermostatFanMode = async (req, res, thermostatData) => {
   const id = tempData[0];
   const mode = tempData[1];
   thermostatData[id].fanMode = mode;
-  const result = `{'status': 'success'}`;
+  const result = `{"status": "success"}`;
   sendResponse(res, result);
 }
 

@@ -1,29 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { setThermostatMode } from '../../../expressMiddlewares/thermostatServices/services';
+import React from 'react';
 import styles from './styles.scss';
 
 
-const RangeSlider = ({key, SliderId, labels, onChangeCallback, SetRangeValue}) => {  
+const RangeSlider = ({name, SliderId, labels, onChangeCallback, SetRangeValue, min}) => {  
 
-  const [state, setSlide] = useState(0);
-
-  const max = labels.length - 1;
+  const inputId = `${name}-${SliderId}`;
+  const max = min + labels.length - 1;
   
   const modeChanged = (e) => {
     onChangeCallback(SliderId, e.target.value);
-    setSlide(e.target.value);
   }
 
   const _SetRangeValue = (range) => {
-    console.log(">>>range : ", range, key);
-    //setSlide(range);
-    //document.querySelectorAll('.labelSecondary')[SliderId].innerText = temperature;
-
+    document.querySelector(`.${inputId}`).value = range;
   }
 
   SetRangeValue(_SetRangeValue);
-
-  //setTempAndHumidity(_setTempAndHumidity);  
 
   return (    
     <div className={styles.wrapper}>
@@ -31,16 +23,16 @@ const RangeSlider = ({key, SliderId, labels, onChangeCallback, SetRangeValue}) =
           {
             labels.map( (label, id) => {
               return(
-                <span>{label}</span>
+                <span key={id}>{label}</span>
               );
             })
           }        
         </div>
         <input 
+          className={[inputId].join(' ')}
           onMouseUp={ (e) => { modeChanged(e) } }
-          defaultValue={state}
           type="range" 
-          min="0" max={max} />  
+          min={min} max={max} />  
     </div>
   );
 }

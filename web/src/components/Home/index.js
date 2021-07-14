@@ -68,10 +68,12 @@ class Home extends Component {
           const curentHumidity = data[0].humidity;
           const requiredTemp = data[i].requiredTemp;
           const mode = data[i].mode;
+          const fanMode = data[i].fanMode;
             if(typeof this.changeRange[i] != 'undefined') {
               this.changeRange[i](requiredTemp);
               this.setTempAndHumidity[i](curentHumidity, curentTemp);
               this.setThermostatSliderMode[i](mode);
+              this.setThermostatFanSliderMode[i](fanMode);
             }
         }
         
@@ -124,17 +126,21 @@ class Home extends Component {
                   <span>{thermostatName}</span>                  
 
                   <RangeSlider 
+                    min = {1}
                     key={thermostatModeKey}
+                    name="thermostat-mode-selector"
                     onChangeCallback={this.onChangeThermostatModeCallback}  
-                    SetRangeValue={ (func) => { this.setThermostatSliderMode[id] = func;  } } 
-                    SliderId={id} labels={['OFF', 'COOL', 'HOT' ]} />
+                    SetRangeValue={ (func) => { this.setThermostatSliderMode[id] = func;  } }                     
+                    SliderId={id} labels={['OFF', 'COOL', 'HOT']} />
 
                   <p>FAN MODE</p>
                   <RangeSlider 
+                    min={0}
                     key={thermostatFanModeKey}
+                    name="thermostat-fan-mode-selector"                
                     onChangeCallback={this.onChangeThermostatFanCallback}  
                     SetRangeValue={ (func) => { this.setThermostatFanSliderMode[id] = func;  } } 
-                    SliderId={id} labels={['AUTO', 'LOW', 'HIGH' ]} />
+                    SliderId={id} labels={['AUTO', 'LOW', 'HIGH' ]} />                    
 
                   <Dialer 
                     onChangeCallback={this.onChangeTemperatureCallback} 
