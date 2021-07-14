@@ -19,6 +19,8 @@ class Home extends Component {
     this.changeRange = [];
     this.setTempAndHumidity = [];
     this.setDialersForTheFirstTime = false;
+    this.setThermostatSliderMode = [];
+    this.setThermostatFanSliderMode = [];
 
     this.addFlagVisible = false;
     this.state = {
@@ -65,9 +67,11 @@ class Home extends Component {
           const curentTemp = data[i].curentTemp;
           const curentHumidity = data[0].humidity;
           const requiredTemp = data[i].requiredTemp;
+          const mode = data[i].mode;
             if(typeof this.changeRange[i] != 'undefined') {
               this.changeRange[i](requiredTemp);
               this.setTempAndHumidity[i](curentHumidity, curentTemp);
+              this.setThermostatSliderMode[i](mode);
             }
         }
         
@@ -118,7 +122,6 @@ class Home extends Component {
                 <div key={key} className={styles.flagWrapper}>
                   <BulletPoint flagName={flag.ThermostatName} status={this.state.flagEditable} />
                   <span>{thermostatName}</span>                  
-                  
 
                   <RangeSlider 
                     key={thermostatModeKey}
@@ -130,7 +133,8 @@ class Home extends Component {
                   <RangeSlider 
                     key={thermostatFanModeKey}
                     onChangeCallback={this.onChangeThermostatFanCallback}  
-                    SliderId={id} labels={['AUTO', 'HIGH', 'LOW' ]} />
+                    SetRangeValue={ (func) => { this.setThermostatFanSliderMode[id] = func;  } } 
+                    SliderId={id} labels={['AUTO', 'LOW', 'HIGH' ]} />
 
                   <Dialer 
                     onChangeCallback={this.onChangeTemperatureCallback} 
