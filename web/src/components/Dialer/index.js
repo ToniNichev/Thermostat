@@ -63,25 +63,34 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, SetRangeValue, setTempAnd
     document.querySelectorAll('.labelPrimary')[SliderId].innerText = val;  
   }
 
+  const dialerPressed = () => {
+    beginDrag = true;
+    onEditingMode(true);
+    document.querySelector('body').style.overflow = 'hidden';    
+  }
+
+  const dialerReleased = () => {
+    beginDrag = false;
+    rangeSelectorValueChanged();
+    onEditingMode(false);
+    document.querySelector('body').style.overflow = '';    
+  }
+
   useEffect(() => {
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('touchstart', e => {
-      beginDrag = true;
+      dialerPressed();
     });    
 
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('touchend', e => {
-      beginDrag = false;
-      rangeSelectorValueChanged();
+      dialerReleased();
     });    
 
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('mousedown', e => {
-      beginDrag = true;
-      onEditingMode(true);
+      dialerPressed();
     });
 
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('mouseup', e => {
-      beginDrag = false;
-      rangeSelectorValueChanged();
-      onEditingMode(false);
+      dialerReleased();
     });
 
     document.addEventListener('mousemove', e => {
