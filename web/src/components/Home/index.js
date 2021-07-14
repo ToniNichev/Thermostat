@@ -21,6 +21,7 @@ class Home extends Component {
     this.setDialersForTheFirstTime = false;
     this.setThermostatSliderMode = [];
     this.setThermostatFanSliderMode = [];
+    this.disableFetchData = false;
 
     this.addFlagVisible = false;
     this.state = {
@@ -58,6 +59,14 @@ class Home extends Component {
   }
 
   fetchData = () => {
+    const refreshRate = 2000;
+    if(this.disableFetchData === true) {
+      setTimeout( () => {
+        this.fetchData();
+      }, refreshRate);
+      return;
+    }
+    console.log("fetch ...");
     fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-full-data`)
       .then(response => response.json())
       .then(data => { 
@@ -75,13 +84,15 @@ class Home extends Component {
               this.setThermostatSliderMode[i](mode);
               this.setThermostatFanSliderMode[i](fanMode);
             }
-        }
-        
+        }        
         setTimeout( () => {
           this.fetchData();
-        }, 2000);
-        
+        }, refreshRate);        
       });
+  }
+
+  disableFetch = (mode) => {
+    this.disableFetchData = mode;
   }
 
   onChangeTemperatureCallback = (thermostatId, requiredTemperature) => {
@@ -144,6 +155,7 @@ class Home extends Component {
 
                   <Dialer 
                     onChangeCallback={this.onChangeTemperatureCallback} 
+                    onEditingMode={this.disableFetch}
                     SliderId={id} 
                     Min='0' 
                     Max='90' 

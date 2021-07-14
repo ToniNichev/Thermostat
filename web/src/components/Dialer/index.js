@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styles from './styles.scss';
 
 
-const Dialer = ({onChangeCallback, SliderId, Min, Max, SetRangeValue, setTempAndHumidity}) => {  
+const Dialer = ({onChangeCallback, SliderId, Min, Max, SetRangeValue, setTempAndHumidity, onEditingMode}) => {  
 
   let beginDrag = false;
   let val = 0;
@@ -30,7 +30,6 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, SetRangeValue, setTempAnd
   setTempAndHumidity(_setTempAndHumidity);
 
   SetRangeValue(setValue); // pass setValue to be accessed from parent component.
-  
 
   const mouseMoveAction = (e) => {
     if(beginDrag == false) return;
@@ -76,15 +75,17 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, SetRangeValue, setTempAnd
 
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('mousedown', e => {
       beginDrag = true;
+      onEditingMode(true);
     });
 
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('mouseup', e => {
-        beginDrag = false;
-        rangeSelectorValueChanged();
+      beginDrag = false;
+      rangeSelectorValueChanged();
+      onEditingMode(false);
     });
 
     document.addEventListener('mousemove', e => {
-        mouseMoveAction(e);
+      mouseMoveAction(e);
     });
 
     document.addEventListener('touchmove', e => {
