@@ -3,10 +3,10 @@
 #include "string_to_float.h"
 #include <DHT.h>
 
-//#define RELAY_FAN_LOW 7
-//#define RELAY_FAN_HIGH 6
+#define RELAY_FAN_LOW 7
+#define RELAY_FAN_HIGH 6
 #define RELAY_COOL 5
-//#define RELAY_HEAT 3
+#define RELAY_HEAT 3
 
 
 // thermostat settings
@@ -33,10 +33,10 @@ void setup() {
   Serial.begin(9600);
   dht.begin();
   // set up 4 relay pins
-  //pinMode(RELAY_FAN_LOW, OUTPUT);
-  //pinMode(RELAY_FAN_HIGH, OUTPUT);
+  pinMode(RELAY_FAN_LOW, OUTPUT);
+  pinMode(RELAY_FAN_HIGH, OUTPUT);
   pinMode(RELAY_COOL, OUTPUT);
-  //pinMode(RELAY_HEAT, OUTPUT);
+  pinMode(RELAY_HEAT, OUTPUT);
   delay(20);
   //digitalWrite(RELAY_FAN_LOW, LOW);
   //digitalWrite(RELAY_FAN_HIGH, LOW);
@@ -103,16 +103,37 @@ void loop() {
   delay(2000);
 
   float *serverVals = parseToValues(serverData);
+  short int fanMode = (int) serverVals[3];  
   short int thermostatMode = (int) serverVals[2];
   float requiredTemperature = serverVals[1];
+
+  // Set fan mode
+  switch(fanMode) {
+    case 0:
+      digitalWrite(RELAY_FAN_LOW, LOW);
+      digitalWrite(RELAY_FAN_HIGH, LOW);
+      break;
+    case 1:
+      digitalWrite(RELAY_FAN_LOW, HIGH);
+      digitalWrite(RELAY_FAN_HIGH, LOW);    
+      break;
+    case 2:
+      digitalWrite(RELAY_FAN_LOW, LOW);
+      digitalWrite(RELAY_FAN_HIGH, HIGH);    
+      break;      
+  }
+  
+  // Set temperature
   switch(thermostatMode) {
     case 2:
-      
-      if(requiredTemperature > temp) {
+      // COOL
+      if(temp > requiredTemperature) {
         digitalWrite(RELAY_COOL, HIGH);
+        Serial.println("COOLING: HIGH");
       }
-      else if(requiredTemperature <= temp) {
+      else {
         digitalWrite(RELAY_COOL, LOW);
+        Serial.println("COOLING: LOW");
       }
     
       Serial.println("#####################");
