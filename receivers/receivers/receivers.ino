@@ -1,6 +1,12 @@
 #include <Ethernet.h>
 #include "RFCommunicator.h"
+#include "string_to_float.h"
 #include <DHT.h>
+
+#define RELAY_FAN_LOW 7
+//#define RELAY_FAN_HIGH 6
+//#define RELAY_COOL 5
+//#define RELAY_HEAT 3
 
 
 // thermostat settings
@@ -21,16 +27,30 @@ float hum;  //Stores humidity value
 float temp; //Stores temperature value
 char t[4] = "";
 char msg[32] = "";
+short int thermostatMode = 0;
 
 void setup() {
   Serial.begin(9600);
   dht.begin();
+  // set up 4 relay pins
+  pinMode(RELAY_FAN_LOW, OUTPUT);
+  //pinMode(RELAY_FAN_HIGH, OUTPUT);
+  //pinMode(RELAY_COOL, OUTPUT);
+  //pinMode(RELAY_HEAT, OUTPUT);
+  delay(20);
+  //digitalWrite(RELAY_FAN_LOW, LOW);
+  //digitalWrite(RELAY_FAN_HIGH, LOW);
+  //digitalWrite(RELAY_COOL, LOW);
+  //digitalWrite(RELAY_HEAT, LOW);
+  
   RFCommunicatorSetup();
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }  
   Serial.println("================== PROGRAM STARTED ======================");
 }
+
+
 
 void loop() {
   Serial.println(" -------------------------- ");
@@ -45,7 +65,7 @@ void loop() {
   while(RFCommunicatorListen(serverData, communicationChannel)!=true) {
     delay(1);
   }
-  
+
   Serial.print("Received data from HUB: ");
   Serial.print(serverData);
   Serial.println();
@@ -81,4 +101,23 @@ void loop() {
 
   RFCommunicatorSend(msg, communicationChannel);
   delay(2000);
+
+  float *serverVals = parseToValues(serverData);
+  short int thermostatMode = (int) serverVals[2];
+
+  switch(thermostatMode) {
+    case 2:
+  Serial.print("vals: ");
+  Serial.print(serverVals[1]);
+  Serial.println();      
+  Serial.print("curent temp: ");
+  Serial.print(temp);
+  Serial.println();      
+      break;
+  }
+
+
+  
+  // Set up the actual thermostat mode
+  //digitalWrite(RELAY_FAN_LOW, HIGH);
 }
