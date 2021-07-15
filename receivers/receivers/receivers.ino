@@ -3,14 +3,14 @@
 #include "string_to_float.h"
 #include <DHT.h>
 
-#define RELAY_FAN_LOW 7
+//#define RELAY_FAN_LOW 7
 //#define RELAY_FAN_HIGH 6
-//#define RELAY_COOL 5
+#define RELAY_COOL 5
 //#define RELAY_HEAT 3
 
 
 // thermostat settings
-short int thermostatId = 1;
+short int thermostatId = 0;
 
 // program variables
 char serverData[100] = {0};
@@ -33,9 +33,9 @@ void setup() {
   Serial.begin(9600);
   dht.begin();
   // set up 4 relay pins
-  pinMode(RELAY_FAN_LOW, OUTPUT);
+  //pinMode(RELAY_FAN_LOW, OUTPUT);
   //pinMode(RELAY_FAN_HIGH, OUTPUT);
-  //pinMode(RELAY_COOL, OUTPUT);
+  pinMode(RELAY_COOL, OUTPUT);
   //pinMode(RELAY_HEAT, OUTPUT);
   delay(20);
   //digitalWrite(RELAY_FAN_LOW, LOW);
@@ -104,15 +104,24 @@ void loop() {
 
   float *serverVals = parseToValues(serverData);
   short int thermostatMode = (int) serverVals[2];
-
+  float requiredTemperature = serverVals[1];
   switch(thermostatMode) {
     case 2:
-  Serial.print("vals: ");
-  Serial.print(serverVals[1]);
-  Serial.println();      
-  Serial.print("curent temp: ");
-  Serial.print(temp);
-  Serial.println();      
+      
+      if(requiredTemperature > temp) {
+        digitalWrite(RELAY_COOL, HIGH);
+      }
+      else if(requiredTemperature <= temp) {
+        digitalWrite(RELAY_COOL, LOW);
+      }
+    
+      Serial.println("#####################");
+      Serial.print("vals: ");
+      Serial.print(requiredTemperature);
+      Serial.println();      
+      Serial.print("curent temp: ");
+      Serial.print(temp);
+      Serial.println();      
       break;
   }
 
