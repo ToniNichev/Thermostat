@@ -14,8 +14,9 @@ This is a Smart Thermostat project
     +   |  GND   |  fan low | Electric/ | compressor |         |  fan high |
         |        |          | Auxiliary |   cool     |         |           | 
         |        |          |   heat    |            |         |           |
-
-
+--------|--------|----------|-----------|------------|---------|-----------|
+    +   |  GND   |   P7     |    P3     |     P5     |         |    P6     |
+----------------------------------------------------------------------------
 # Web App
 
 http://localhost:8081/home        

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styles from './styles.scss';
 
 
-const Dialer = ({onChangeCallback, SliderId, Min, Max, SetRangeValue, setTempAndHumidity, onEditingMode}) => {  
+const Dialer = ({onChangeCallback, SliderId, Min, Max, step, SetRangeValue, setTempAndHumidity, onEditingMode}) => {  
 
   let beginDrag = false;
   let val = 0;
