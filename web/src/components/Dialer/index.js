@@ -2,12 +2,27 @@ import React, { useEffect } from 'react';
 import styles from './styles.scss';
 
 
-const Dialer = ({onChangeCallback, SliderId, Min, Max, step, SetRangeValue, setTempAndHumidity, onEditingMode}) => {  
+/**
+ * 
+ * @param {function} onChangeCallback - callback function in the HOC to be called on dialer value changed
+ * @param {number} SliderId
+ * @param {number} Min
+ * @param {number} max
+ * @param {number} Step - steps between value and value + 1 (2 will make the dailer to do 0, 0.5, 1 on drag.) 10 will go through all 10 values between 0 and 1
+ * @param {number} ShowPrecision - how many digints after decimal point to show
+ * @param {function} SetRangeValue - the function in HOC to be called when the value of the dialer should be changed.
+ * @param {function} setTempAndHumidity
+ * @param {function} onEditingMode - returns either the diler is dragged or not. Helpfull to disable update when the user drag it.
+ * 
+ * @returns 
+ */
+const Dialer = ({onChangeCallback, SliderId, Min, Max, Step, ShowPrecision, SetRangeValue, setTempAndHumidity, onEditingMode}) => {  
 
   let beginDrag = false;
   let val = 0;
   const min = parseFloat(Min);
   const max = parseFloat(Max);
+  const step = parseFloat(Step);
   const ratio = 360 / (max - min);
 
   const rangeSelectorValueChanged = () => {
@@ -16,15 +31,15 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, step, SetRangeValue, setT
   }  
 
   const setValue = (val) => {
-    const v = parseFloat(val);
-    const rotateAngle = (360 / max) * val;
+    val = parseFloat(val).toFixed(ShowPrecision);
+    const rotateAngle = (360 / (max - min) ) * val;
     if(typeof document == 'undefined') return;
     document.querySelectorAll('.labelPrimary')[SliderId].innerText = val;      
     document.querySelectorAll('.circle > .dot')[SliderId].style.transform = `rotate(${rotateAngle}deg)`;
   }
 
   const _setTempAndHumidity = (humidity, temperature) => {
-    document.querySelectorAll('.labelSecondary')[SliderId].innerText = temperature;
+    document.querySelectorAll('.labelSecondary')[SliderId].innerText = parseFloat(temperature).toFixed(ShowPrecision);
   }
 
   setTempAndHumidity(_setTempAndHumidity);
@@ -57,9 +72,9 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, step, SetRangeValue, setT
     document.querySelectorAll('.circle > .dot')[SliderId].style.transform = `rotate(${angle}deg)`;
     
     const m = parseFloat(min);
-    const a = Math.round(((angle / ratio) * 100) / 100);
+    const a = (Math.round((angle / ratio) * step) / step);
 
-    val = m + a;
+    val = (m + a).toFixed(ShowPrecision);
     document.querySelectorAll('.labelPrimary')[SliderId].innerText = val;  
   }
 
