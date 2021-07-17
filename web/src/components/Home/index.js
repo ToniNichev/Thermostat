@@ -157,9 +157,10 @@ class Home extends Component {
                     onChangeCallback={this.onChangeTemperatureCallback} 
                     onEditingMode={this.disableFetch}
                     SliderId={id} 
-                    Min='0' 
-                    Max='35' 
-                    step='0.5'
+                    Min={0} 
+                    Max={90} 
+                    Step={2}
+                    ShowPrecision={1}
                     SetRangeValue={ (func) => { this.changeRange[id] = func;  } } 
                     setTempAndHumidity={ (func) => { this.setTempAndHumidity[id] = func;  } } />                  
                 </div>);}
