@@ -126,8 +126,12 @@ void loop() {
   
   // Set temperature
   switch(thermostatMode) {
+    case 1:
+      digitalWrite(RELAY_COOL, LOW);    
+      digitalWrite(RELAY_HEAT, LOW);
     case 2:
       // COOL
+      digitalWrite(RELAY_HEAT, LOW);      
       if(temp > requiredTemperature) {
         digitalWrite(RELAY_COOL, LOW);
         Serial.println("COOLING: LOw");
