@@ -75,7 +75,7 @@ void loop() {
       char temp[32] = "";
       while(RFCommunicatorListen(temp, thermostatId)!= true) {
         loops ++;
-        delay(100);
+        delay(50);
 
         if(loops > 50) {
           Serial.print("Hub didn't hear from thermostat (");
@@ -102,6 +102,6 @@ void loop() {
     }
   }
 
-  Serial.println("delaying 3 sec before the next cycle ...");
-  delay(3000);
+  Serial.println("delaying 2 sec before the next cycle ...");
+  delay(2000);
 }
