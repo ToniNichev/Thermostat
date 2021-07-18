@@ -37,11 +37,12 @@ void setup() {
   pinMode(RELAY_FAN_HIGH, OUTPUT);
   pinMode(RELAY_COOL, OUTPUT);
   pinMode(RELAY_HEAT, OUTPUT);
-  delay(20);
-  //digitalWrite(RELAY_FAN_LOW, LOW);
-  //digitalWrite(RELAY_FAN_HIGH, LOW);
-  //digitalWrite(RELAY_COOL, LOW);
-  //digitalWrite(RELAY_HEAT, LOW);
+
+  // set up all relays to 0
+  digitalWrite(RELAY_FAN_LOW, HIGH);
+  digitalWrite(RELAY_FAN_HIGH, HIGH);
+  digitalWrite(RELAY_COOL, HIGH);
+  digitalWrite(RELAY_HEAT, HIGH);
   
   RFCommunicatorSetup();
   while (!Serial) {
@@ -110,16 +111,16 @@ void loop() {
   // Set fan mode
   switch(fanMode) {
     case 0:
-      digitalWrite(RELAY_FAN_LOW, LOW);
-      digitalWrite(RELAY_FAN_HIGH, LOW);
+      digitalWrite(RELAY_FAN_LOW, HIGH);
+      digitalWrite(RELAY_FAN_HIGH, HIGH);
       break;
     case 1:
-      digitalWrite(RELAY_FAN_LOW, HIGH);
-      digitalWrite(RELAY_FAN_HIGH, LOW);    
-      break;
-    case 2:
       digitalWrite(RELAY_FAN_LOW, LOW);
       digitalWrite(RELAY_FAN_HIGH, HIGH);    
+      break;
+    case 2:
+      digitalWrite(RELAY_FAN_LOW, HIGH);
+      digitalWrite(RELAY_FAN_HIGH, LOW);    
       break;      
   }
   
@@ -128,12 +129,12 @@ void loop() {
     case 2:
       // COOL
       if(temp > requiredTemperature) {
-        digitalWrite(RELAY_COOL, HIGH);
-        Serial.println("COOLING: HIGH");
+        digitalWrite(RELAY_COOL, LOW);
+        Serial.println("COOLING: LOw");
       }
       else {
-        digitalWrite(RELAY_COOL, LOW);
-        Serial.println("COOLING: LOW");
+        digitalWrite(RELAY_COOL, HIGH);
+        Serial.println("COOLING: HIGH");
       }
     
       Serial.println("#####################");
