@@ -34,12 +34,13 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, Step, ShowPrecision, SetR
     val = parseFloat(val).toFixed(ShowPrecision);
     const rotateAngle = (360 / (max - min) ) * val;
     if(typeof document == 'undefined') return;
-    document.querySelectorAll('.labelPrimary')[SliderId].innerText = val;      
+    document.querySelectorAll('.labelPrimary')[SliderId].innerText = val + ' °C';      
     document.querySelectorAll('.circle > .dot')[SliderId].style.transform = `rotate(${rotateAngle}deg)`;
   }
 
   const _setTempAndHumidity = (humidity, temperature) => {
-    document.querySelectorAll('.labelSecondary')[SliderId].innerText = parseFloat(temperature).toFixed(ShowPrecision);
+    document.querySelectorAll('.labelSecondary')[SliderId].innerText = parseFloat(temperature).toFixed(ShowPrecision) + ' °C';
+    document.querySelectorAll('.labelThird')[SliderId].innerText = parseFloat(humidity).toFixed(ShowPrecision);
   }
 
   setTempAndHumidity(_setTempAndHumidity);
@@ -124,6 +125,7 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, Step, ShowPrecision, SetR
       <div className={[styles.circle, 'circle'].join(' ')}>
         <div className={[styles.labelPrimary, 'labelPrimary'].join(' ')}> -- </div>
         <div className={[styles.labelSecondary, 'labelSecondary'].join(' ')}> -- </div>
+        <div className={[styles.labelThird, 'labelThird'].join(' ')}> -- </div>
         <div className={[styles.dot, 'dot'].join(' ')}></div>
       </div>
     </div>

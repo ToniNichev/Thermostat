@@ -1,4 +1,7 @@
 .wrapper {
+
+  font-family: 'DigitalDisplay';
+
   @media only screen and (min-width: 600px) {
     margin: auto;
     width: 50%;  
@@ -62,17 +65,22 @@
     left: 44%;
   }
 
-  .labelPrimary, .labelSecondary {
+  .labelPrimary, .labelSecondary, .labelThird {
     position: relative;
-    top: 40%;
+    top: 35%;
     text-align: center;
-    font-size: 22px;
+    font-size: 42px;
   }  
 
   .labelSecondary {
-    top: 50%;
-    font-size: 18px;    
+    top: 40%;
+    font-size: 25px;    
   }
+
+  .labelThird {
+    top: 45%;
+    font-size: 25px;    
+  }  
 
 }
 

@@ -1,4 +1,11 @@
 @font-face {
+  font-family: 'DigitalDisplay';
+  src:  url('../../fonts/digital-display.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'MyFont';
   src:  url('../../fonts/aclonica/aclonica-regular.woff2') format('woff2');
   font-weight: 600;
