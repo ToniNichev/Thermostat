@@ -126,11 +126,16 @@ void loop() {
   
   // Set temperature
   switch(thermostatMode) {
+    case 1:
+      digitalWrite(RELAY_COOL, HIGH);    
+      digitalWrite(RELAY_HEAT, HIGH);
+      break;
     case 2:
       // COOL
+      digitalWrite(RELAY_HEAT, HIGH);      
       if(temp > requiredTemperature) {
         digitalWrite(RELAY_COOL, LOW);
-        Serial.println("COOLING: LOw");
+        Serial.println("COOLING: LOW");
       }
       else {
         digitalWrite(RELAY_COOL, HIGH);
@@ -138,7 +143,7 @@ void loop() {
       }
     
       Serial.println("#####################");
-      Serial.print("vals: ");
+      Serial.print("required mtemperature: ");
       Serial.print(requiredTemperature);
       Serial.println();      
       Serial.print("curent temp: ");
@@ -146,9 +151,4 @@ void loop() {
       Serial.println();      
       break;
   }
-
-
-  
-  // Set up the actual thermostat mode
-  //digitalWrite(RELAY_FAN_LOW, HIGH);
 }
