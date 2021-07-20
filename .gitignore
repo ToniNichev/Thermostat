@@ -23,3 +23,6 @@ source-maps/
 .nvmrc
 .DS_store
 server-build/
+api-secrets.txt
+.env
+.env.production
