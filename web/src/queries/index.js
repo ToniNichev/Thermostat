@@ -43,6 +43,7 @@ export default {
      mongoDB.dropDB();
      const obj = [
       {
+        "UserId": "0",
         "ThermostatName" : "Living Room",
         "group": "My home",        
         "id": "0",
@@ -53,6 +54,7 @@ export default {
         "fanMode": "0"
       },
       {
+        "UserId": "0",
         "ThermostatName" : "Bedroom",
         "group": "My home",        
         "id": "1",

@@ -29,10 +29,8 @@ const getInitialDataFromDb = async () => {
 }
 
 const result = getInitialDataFromDb().then((data) => {
-  console.log(">>>>", thermostatData);
   thermostatData = data;
 });
-
 
 console.log("SERVER_PORT: ", SERVER_PORT);
 const app = new express();
@@ -112,7 +110,6 @@ app.get('/Robots.txt', (req, res) => {
   User-agent: * Disallow: /
   `)
 });
-
 
 app.get('/thermostat-services/*', async (req, res) => {
   await thermostatServices(req, res, thermostatData);
