@@ -26,3 +26,4 @@ server-build/
 api-secrets.txt
 .env
 .env.production
+web/.env
