@@ -22,4 +22,5 @@ report.*.json
 source-maps/
 .nvmrc
 .DS_store
-server-build
+server-build/
+web/server-build
