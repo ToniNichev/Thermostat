@@ -19,6 +19,7 @@ const unsetSelectedList = (id) => {
 }
 
 
+
 EventsManager.registerEvent('getSelectedList' ,getSelectedList);
 EventsManager.registerEvent('setSelectedList' ,setSelectedList);
 EventsManager.registerEvent('unsetSelectedList' ,unsetSelectedList);
@@ -27,9 +28,8 @@ EventsManager.registerEvent('unsetSelectedList' ,unsetSelectedList);
 const Header = ( {title} ) => (
   <div>
     <div className={styles.wrapper}>      
-      <h2>{ title } { process.env.APP_NAME } </h2>
       <ul>
-        <li><Link to='/home'>FLAGS</Link></li>
+        <li><Link to='/home'>THERMOSTATS</Link></li>
         <li><Link to='/setup'>SETTINGS</Link></li>       
         <li><Link to='/about'>ABOUT</Link></li>
       </ul>

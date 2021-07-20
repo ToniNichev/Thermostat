@@ -9,6 +9,7 @@ import { apiUrl } from '../../utils/getParams';
 import Dialer from '../Dialer';
 import RangeSlider from '../RangeSlider';
 import TemperatureBar from '../TemperatureBar';
+const {WEATHER_API_URL} = process.env;
 
 class Home extends Component {
   
@@ -31,6 +32,7 @@ class Home extends Component {
       thermostats: []
     };
     this.fetchData();
+    this.fetchWeatherData();  
   }  
 
   addFlag() {
@@ -56,6 +58,36 @@ class Home extends Component {
 
   editFlag() {
     this.setState({flagEditable: !this.state.flagEditable});     
+  }
+
+  fetchWeatherData = () => {
+    const refreshRate = 60000;
+  
+    fetch('/weather-services/get-local-weather')
+      .then(response => response.json())
+      .then(data => { 
+        const outsideTemp = data.main.temp;
+        const feelsLike = data.main.feels_like;
+        const humidity = data.main.humidity;
+        const icon = data.weather[0].icon;
+
+        const minTemp = data.main.temp_min;
+        const maxTemp = data.main.temp_max;
+        const pressure = data.main.pressure;
+        //const windSpeed = data.main.wind.speed;
+        document.querySelector('.weatherTitle').innerHTML = 
+          `<div>
+            <img src='weather/icons/${icon}.png' />
+          </div> 
+          <p>outside: <span>${outsideTemp} °C</span>" feels like: <span>${feelsLike} °C</span> humidity: <span>${humidity}</span></p>
+          <p>min temp: <span>${minTemp} °C</span> max temp: <span>${maxTemp} °C</span> pressure: <span>${pressure}</span></p>
+
+          `;
+
+        setTimeout( () => {
+          this.fetchWeatherData();
+        }, refreshRate);        
+      });
   }
 
   fetchData = () => {
@@ -124,7 +156,7 @@ class Home extends Component {
     return (
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>
-            <div className={styles.title} id="test">THERMOSTATS</div>
+            <div className={[styles.weatherTitle, 'weatherTitle'].join(' ')}>...</div>
               {Thermostats.map( (flag, flagId) => {
                 const id = parseInt(flag.id);
                 const key = `thermostat-control-${id}`;
@@ -134,7 +166,7 @@ class Home extends Component {
                 return(
                 <div key={key} className={styles.flagWrapper}>
                   <BulletPoint flagName={flag.ThermostatName} status={this.state.flagEditable} />
-                  <span>{thermostatName}</span>                  
+                  <span className={styles.roomName}>{thermostatName}</span>                  
 
                   <RangeSlider 
                     min = {1}
@@ -144,7 +176,7 @@ class Home extends Component {
                     SetRangeValue={ (func) => { this.setThermostatSliderMode[id] = func;  } }                     
                     SliderId={id} labels={['OFF', 'COOL', 'HOT']} />
 
-                  <p>FAN MODE</p>
+                  <p className={styles.fanModeText}>FAN MODE</p>
                   <RangeSlider 
                     min={0}
                     key={thermostatFanModeKey}

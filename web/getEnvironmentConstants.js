@@ -9,7 +9,8 @@ const frontendConstants = [
   'ASSETS_SERVER_PORT',
   'ENVIRONMENT',
   'DB_DATABASE_NAME',
-  'DB_DATABASE_PORT'
+  'DB_DATABASE_PORT',
+  'WEATHER_API_URL'
 ];
 
 const { NODE_ENV } = process.env;

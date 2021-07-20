@@ -23,4 +23,3 @@ source-maps/
 .nvmrc
 .DS_store
 server-build/
-web/server-build

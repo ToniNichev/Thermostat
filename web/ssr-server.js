@@ -15,6 +15,7 @@ import requestDataFromAPI from './expressMiddlewares/requestDataFromAPI';
 const publicPath = `${process.env.APP_HOST}:${process.env.ASSETS_SERVER_PORT}/dist/`;
 // import pageData from './expressMiddlewares/pageData';
 import thermostatServices from './expressMiddlewares/thermostatServices';
+import weatherServices from './expressMiddlewares/WeatherServices';
 import queries from './src/queries';
 import bodyParser from 'body-parser';
 
@@ -28,6 +29,7 @@ const getInitialDataFromDb = async () => {
 }
 
 const result = getInitialDataFromDb().then((data) => {
+  console.log(">>>>", thermostatData);
   thermostatData = data;
 });
 
@@ -45,6 +47,7 @@ app.use(cookieParser());
 app.use('/server-build', express.static('./server-build'));
 app.use('/dist', express.static('dist')); // to serve frontent prod static files
 app.use('/favicon.ico', express.static('./static-assets/favicon.ico'));
+app.use(express.static('static-assets'));
 
 function response(req, res, apiData, templateName) {
   // make APP data available for SSR and browser.
@@ -115,6 +118,10 @@ app.get('/thermostat-services/*', async (req, res) => {
   await thermostatServices(req, res, thermostatData);
 });
 
+app.get('/weather-services/*', async (req, res) => {
+  await weatherServices(req, res);
+});
+
 
 app.post('/services/setup', async (req, res) => {
   queries.setup();
@@ -134,33 +141,6 @@ app.post('/services/dropdb', async (req, res) => {
   .set('Access-Control-Allow-Origin', '*')
   .set('Access-Control-Allow-Headers', '*')
   .send(respond);  
-});
-
-// All page requests
-app.get('/services/data', async (req, res) => {
-  const response = `#@$[1,4,68.54,28.56]`;
-  const data = JSON.parse(req.query.data);
-  const thermostats = data[0];
-
-  let offset = 1;
-
-  for(let i = 0; i < thermostats; i ++) {
-    offset = i * 3;
-    const id = data[offset];
-    const humidity = data[offset + 1];
-    const curentTemp = data[offset + 2];
-    thermostatsData[i].id = id;
-    thermostatsData[i].humidity = humidity;
-    thermostatsData[i].curentTemp = curentTemp;
-  }
-
-  //const response = JSON.stringify(thermostatsData);
-  res
-  .status(200)
-  .set('Content-Type', 'application/json')
-  .set('Access-Control-Allow-Origin', '*')
-  .set('Access-Control-Allow-Headers', '*')
-  .send(response);  
 });
 
 

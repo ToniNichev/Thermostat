@@ -6,16 +6,20 @@
 }
 
 @font-face {
-  font-family: 'MyFont';
-  src:  url('../../fonts/aclonica/aclonica-regular.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
+  font-family: 'RobotoLight';
+  src:  url('../../fonts/Roboto/Roboto-Light.ttf') format('truetype');
 }
+
+@font-face {
+  font-family: 'RobotoBlack';
+  src:  url('../../fonts/Roboto/Roboto-Black.ttf') format('truetype');
+}
+
 .appWrapper {
   background:#ecf0f1;  
   color: white;
   text-align: center;
-  font-family: MyFont;
+  font-family: RobotoLight;
 }
 
 body {

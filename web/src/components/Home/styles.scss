@@ -1,20 +1,40 @@
-.title {
+.weatherTitle {
   background: #7983e4;
-  color: white;
+  color: #dbd0d0;
   text-align: center;
-  font-family: MyFont;
+  
   padding: 10px;
+
+  span {
+    font-family: DigitalDisplay;
+    font-size: 22px;
+    color: white;
+  }
+
+  img {
+    width: 35px;
+  }
 }
 
 .wrapper {
   background: rgb(243, 243, 247);
   color: black;
+
+  .roomName {
+    
+  }
+
+  .flagWrapper {
+    border: 1px solid silver;
+    padding: 40px;
+  }
+
+  .fanModeText {
+    font-size:13px;
+  }
 } 
 
-.flagWrapper {
-  border: 1px solid silver;
-  padding: 40px;
-}
+
 
 .leftRail {
   text-align: left;
