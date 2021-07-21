@@ -79,9 +79,7 @@ class Home extends Component {
           `<div>
             <img src='weather/icons/${icon}.png' />
           </div> 
-          <p>outside: <span>${outsideTemp} °C</span>" feels like: <span>${feelsLike} °C</span> humidity: <span>${humidity}</span></p>
-          <p>min temp: <span>${minTemp} °C</span> max temp: <span>${maxTemp} °C</span> pressure: <span>${pressure}</span></p>
-
+          <p>outside: <span>${outsideTemp} °C</span>" feels like: <span>${feelsLike} °C</span> humidity: <span>${humidity}</span></p>        
           `;
 
         setTimeout( () => {

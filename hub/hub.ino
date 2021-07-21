@@ -2,6 +2,9 @@
 #include "EthernetWebClient.h"
 #include "RFCommunicator.h"
 
+#define ethernetUrl "GET /thermostat-services/get-data?data="
+#define ethernetPort 8061
+
 char thermostatsData[100] = ""; 
       
 void setup() {
@@ -21,7 +24,7 @@ void loop() {
   Serial.println();
   Serial.println(" -------------------------------------------------------- ");
 
-  strcpy(ethernetURL, "GET /thermostat-services/get-data?data=");
+  strcpy(ethernetURL, ethernetUrl);
   strcat(ethernetURL, thermostatsData);
   strcat(ethernetURL, " HTTP/1.1");
 
@@ -33,7 +36,7 @@ void loop() {
     
   char serverData[100] = {0};  
   int len;       
-  while(setupEthernetWebClient(ethernetURL, "toni-develops.com", 8061, serverData, len) == false) {
+  while(setupEthernetWebClient(ethernetURL, "toni-develops.com", ethernetPort, serverData, len) == false) {
     ; // wait untill get server data
   }
 
