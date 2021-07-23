@@ -2,10 +2,20 @@
 #include "EthernetWebClient.h"
 #include "RFCommunicator.h"
 
+#define ethernetDomain "toni-develops.com"
 #define ethernetUrl "GET /thermostat-services/get-data?data="
 #define ethernetPort 8061
 
+#define hubId "AXCS12"
+
 char thermostatsData[100] = ""; 
+
+
+void setHubId() {
+  strcpy(thermostatsData, "[\"");
+  strcat(thermostatsData, hubId);  
+  strcat(thermostatsData, "\"]");  
+}
       
 void setup() {
   Serial.begin(9600);
@@ -14,29 +24,33 @@ void setup() {
     ; // wait for serial port to connect. Needed for native USB port only
   }
   Serial.println();
-  Serial.println();  
   Serial.println("================== PROGRAM STARTED ======================");
   delay(200);
 }
 
 void loop() {
-  char ethernetURL[100] = "";
+  char ethernetURL[150] = "";
   Serial.println();
   Serial.println(" -------------------------------------------------------- ");
 
+  if(thermostatsData[0] != '[') {
+    Serial.println("#$#$#$");
+    setHubId();
+  }
+
+  
   strcpy(ethernetURL, ethernetUrl);
   strcat(ethernetURL, thermostatsData);
   strcat(ethernetURL, " HTTP/1.1");
 
   Serial.println();
-  Serial.print("Request to Web server :");
+  Serial.print("Request from Web server >> :");
   Serial.print(ethernetURL);
   Serial.println();
-  Serial.println("- - -");
     
   char serverData[100] = {0};  
   int len;       
-  while(setupEthernetWebClient(ethernetURL, "toni-develops.com", ethernetPort, serverData, len) == false) {
+  while(setupEthernetWebClient(ethernetURL, ethernetDomain, ethernetPort, serverData, len) == false) {
     ; // wait untill get server data
   }
 
@@ -46,7 +60,8 @@ void loop() {
   Serial.println(" -------------------------------------------------------- ");
   Serial.println();
 
-  thermostatsData[0] = '\0';
+  // add hub ID
+  setHubId();
       
   char data[32] = "";
   short int thermostatId = 0;

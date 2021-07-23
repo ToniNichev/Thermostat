@@ -23,6 +23,7 @@ class Home extends Component {
     this.setThermostatSliderMode = [];
     this.setThermostatFanSliderMode = [];
     this.disableFetchData = false;
+    this.hubId = null;
 
     this.addFlagVisible = false;
     this.state = {
@@ -31,8 +32,13 @@ class Home extends Component {
 
       thermostats: []
     };
+    // get api data
+    const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
+    this.thermostatsData = apiData.thermostatsData;
+    this.hubId = apiData.hubId;
+    // fetch thermostat and weather data
     this.fetchData();
-    this.fetchWeatherData();  
+    this.fetchWeatherData();      
   }  
 
   addFlag() {
@@ -97,7 +103,7 @@ class Home extends Component {
       return;
     }
     console.log("fetch ...");
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-full-data`)
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-full-data?data=["${this.hubId}"]`)
       .then(response => response.json())
       .then(data => { 
 
@@ -126,7 +132,7 @@ class Home extends Component {
   }
 
   onChangeTemperatureCallback = (thermostatId, requiredTemperature) => {
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-desired-temperature?data=[${thermostatId},${requiredTemperature}]`)
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-desired-temperature?data=["${this.hubId}"][${thermostatId},${requiredTemperature}]`)
       .then(response => response.json())
       .then(data => { 
       });
@@ -134,7 +140,7 @@ class Home extends Component {
 
 
   onChangeThermostatModeCallback = (thermostatId, requiredMode) => {
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-thermostat-mode?data=[${thermostatId},${requiredMode}]`)
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-thermostat-mode?data=["${this.hubId}"][${thermostatId},${requiredMode}]`)
       .then(response => response.json())
       .then(data => { 
       });
@@ -142,7 +148,7 @@ class Home extends Component {
   
 
   onChangeThermostatFanCallback = (thermostatId, requiredMode) => {
-    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-thermostat-fan-mode?data=[${thermostatId},${requiredMode}]`)
+    fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/set-thermostat-fan-mode?data=["${this.hubId}"][${thermostatId},${requiredMode}]`)
       .then(response => response.json())
       .then(data => { 
       });
@@ -150,8 +156,7 @@ class Home extends Component {
   
 
   render() {
-    debugger;
-    const Thermostats = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
+    const Thermostats = this.thermostatsData;
     return (
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>
@@ -159,12 +164,12 @@ class Home extends Component {
               {Thermostats.map( (thermostat, tId) => {
                 const id = parseInt(thermostat.thermostatId);
                 const key = `thermostat-control-${id}`;
-                const thermostatModeKey = "thermostat-mode-${id}";
-                const thermostatFanModeKey = "thermostat-fan-mode-${id}";
-                const thermostatName = thermostat.ThermostatName;
+                const thermostatModeKey = `thermostat-mode-${id}`;
+                const thermostatFanModeKey = `thermostat-fan-mode-${id}`;
+                const thermostatName = thermostat.thermostatName;
                 return(
                 <div key={key} className={styles.flagWrapper}>
-                  <BulletPoint flagName={thermostat.ThermostatName} status={this.state.flagEditable} />
+                  <BulletPoint flagName={thermostatName} status={this.state.flagEditable} />
                   <span className={styles.roomName}>{thermostatName}</span>                  
 
                   <RangeSlider 

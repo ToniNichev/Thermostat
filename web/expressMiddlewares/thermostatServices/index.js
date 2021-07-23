@@ -15,24 +15,25 @@ const stringToObject = (str) => {
 
 const dispatch = async (req, res, thermostatsData) => {
     const action = req.params[0];
-    const thermostatResponse = stringToObject(req.query.data);
-    const hubId = thermostatResponse[0][0];
+    const requestData = stringToObject(req.query.data);
+    const hubId = requestData[0][0];
+    console.log(">>>", hubId)
     switch(action) {
         case 'get-full-data':
             await getFullReadings(req, res, thermostatsData[hubId]);
             break;
         case 'get-data':
             //await getReadings(req, res, thermostatData);
-            getReadings(req, res, thermostatsData[hubId], thermostatResponse);
+            getReadings(req, res, thermostatsData[hubId], requestData);
             break;   
         case 'set-desired-temperature': 
-            await setDesiredTemperature(req, res, thermostatData);
+            await setDesiredTemperature(req, res, thermostatsData[hubId], requestData);
             break;
         case 'set-thermostat-mode': 
-            await setThermostatMode(req, res, thermostatData);
+            await setThermostatMode(req, res, thermostatsData[hubId], requestData);
             break;  
         case 'set-thermostat-fan-mode': 
-            await setThermostatFanMode(req, res, thermostatData);
+            await setThermostatFanMode(req, res, thermostatsData[hubId], requestData);
             break;            
     }
 }

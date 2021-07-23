@@ -35,7 +35,7 @@ const getReadings = async (req, res, thermostatData, thermostatResponse) => {
   
   for(let i = 0; i < thermostatData.length; i ++) {
     // set up thermostatData with the real data from thermostats
-    if(typeof thermostatResponse[i] != 'undefined') {
+    if(typeof thermostatResponse[i] != 'undefined' && thermostatResponse.length > 1) {
       // thermostatResponse[0][0] is the hub ID
       thermostatData[i].humidity = thermostatResponse[i + 1][1];
       thermostatData[i].curentTemp = thermostatResponse[i + 1][2];
@@ -46,31 +46,28 @@ const getReadings = async (req, res, thermostatData, thermostatResponse) => {
   sendResponse(res, result);
 }
 
-const setDesiredTemperature = async (req, res, thermostatData) => {
-  const tempDataString = req.query.data;
-  const tempData = JSON.parse(tempDataString);
-  const id = tempData[0];
-  const temp = tempData[1];
+const setDesiredTemperature = async (req, res, thermostatData, requestData) => {
+  const data = requestData[1];
+  const id = data[0];
+  const temp = data[1];
   thermostatData[id].requiredTemp = temp;
   const result = `{"status": "success"}`;
   sendResponse(res, result);
 }
 
-const setThermostatMode = async (req, res, thermostatData) => {
-  const tempDataString = req.query.data;
-  const tempData = JSON.parse(tempDataString);
-  const id = tempData[0];
-  const mode = tempData[1];
+const setThermostatMode = async (req, res, thermostatData, requestData) => {
+  const data = requestData[1];
+  const id = data[0];
+  const mode = data[1];
   thermostatData[id].mode = mode;
   const result = `{"status": "success"}`;
   sendResponse(res, result);
 }
 
-const setThermostatFanMode = async (req, res, thermostatData) => {
-  const tempDataString = req.query.data;
-  const tempData = JSON.parse(tempDataString);
-  const id = tempData[0];
-  const mode = tempData[1];
+const setThermostatFanMode = async (req, res, thermostatData, requestData) => {
+  const data = requestData[1];
+  const id = data[0];
+  const mode = data[1];
   thermostatData[id].fanMode = mode;
   const result = `{"status": "success"}`;
   sendResponse(res, result);
