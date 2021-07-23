@@ -24,20 +24,17 @@ void setup() {
     ; // wait for serial port to connect. Needed for native USB port only
   }
   Serial.println();
-  Serial.println("================== PROGRAM STARTED ======================");
+  Serial.println("PROGRAM STARTED");
   delay(200);
 }
 
 void loop() {
   char ethernetURL[150] = "";
   Serial.println();
-  Serial.println(" -------------------------------------------------------- ");
 
   if(thermostatsData[0] != '[') {
-    Serial.println("#$#$#$");
     setHubId();
   }
-
   
   strcpy(ethernetURL, ethernetUrl);
   strcat(ethernetURL, thermostatsData);
@@ -56,8 +53,6 @@ void loop() {
 
   Serial.print("Received WEB server data:");
   Serial.print(serverData);
-  Serial.println();
-  Serial.println(" -------------------------------------------------------- ");
   Serial.println();
 
   // add hub ID
@@ -78,17 +73,12 @@ void loop() {
       Serial.print(") : ");
       Serial.print(data);
       Serial.println();
-      Serial.println(); 
 
       // clead data
       memset(data, 0, 32);
       
       delay(1000);
 
-      Serial.print("waiting for thermostat (");
-      Serial.print(thermostatId);
-      Serial.print(") data ...");
-      Serial.println();
       int loops = 0;
       char temp[32] = "";
       while(RFCommunicatorListen(temp, thermostatId)!= true) {

@@ -42,9 +42,6 @@ bool setupEthernetWebClient(char url[100], char Server[100], int ethernetWebClie
     }
     // give the Ethernet shield a second to initialize:
     delay(1000);
-    //Serial.print("connecting to ");
-    //Serial.print(ethernetWebClientServerName);
-    //Serial.println("...");
   
     // if you get a connection, report back via serial:
     if (client.connect(ethernetWebClientServerName, ethernetWebClientPort)) {
@@ -52,7 +49,6 @@ bool setupEthernetWebClient(char url[100], char Server[100], int ethernetWebClie
       Serial.println(client.remoteIP());
 
       client.println(url);
-      //client.println("Host: www.google.com");
       client.println("Connection: close");
       client.println();
       ethernetMode = 1;
