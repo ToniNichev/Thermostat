@@ -150,20 +150,21 @@ class Home extends Component {
   
 
   render() {
+    debugger;
     const Thermostats = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
     return (
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>
             <div className={[styles.weatherTitle, 'weatherTitle'].join(' ')}>...</div>
-              {Thermostats.map( (flag, flagId) => {
-                const id = parseInt(flag.id);
+              {Thermostats.map( (thermostat, tId) => {
+                const id = parseInt(thermostat.thermostatId);
                 const key = `thermostat-control-${id}`;
                 const thermostatModeKey = "thermostat-mode-${id}";
                 const thermostatFanModeKey = "thermostat-fan-mode-${id}";
-                const thermostatName = flag.ThermostatName;
+                const thermostatName = thermostat.ThermostatName;
                 return(
                 <div key={key} className={styles.flagWrapper}>
-                  <BulletPoint flagName={flag.ThermostatName} status={this.state.flagEditable} />
+                  <BulletPoint flagName={thermostat.ThermostatName} status={this.state.flagEditable} />
                   <span className={styles.roomName}>{thermostatName}</span>                  
 
                   <RangeSlider 

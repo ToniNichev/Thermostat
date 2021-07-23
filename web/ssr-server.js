@@ -21,16 +21,26 @@ import bodyParser from 'body-parser';
 
 const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 
-let thermostatData = [];
+let thermostatsData = {};
+let usersData = [];
 
-const getInitialDataFromDb = async () => {
-  const result = await queries.getThermostatData();
-  return result;
-}
+// load users and thermostats data
+( async () => {
+  usersData = await queries.getAllUsers();
+  const thermostats = await queries.getAllThermostats();
 
-const result = getInitialDataFromDb().then((data) => {
-  thermostatData = data;
-});
+  // sort thermostat data for each user
+  thermostats.forEach( thermostat => {
+    var hubId = thermostat.hubId;
+    if(typeof thermostatsData[hubId] === 'undefined') {
+      thermostatsData[hubId] = [thermostat];
+    }
+    else {
+      thermostatsData[hubId].push(thermostat);
+    }
+  });
+})();
+
 
 console.log("SERVER_PORT: ", SERVER_PORT);
 const app = new express();
@@ -112,7 +122,7 @@ app.get('/Robots.txt', (req, res) => {
 });
 
 app.get('/thermostat-services/*', async (req, res) => {
-  await thermostatServices(req, res, thermostatData);
+  await thermostatServices(req, res, thermostatsData);
 });
 
 app.get('/weather-services/*', async (req, res) => {
@@ -144,7 +154,9 @@ app.post('/services/dropdb', async (req, res) => {
 // All page requests
 
 app.get('/*', 
-  requestDataFromAPI, 
+  function (req, res, next) {
+    requestDataFromAPI(req, res, thermostatsData, next);
+  },
   function (req, res, next) {
    response(req, res, req.apiData, req.templateName);
 });

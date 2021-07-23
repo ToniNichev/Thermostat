@@ -30,25 +30,18 @@ const getFullReadings = async (req, res, thermostatData) => {
  * @param {*} req 
  * @param {*} res 
  */
-const getReadings = async (req, res, thermostatData) => {
-
-  // get curent humidity and temperature from thermostats
-  const thermostatString = req.query.data == '' ? '[]' : '[' + req.query.data.split('][').join('],[') + ']';
-  const thermostatReadings = JSON.parse(thermostatString);
-
-  // get thermostat object from DB
-  // const response = await queries.getThermostatData();
-
+const getReadings = async (req, res, thermostatData, thermostatResponse) => {
   let result = '';
+  
   for(let i = 0; i < thermostatData.length; i ++) {
     // set up thermostatData with the real data from thermostats
-    if(typeof thermostatReadings[i] != 'undefined') {
-      thermostatData[i].humidity = thermostatReadings[i][1];
-      thermostatData[i].curentTemp = thermostatReadings[i][2];
+    if(typeof thermostatResponse[i] != 'undefined') {
+      // thermostatResponse[0][0] is the hub ID
+      thermostatData[i].humidity = thermostatResponse[i + 1][1];
+      thermostatData[i].curentTemp = thermostatResponse[i + 1][2];
     }
     // get the desired temperature
-
-    result += '[' + thermostatData[i].id + ',' + thermostatData[i].requiredTemp + ',' + thermostatData[i].mode + ',' + thermostatData[i].fanMode + ']'; 
+    result += '[' + thermostatData[i].thermostatId + ',' + thermostatData[i].requiredTemp + ',' + thermostatData[i].mode + ',' + thermostatData[i].fanMode + ']'; 
   }
   sendResponse(res, result);
 }

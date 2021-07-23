@@ -1,12 +1,22 @@
 import PageData from '../src/containers/PageLayout/PageData'; 
-import queries from '../src/queries';
+const url = require('url');
+const querystring = require('querystring');
+//import queries from '../src/queries';
 
-const requestDataFromAPI = async (req, res, next) => {
-  // not in use right now. Suppose to supply data to the front end on load.
-  const result = await queries.getFeatureFlags();
-  const templateName = typeof PageData[req.url] != 'undefined' ? PageData[req.url].template : '';    
+
+const requestDataFromAPI = async (req, res, thermostatsData, next) => {  
+  req.parsedUrl = url.parse(req.url);
+  const pathname = req.parsedUrl.pathname;  
+  const parsedQs = querystring.parse(req.parsedUrl.query);
+  if(typeof parsedQs.data === 'undefined') {
+    console.log("ERROR ! NO `data` Query String Param!!!");
+  }
+  const dataString = JSON.parse(parsedQs.data);
+  const hubId = dataString[0];
+  // send thermostats data for this specific hub from the request
+  req.apiData = thermostatsData[hubId];
+  const templateName = typeof PageData[pathname] != 'undefined' ? PageData[pathname].template : '';    
   req.templateName = templateName;
-  req.apiData = result;
   next(); // continue once the data is available.
 
 }

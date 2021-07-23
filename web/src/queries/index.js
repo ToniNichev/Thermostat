@@ -1,35 +1,59 @@
 
 import mongoDB  from'../connectors/database/mongodb';
 
-const collectionName = 'thermostat';
+const thermostatCollectionName = 'thermostat';
+const usersCollectionName = 'users';
 
 export default {
 
-    findFeatureFlagByName: async (flagName) => {
-      const result = await mongoDB.find({ flagName }, collectionName);
+    // Thermostat functions
+
+    getAllThermostats: async () => {
+      const result = await mongoDB.find({}, thermostatCollectionName);
+      return result;
+    }, 
+
+    getThermostatsByUserId: async (userId) => {
+      const result = await mongoDB.find({ "UserId": userId }, thermostatCollectionName);
       return result;
     },
 
-    getThermostatData: async () => {
-      const result = await mongoDB.find({}, collectionName);
+
+    // Users functions
+    getAllUsers: async (userId) => {
+      const result = await mongoDB.find({}, usersCollectionName);
+      return result;
+    },  
+
+    getUserByUserId: async (userId) => {
+      const result = await mongoDB.find({ "UserId": userId }, thermostatCollectionName);
+      return result;
+    },    
+
+    /**
+     * 
+     * @returns thermostatsObject
+     */
+    getThermostatData: async (thermostatId) => {
+      const result = await mongoDB.find({}, thermostatCollectionName);
       return result;     
      },    
     
    getFeatureFlags: async () => {
-    const result = await mongoDB.find({}, collectionName);
+    const result = await mongoDB.find({}, thermostatCollectionName);
     console.log(result);
     return result;     
    },
 
    updateFeatureFlag: async (searchObject, newObject) => {
      delete newObject._id;
-    mongoDB.update(searchObject, newObject, collectionName, (result) => {
+    mongoDB.update(searchObject, newObject, thermostatCollectionName, (result) => {
       return true;
     });     
    },    
 
    addFeatureFlag: async (flagData) => {
-    mongoDB.add(flagData, collectionName, () => {
+    mongoDB.add(flagData, thermostatCollectionName, () => {
       return true;
     });     
    }, 
@@ -41,32 +65,71 @@ export default {
 
    setup: async () => {
      mongoDB.dropDB();
-     const obj = [
+     const thermostatsObj = [
       {
-        "UserId": "0",
-        "ThermostatName" : "Living Room",
+        "thermostatId": "0",
+        "userId": "0",
+        "thermostatName" : "Living Room",
+        "hubId": "AXCS12",
         "group": "My home",        
-        "id": "0",
         "humidity": "0",
         "curentTemp": "0",
         "requiredTemp": "0",
         "mode": "1",
         "fanMode": "0"
       },
+
       {
-        "UserId": "0",
-        "ThermostatName" : "Bedroom",
-        "group": "My home",        
-        "id": "1",
+        "thermostatId": "0",
+        "userId": "1",
+        "thermostatName" : "My Studio thermostat",
+        "hubId": "B2CF62",
+        "group": "My Studio",        
         "humidity": "0",
         "curentTemp": "0",
         "requiredTemp": "0",
         "mode": "1",
-        "fanMode": "0"        
-      }                 
+        "fanMode": "0"
+      },
 
-     ]
-    mongoDB.add(obj, collectionName, () => {}); 
+      
+      {
+        "thermostatId": "1",
+        "userId": "0",
+        "thermostatName" : "Bedroom",
+        "hubId": "AXCS12",
+        "group": "My home",        
+        "humidity": "0",
+        "curentTemp": "0",
+        "requiredTemp": "0",
+        "mode": "1",
+        "fanMode": "0"
+      },     
+     ];
+    mongoDB.add(thermostatsObj, thermostatCollectionName, () => {}); 
+
+    // create users collection
+    const usersObj = [
+      {
+        "userId": "0",
+        "email" : "toni.nichev@gmail.com",
+        "password": "1234",
+        "group": "some group",
+        "thermostatHubs": [
+          "AXCS12"
+        ]     
+      },
+      {
+        "userId": "1",
+        "email" : "john.smith@gmail.com",
+        "password": "1234",
+        "group": "some group",     
+        "thermostatHubs": [
+          "B2CF62"
+        ]     
+      }                
+     ];    
+     mongoDB.add(usersObj, usersCollectionName, () => {}); 
    }   
 
 }
