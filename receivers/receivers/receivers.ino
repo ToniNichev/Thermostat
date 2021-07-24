@@ -141,6 +141,19 @@ void loop() {
         digitalWrite(RELAY_COOL, HIGH);
         Serial.println("COOLING: HIGH");
       }
+      break;
+     case 3:
+      // HEAT
+      digitalWrite(RELAY_COOL, HIGH);      
+      if(temp < requiredTemperature) {
+        digitalWrite(RELAY_HEAT, LOW);
+        Serial.println("HEATING: LOW");
+      }
+      else {
+        digitalWrite(RELAY_HEAT, HIGH);
+        Serial.println("HEATING: HIGH");
+      }     
+      break;
     
       Serial.println("#####################");
       Serial.print("required mtemperature: ");
