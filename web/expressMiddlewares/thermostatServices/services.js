@@ -37,8 +37,10 @@ const getReadings = async (req, res, thermostatData, thermostatResponse) => {
     // set up thermostatData with the real data from thermostats
     if(typeof thermostatResponse[i] != 'undefined' && thermostatResponse.length > 1) {
       // thermostatResponse[0][0] is the hub ID
-      thermostatData[i].humidity = thermostatResponse[i + 1][1];
-      thermostatData[i].curentTemp = thermostatResponse[i + 1][2];
+      if(typeof thermostatResponse[i + 1] !== 'undefined') {
+        thermostatData[i].humidity = thermostatResponse[i + 1][1];
+        thermostatData[i].curentTemp = thermostatResponse[i + 1][2];
+      }
     }
     // get the desired temperature
     result += '[' + thermostatData[i].thermostatId + ',' + thermostatData[i].requiredTemp + ',' + thermostatData[i].mode + ',' + thermostatData[i].fanMode + ']'; 

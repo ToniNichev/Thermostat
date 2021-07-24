@@ -23,7 +23,6 @@ const dispatch = async (req, res, thermostatsData) => {
             await getFullReadings(req, res, thermostatsData[hubId]);
             break;
         case 'get-data':
-            //await getReadings(req, res, thermostatData);
             getReadings(req, res, thermostatsData[hubId], requestData);
             break;   
         case 'set-desired-temperature': 
