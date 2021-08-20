@@ -129,7 +129,6 @@ app.get('/weather-services/*', async (req, res) => {
   await weatherServices(req, res);
 });
 
-
 app.post('/services/setup', async (req, res) => {
   queries.setup();
   res

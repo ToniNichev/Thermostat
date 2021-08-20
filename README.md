@@ -24,17 +24,27 @@ A Smart Thermostat project
 -------------------------------------
    IN3  | IN4 |    IN1   |    IN2   |
 # Web App
+    * dev
+        http://localhost:8081/home?data=["AXCS12"]      
 
-http://localhost:8081/home?data=["AXCS12"]      
+    * prod
+        http://toni-develops.com:8061/home?data=["AXCS12"]
+
+    * setup
+        http://localhost:8081/setup?data=["AXCS12"]
 
 * Services
 
     * Get Full Data
-        http://toni-develops.com:8061//thermostat-services/get-full-data
+        http://toni-develops.com:8061/thermostat-services/get-full-data?data=[HUB-ID]
+        - get all thermostats data for given hub HUB-ID
+        example: http://toni-develops.com:8061/thermostat-services/get-full-data?data=["AXCS12"]
 
     * Get Data
         - called from the hub to send (id, curentHumidity, curentTemperature, empty)
         - web server response (id, requiredTemperature, ThermostatMode, fanMode ):  [0,24,1,0][1,31,1,0]
+        - id: thermostat id
+        - requiredTemperature: the temperature set up with the dialer
         - thermostatMode: 0 - off, 1 - cool, 2 - heat
         - fanMode: 0 - auto, 1 - low speed, 2 - high speed
         http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][0,52.80,28.63,0][1,51.90,28.38,0]
@@ -43,6 +53,13 @@ http://localhost:8081/home?data=["AXCS12"]
         http://localhost:8081/thermostat-services/set-desired-temperature?data=["AXCS12"][0,21.0]
 
 
+* Architecture
+    * Dev build
+        yarn start-dev
+        * source map location: http://localhost:8000/dist/main-bundle.js.map
+
+    * Prod build
+        yarn start-prod
 
 
 ================================================

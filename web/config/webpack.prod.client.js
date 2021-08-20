@@ -10,7 +10,7 @@ console.log(`Assets will be served from: ${process.env.APP_HOST} ${process.env.A
 
 module.exports = {
   mode: 'production',
-  devtool: '',
+  devtool: 'source-map',
 
   entry: [
     './src/index.js',
@@ -18,6 +18,7 @@ module.exports = {
 
   output: {
     filename: '[name]-bundle.js',
+    sourceMapFilename: '../source-maps/[name]-[chunkhash].js.map',
     publicPath
   },  
 

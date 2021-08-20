@@ -2,6 +2,7 @@
 #include "RFCommunicator.h"
 #include "string_to_float.h"
 #include <DHT.h>
+#include <EEPROM.h>
 
 #define RELAY_FAN_LOW 7
 #define RELAY_FAN_HIGH 6
@@ -101,7 +102,7 @@ void loop() {
   Serial.println();
 
   RFCommunicatorSend(msg, communicationChannel);
-  delay(2000);
+  delay(1000);
 
   float *serverVals = parseToValues(serverData);
   short int fanMode = (int) serverVals[3];  
@@ -156,7 +157,7 @@ void loop() {
       break;
     
       Serial.println("#####################");
-      Serial.print("required mtemperature: ");
+      Serial.print("required temperature: ");
       Serial.print(requiredTemperature);
       Serial.println();      
       Serial.print("curent temp: ");

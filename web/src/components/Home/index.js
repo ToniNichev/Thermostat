@@ -54,12 +54,19 @@ class Home extends Component {
     // run this only on client side
     if(typeof window == 'undefined')
       return;
+
+    /*
+      
     const result = await Poster(`${apiUrl}/get`, {});
+
+    console.log("getThermostatsSettings!!!!!!!!!!!!!!!");      
+    console.log(result);
 
     if(JSON.stringify(result) !== JSON.stringify(window.__API_DATA__)) {
       window.__API_DATA__ = result;
       this.forceUpdate();
     } 
+    */
   }
 
   editFlag() {
@@ -67,6 +74,7 @@ class Home extends Component {
   }
 
   fetchWeatherData = () => {
+    if(typeof window == 'undefined') return;
     const refreshRate = 60000;
   
     fetch('/weather-services/get-local-weather')
@@ -95,6 +103,7 @@ class Home extends Component {
   }
 
   fetchData = () => {
+    if(typeof window == 'undefined') return;
     const refreshRate = 2000;
     if(this.disableFetchData === true) {
       setTimeout( () => {

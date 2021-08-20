@@ -32,10 +32,11 @@ void loop() {
   char ethernetURL[150] = "";
   Serial.println();
 
+  // construct the url and append thermostat id
   if(thermostatsData[0] != '[') {
     setHubId();
   }
-  
+
   strcpy(ethernetURL, ethernetUrl);
   strcat(ethernetURL, thermostatsData);
   strcat(ethernetURL, " HTTP/1.1");
@@ -110,6 +111,6 @@ void loop() {
     }
   }
 
-  Serial.println("delaying 2 sec before the next cycle ...");
-  delay(2000);
+  Serial.println("delaying 1 sec before the next cycle ...");
+  delay(1000);
 }

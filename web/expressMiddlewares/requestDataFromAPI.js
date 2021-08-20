@@ -9,7 +9,9 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);
   if(typeof parsedQs.data === 'undefined') {
+    console.log("#####################################################################");
     console.log("ERROR ! NO `data` Query String Param!!!");
+    console.log("#####################################################################");
   }
   const dataString = JSON.parse(parsedQs.data);
   const hubId = dataString[0];
