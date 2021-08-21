@@ -41,13 +41,15 @@ A Smart Thermostat project
         example: http://toni-develops.com:8061/thermostat-services/get-full-data?data=["AXCS12"]
 
     * Get Data
-        - called from the hub to send (id, curentHumidity, curentTemperature, empty)
+        http://toni-develops.com:8061/thermostat-services/get-data?data=[HUB-ID][THERMOSTAT-ID,HUMIDITY,TEMPERATURE,MODE]
+        - called from the hub to send thermostat readings (THERMOSTAT-ID, HUMIDITY, TEMPERATURE, MODE),
+          and to get
         - web server response (id, requiredTemperature, ThermostatMode, fanMode ):  [0,24,1,0][1,31,1,0]
         - id: thermostat id
         - requiredTemperature: the temperature set up with the dialer
         - thermostatMode: 0 - off, 1 - cool, 2 - heat
         - fanMode: 0 - auto, 1 - low speed, 2 - high speed
-        http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][0,52.80,28.63,0][1,51.90,28.38,0]
+        - example call: http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][0,52.80,28.63,0][1,51.90,28.38,0]
 
     * Set desired temperature
         http://localhost:8081/thermostat-services/set-desired-temperature?data=["AXCS12"][0,21.0]

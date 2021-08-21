@@ -14,7 +14,7 @@
 short int thermostatId = 0;
 
 // program variables
-char serverData[100] = {0};
+//char serverData[100] = "";
 int len;
 short int programMode = 0;
 short int communicationChannel = thermostatId;
@@ -55,22 +55,21 @@ void setup() {
 
 
 void loop() {
-  Serial.println(" -------------------------- ");
   Serial.println();
-  delay(50);
+  Serial.println();
+  delay(150);
 
   Serial.print("Waiting for data from the HUB on channel :");
   Serial.print(thermostatId);
-  Serial.println();
-  Serial.println();  
+  Serial.println(); 
 
+  char serverData[32] = "";
   while(RFCommunicatorListen(serverData, communicationChannel)!=true) {
-    delay(1);
+    delay(10);
   }
 
-  Serial.print("Received data from HUB: ");
+  Serial.print("⌂ >>> ⍑ : "); // Received data from the HUB
   Serial.print(serverData);
-  Serial.println();
   Serial.println();
   delay(3000);  
 
@@ -97,18 +96,20 @@ void loop() {
   msg[15] = '0';
   msg[16] = ']';       
 
-  Serial.print("Sending data to the HUB: ");
+  Serial.print("⍑ >>> ⌂ : "); // Sending data [ID, HUMIDITY, TEMPERATURE, EMPTY] to the HUB
   Serial.print(msg);
   Serial.println();
 
   RFCommunicatorSend(msg, communicationChannel);
   delay(1000);
 
-  float *serverVals = parseToValues(serverData);
+  float *serverVals = parseToValues("[1,2,3,4]");
   short int fanMode = (int) serverVals[3];  
   short int thermostatMode = (int) serverVals[2];
   float requiredTemperature = serverVals[1];
 
+  delay(100);
+  
   // Set fan mode
   switch(fanMode) {
     case 0:

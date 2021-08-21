@@ -42,7 +42,7 @@ void loop() {
   strcat(ethernetURL, " HTTP/1.1");
 
   Serial.println();
-  Serial.print("Request from Web server >> :");
+  Serial.print("⌂ >>> ♁ :"); // request from the hub to the web server
   Serial.print(ethernetURL);
   Serial.println();
     
@@ -52,8 +52,9 @@ void loop() {
     ; // wait untill get server data
   }
 
-  Serial.print("Received WEB server data:");
+  Serial.print("⌂ <<< ♁ :"); // response from the web server to the hub
   Serial.print(serverData);
+  Serial.println();
   Serial.println();
 
   // add hub ID
@@ -69,7 +70,7 @@ void loop() {
     pos ++;
     if(serverData[i] == ']') {      
       RFCommunicatorSend(data, thermostatId);          
-      Serial.print(">>> (");
+      Serial.print("⌂ >>> ⍑ (");
       Serial.print(thermostatId);
       Serial.print(") : ");
       Serial.print(data);
@@ -82,12 +83,12 @@ void loop() {
 
       int loops = 0;
       char temp[32] = "";
-      while(RFCommunicatorListen(temp, thermostatId)!= true) {
+      while(RFCommunicatorListen(temp, thermostatId)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
         loops ++;
-        delay(50);
+        delay(100);
 
         if(loops > 50) {
-          Serial.print("Hub didn't hear from thermostat (");
+          Serial.print("⌂  ⃠ ⍑ (");
           Serial.print(thermostatId);
           Serial.print(") for more than ");
           Serial.print(loops);
@@ -98,7 +99,7 @@ void loop() {
       }
       if(loops < 50) {
         strcat(thermostatsData, temp);
-        Serial.print("<<< (");
+        Serial.print("⌂ <<< ⍑ (");
         Serial.print(thermostatId);
         Serial.print(") : ");
         Serial.print(temp);
@@ -112,5 +113,5 @@ void loop() {
   }
 
   Serial.println("delaying 1 sec before the next cycle ...");
-  delay(1000);
+  delay(2000);
 }
