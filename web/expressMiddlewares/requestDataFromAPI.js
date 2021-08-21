@@ -5,6 +5,9 @@ const querystring = require('querystring');
 
 
 const requestDataFromAPI = async (req, res, thermostatsData, next) => {  
+  console.log("^^^^^^^^^^^^^^^^^^^^");
+  console.log(req.url);
+  console.log("^^^^^^^^^^^^^^^^^^^^");
   req.parsedUrl = url.parse(req.url);
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);

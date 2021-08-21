@@ -52,10 +52,9 @@ class Home extends Component {
 
   async getThermostatsSettings() { 
     // run this only on client side
+    /*
     if(typeof window == 'undefined')
       return;
-
-    /*
       
     const result = await Poster(`${apiUrl}/get`, {});
 

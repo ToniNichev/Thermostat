@@ -52,6 +52,7 @@ app.use(express.text())
 app.use(bodyParser.text({ type: 'text/*' }));
 
 app.use(cookieParser());
+app.use('/source-maps', express.static('./source-maps'));
 app.use('/server-build', express.static('./server-build'));
 app.use('/dist', express.static('dist')); // to serve frontent prod static files
 app.use('/favicon.ico', express.static('./static-assets/favicon.ico'));
