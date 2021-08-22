@@ -63,7 +63,7 @@ void loop() {
   Serial.print(thermostatId);
   Serial.println(); 
 
-  char serverData[32] = "";
+  char serverData[64] = "";
   while(RFCommunicatorListen(serverData, communicationChannel)!=true) {
     delay(10);
   }
@@ -103,11 +103,12 @@ void loop() {
   RFCommunicatorSend(msg, communicationChannel);
   delay(1000);
 
-  float *serverVals = parseToValues("[1,2,3,4]");
+  float *serverVals = parseToValues(serverData);
   short int fanMode = (int) serverVals[3];  
   short int thermostatMode = (int) serverVals[2];
   float requiredTemperature = serverVals[1];
 
+  
   delay(100);
   
   // Set fan mode
