@@ -101,7 +101,7 @@ void loop() {
   Serial.println();
 
   RFCommunicatorSend(msg, communicationChannel);
-  delay(1000);
+  delay(500);
 
   float *serverVals = parseToValues(serverData);
   short int fanMode = (int) serverVals[3];  
