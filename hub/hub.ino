@@ -87,7 +87,7 @@ void loop() {
         loops ++;
         delay(100);
 
-        if(loops > 20) {
+        if(loops > 51) {
           Serial.print("⌂  ⃠ ⍑ (");
           Serial.print(thermostatId);
           Serial.print(") for more than ");
@@ -97,7 +97,7 @@ void loop() {
           break;
         }
       }
-      if(loops < 20) {
+      if(loops < 51) {
         strcat(thermostatsData, temp);
         Serial.print("⌂ <<< ⍑ (");
         Serial.print(thermostatId);
