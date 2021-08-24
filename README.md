@@ -5,7 +5,13 @@ A Smart Thermostat project
     *   setting up PTAC in remote terminal mode
         - press and hold +/- then press [off] twise
         - press heat to go to C1
-        - press +/- to go to L1 (or L5 didn't remember. I have to test again ...)
+        - press +/- to go to L5
+        - press off
+
+    * getting out into a normal mode 
+        - press and hold +/- then press [off] twise
+        - presss heat to go to 0
+        - preass off
 
     https://www.youtube.com/watch?v=bffd5M8eKCk
 
@@ -23,6 +29,8 @@ A Smart Thermostat project
   COOL  | HOT |  FAN LOW | FAN HIGH |
 -------------------------------------
    IN3  | IN4 |    IN1   |    IN2   |
+-------------------------------------
+  Y/W1  |  W2 |   GL     |     GH   |
 # Web App
     * dev
         http://localhost:8081/home?data=["AXCS12"]      
