@@ -76,10 +76,10 @@ void loop() {
       Serial.print(data);
       Serial.println();
 
-      // clead data
+      // clear data
       memset(data, 0, 32);
       
-      delay(1000);
+      delay(700);
 
       int loops = 0;
       char temp[32] = "";
@@ -87,7 +87,7 @@ void loop() {
         loops ++;
         delay(100);
 
-        if(loops > 50) {
+        if(loops > 20) {
           Serial.print("⌂  ⃠ ⍑ (");
           Serial.print(thermostatId);
           Serial.print(") for more than ");
@@ -97,7 +97,7 @@ void loop() {
           break;
         }
       }
-      if(loops < 50) {
+      if(loops < 20) {
         strcat(thermostatsData, temp);
         Serial.print("⌂ <<< ⍑ (");
         Serial.print(thermostatId);
@@ -113,5 +113,5 @@ void loop() {
   }
 
   Serial.println("delaying 1 sec before the next cycle ...");
-  delay(2000);
+  delay(1000);
 }
