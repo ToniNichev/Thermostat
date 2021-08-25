@@ -71,7 +71,6 @@ void loop() {
   Serial.print("⌂ >>> ⍑ : "); // Received data from the HUB
   Serial.print(serverData);
   Serial.println();
-  delay(3000);  
 
   hum = dht.readHumidity();
   temp = dht.readTemperature();  
@@ -100,7 +99,7 @@ void loop() {
   Serial.print(msg);
   Serial.println();
 
-
+  delay(4000);  
   RFCommunicatorSend(msg, communicationChannel);
   delay(1000);
 
@@ -109,8 +108,6 @@ void loop() {
   short int thermostatMode = (int) serverVals[2];
   float requiredTemperature = serverVals[1];
 
-  
-  delay(100);
   
   // Set fan mode
   switch(fanMode) {
