@@ -63,6 +63,7 @@ void loop() {
   char data[32] = "";
   short int thermostatId = 0;
   int pos = 0;
+  delay(1000);
   for(int i = 0; i < 100; i ++) {
     if(serverData[i] == '\0')
       break;
@@ -83,7 +84,7 @@ void loop() {
 
       int loops = 0;
       char temp[32] = "";
-      short int loopsBeforeGiveUp = 550;
+      short int loopsBeforeGiveUp = 1000;
       while(RFCommunicatorListen(temp, thermostatId)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
         loops ++;
         delay(10);
