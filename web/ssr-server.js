@@ -22,14 +22,18 @@ import bodyParser from 'body-parser';
 const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 
 let thermostatsData = {};
-let usersData = [];
+//let usersData = [];
 
 // load users and thermostats data
 ( async () => {
-  usersData = await queries.getAllUsers();
+  //usersData = await queries.getAllUsers();
+  //console.log("@#@#@#@##@");
+  //console.log(usersData);
   const thermostats = await queries.getAllThermostats();
 
-  // sort thermostat data for each user
+  console.log(">>>>>>>", thermostats);
+
+  // sort thermostat data for each hubId
   thermostats.forEach( thermostat => {
     var hubId = thermostat.hubId;
     if(typeof thermostatsData[hubId] === 'undefined') {
@@ -58,7 +62,7 @@ app.use('/dist', express.static('dist')); // to serve frontent prod static files
 app.use('/favicon.ico', express.static('./static-assets/favicon.ico'));
 app.use(express.static('static-assets'));
 
-function response(req, res, apiData, templateName) {
+function responseWithSourceCode(req, res, apiData, templateName) {
   // make APP data available for SSR and browser.
   global.__API_DATA__ = apiData;
   const Html = templateList[templateName];
@@ -158,7 +162,7 @@ app.get('/*',
     requestDataFromAPI(req, res, thermostatsData, next);
   },
   function (req, res, next) {
-   response(req, res, req.apiData, req.templateName);
+   responseWithSourceCode(req, res, req.apiData, req.templateName);
 });
 
 

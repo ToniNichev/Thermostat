@@ -165,11 +165,12 @@ class Home extends Component {
 
   render() {
     const Thermostats = this.thermostatsData;
+    console.log("@#@#@#@@#>>>", Thermostats);
     return (
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>
             <div className={[styles.weatherTitle, 'weatherTitle'].join(' ')}>...</div>
-              {Thermostats.map( (thermostat, tId) => {
+              {Thermostats && Thermostats.map( (thermostat, tId) => {
                 const id = parseInt(thermostat.thermostatId);
                 const key = `thermostat-control-${id}`;
                 const thermostatModeKey = `thermostat-mode-${id}`;

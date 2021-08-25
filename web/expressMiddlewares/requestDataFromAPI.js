@@ -19,6 +19,7 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
   const dataString = JSON.parse(parsedQs.data);
   const hubId = dataString[0];
   // send thermostats data for this specific hub from the request
+  const thermostatDataForThisHub = typeof thermostatsData[hubId] !== 'undefined' ? thermostatsData[hubId] : {};
   req.apiData = {"hubId": hubId, "thermostatsData" : thermostatsData[hubId]};
   const templateName = typeof PageData[pathname] != 'undefined' ? PageData[pathname].template : '';    
   req.templateName = templateName;
