@@ -79,15 +79,18 @@ void loop() {
       // clear data
       memset(data, 0, 32);
       
-      delay(700);
+      delay(2000);
 
       int loops = 0;
       char temp[32] = "";
+      short int loopsBeforeGiveUp = 550;
       while(RFCommunicatorListen(temp, thermostatId)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
         loops ++;
-        delay(100);
-
-        if(loops > 51) {
+        delay(10);
+        if(loops > loopsBeforeGiveUp)
+          break;
+      }
+        if(loops > loopsBeforeGiveUp) {
           Serial.print("⌂  ⃠ ⍑ (");
           Serial.print(thermostatId);
           Serial.print(") for more than ");
@@ -95,9 +98,8 @@ void loop() {
           Serial.println(" cycles. Skipping ..."); 
           RFCommunicatorReset();
           break;
-        }
-      }
-      if(loops < 51) {
+        }      
+      else {
         strcat(thermostatsData, temp);
         Serial.print("⌂ <<< ⍑ (");
         Serial.print(thermostatId);
@@ -112,6 +114,6 @@ void loop() {
     }
   }
 
-  Serial.println("delaying 1 sec before the next cycle ...");
-  delay(1000);
+  Serial.println("delaying 2 sec before the next cycle ...");
+  delay(2000);
 }
