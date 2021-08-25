@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styles from './styles.scss';
 import GenralPopup from '../GeneralPopup';
 import EventsManager from '../../containers/EventsManager';
@@ -25,16 +25,20 @@ EventsManager.registerEvent('setSelectedList' ,setSelectedList);
 EventsManager.registerEvent('unsetSelectedList' ,unsetSelectedList);
 
 
-const Header = ( {title} ) => (
-  <div>
-    <div className={styles.wrapper}>      
-      <ul>
-        <li><Link to='/home'>THERMOSTATS</Link></li>
-        <li><Link to='/setup'>SETTINGS</Link></li>       
-        <li><Link to='/about'>ABOUT</Link></li>
-      </ul>
+const Header = ( {title} ) => {
+  const { search } = useLocation();
+
+  return (
+    <div>
+      <div className={styles.wrapper}>      
+        <ul>
+          <li><Link to={`/home${search}`}>THERMOSTATS</Link></li>
+          <li><Link to={`/setup${search}`}>SETTINGS</Link></li>       
+        <li><Link to={`/about${search}`}>ABOUT</Link></li>
+        </ul>
+      </div>
+      <GenralPopup showPopup={false} />
     </div>
-    <GenralPopup showPopup={false} />
-  </div>
-);
+  );
+}
 export default Header;
