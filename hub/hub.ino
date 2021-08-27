@@ -8,8 +8,9 @@
 
 #define hubId "AXCS12"
 
-char thermostatsData[100] = ""; 
+#define addNewThermostatChannel 0
 
+char thermostatsData[100] = ""; 
 
 void setHubId() {
   strcpy(thermostatsData, "[\"");
@@ -64,57 +65,75 @@ void loop() {
   short int thermostatId = 0;
   int pos = 0;
   delay(1000);
-  for(int i = 0; i < 100; i ++) {
-    if(serverData[i] == '\0')
-      break;
-    data[pos] = serverData[i];
-    pos ++;
-    if(serverData[i] == ']') {      
-      RFCommunicatorSend(data, thermostatId);          
-      Serial.print("⌂ >>> ⍑ (");
-      Serial.print(thermostatId);
-      Serial.print(") : ");
-      Serial.print(data);
-      Serial.println();
 
-      // clear data
-      memset(data, 0, 32);
-      
-      delay(2000);
-
-      int loops = 0;
-      char temp[32] = "";
-      short int loopsBeforeGiveUp = 1000;
-      while(RFCommunicatorListen(temp, thermostatId)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
-        loops ++;
+  
+  if(serverData[1] == '#') {
+    // adding thermostat mode
+    Serial.println("Adding thermostat mode");
+    RFCommunicatorSend(serverData, thermostatId);   
+    /*
+    char temp[32] = "";
+     while(RFCommunicatorListen(temp, addNewThermostatChannel)!= true) {
         delay(10);
-        if(loops > loopsBeforeGiveUp)
-          break;
-      }
-        if(loops > loopsBeforeGiveUp) {
-          Serial.print("⌂  ⃠ ⍑ (");
-          Serial.print(thermostatId);
-          Serial.print(") for more than ");
-          Serial.print(loops);
-          Serial.println(" cycles. Skipping ..."); 
-          RFCommunicatorReset();
-          break;
-        }      
-      else {
-        strcat(thermostatsData, temp);
-        Serial.print("⌂ <<< ⍑ (");
+     }
+    Serial.print("⍑ (add) ");
+    Serial.println(temp);
+    */
+    
+    delay(5000);
+  }
+  else {
+    for(int i = 0; i < 100; i ++) {
+      if(serverData[i] == '\0')
+        break;
+      data[pos] = serverData[i];
+      pos ++;
+      if(serverData[i] == ']') {      
+        RFCommunicatorSend(data, thermostatId);          
+        Serial.print("⌂ >>> ⍑ (");
         Serial.print(thermostatId);
         Serial.print(") : ");
-        Serial.print(temp);
+        Serial.print(data);
         Serial.println();
-        Serial.println();          
+  
+        // clear data
+        memset(data, 0, 32);
+        
+        delay(2000);
+  
+        int loops = 0;
+        char temp[32] = "";
+        short int loopsBeforeGiveUp = 1000;
+        while(RFCommunicatorListen(temp, thermostatId)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
+          loops ++;
+          delay(10);
+          if(loops > loopsBeforeGiveUp)
+            break;
+        }
+          if(loops > loopsBeforeGiveUp) {
+            Serial.print("⌂  ⃠ ⍑ (");
+            Serial.print(thermostatId);
+            Serial.print(") for more than ");
+            Serial.print(loops);
+            Serial.println(" cycles. Skipping ..."); 
+            RFCommunicatorReset();
+            break;
+          }      
+        else {
+          strcat(thermostatsData, temp);
+          Serial.print("⌂ <<< ⍑ (");
+          Serial.print(thermostatId);
+          Serial.print(") : ");
+          Serial.print(temp);
+          Serial.println();
+          Serial.println();          
+        }
+        thermostatId ++;
+        pos = 0;
+        loops = 0;
       }
-      thermostatId ++;
-      pos = 0;
-      loops = 0;
     }
   }
-
   Serial.println("delaying 2 sec before the next cycle ...");
   delay(2000);
 }
