@@ -33,7 +33,7 @@ const getFullReadings = async (req, res, thermostatData) => {
 const getReadings = async (req, res, thermostatData, thermostatResponse, hubPreferences) => {
   let result = '';
 
-  const l = thermostatData.length < 1 ? 0 : thermostatData.length;
+  const l = thermostatData.length < 1 ? 1 : thermostatData.length;
   if(hubPreferences.mode === 1) {
     result = `[#,${l}]`; 
   }
@@ -58,6 +58,7 @@ const setDesiredTemperature = async (req, res, thermostatData, requestData) => {
   const data = requestData[1];
   const id = data[0];
   const temp = data[1];
+  thermostatData[id].requiredTemp = temp;
   const result = `{"status": "success"}`;
   sendResponse(res, result);
 }

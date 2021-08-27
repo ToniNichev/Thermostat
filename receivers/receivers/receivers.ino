@@ -9,6 +9,8 @@
 #define RELAY_COOL 5
 #define RELAY_HEAT 3
 
+#define THERMOSTAT_ID_ADDRESS 3
+
 
 // thermostat settings
 short int thermostatId = 0;
@@ -51,13 +53,14 @@ void setup() {
   }  
   Serial.println("================== PROGRAM STARTED ======================");
 
-  short int Id = readIntFromEEPROM(3);
+  writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, 0);  
+  short int Id = readIntFromEEPROM(THERMOSTAT_ID_ADDRESS);
   if(Id == -1) {
     programMode = 1; // set add new thermostat mode
     Serial.println("Setting up thermostat in Add mode");
   }
   else {
-    thermostatId = Id;
+    communicationChannel = thermostatId = Id;
   }
 }
 
@@ -82,12 +85,17 @@ void loop() {
   Serial.println();
 
   if(programMode == 1) {
-    //writeIntIntoEEPROM(1, 1234);
-    //Serial.print("ID : ");
-    //Serial.println(id);
-    Serial.print("serverData : ");
-    Serial.println(serverData);
+    float *serverVals = parseToValues(serverData);
+    short int id = (int) serverVals[1];
+    Serial.print(">>>>>>>");    
+    Serial.println(id);
+    communicationChannel = thermostatId = id;
+
+    writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, id);        
+    char msgToServer = "[added]";
+    RFCommunicatorSend(msgToServer, communicationChannel);
     delay(4000);
+    programMode = 0;
   }
   else {
     hum = dht.readHumidity();
@@ -118,6 +126,8 @@ void loop() {
     Serial.println();
   
     delay(4000);  
+    Serial.print("communicationChannel : ");
+    Serial.println(communicationChannel);
     RFCommunicatorSend(msg, communicationChannel);
     delay(1000);
   
