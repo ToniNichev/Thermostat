@@ -68,9 +68,16 @@ void loop() {
 
   
   if(serverData[1] == '#') {
+    /*
     // adding thermostat mode
-    Serial.println("Adding thermostat mode");
-    RFCommunicatorSend(serverData, thermostatId);   
+    Serial.println(" --== Adding thermostat mode ==--");
+    RFCommunicatorSend(serverData, thermostatId);
+    char tempTwo[32] = "";
+    while(RFCommunicatorListen(tempTwo, thermostatId)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
+      delay(10);
+    }
+    Serial.print("⍑ !!!!!");
+    */
     /*
     char temp[32] = "";
      while(RFCommunicatorListen(temp, addNewThermostatChannel)!= true) {
