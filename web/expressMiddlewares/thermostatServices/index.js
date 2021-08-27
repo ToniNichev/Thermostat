@@ -3,7 +3,8 @@ import {
     getFullReadings,
     setDesiredTemperature,
     setThermostatMode,
-    setThermostatFanMode
+    setThermostatFanMode,
+    setAddThermostatMode
 } from './services';
 
 
@@ -13,7 +14,9 @@ const stringToObject = (str) => {
     return JSON.parse(fullString);
 }
 
-const dispatch = async (req, res, thermostatsData) => {
+const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => {
+    //console.log(">>>>>>> hubMode >>>>>>>>", hubMode);
+    //hubMode = 1;
     const action = req.params[0];
     const requestData = stringToObject(req.query.data);
     const hubId = requestData[0][0];
@@ -23,7 +26,7 @@ const dispatch = async (req, res, thermostatsData) => {
             await getFullReadings(req, res, thermostatsData[hubId]);
             break;
         case 'get-data':
-            getReadings(req, res, thermostatsData[hubId], requestData);
+            getReadings(req, res, thermostatsData[hubId], requestData, hubPreferences);
             break;   
         case 'set-desired-temperature': 
             await setDesiredTemperature(req, res, thermostatsData[hubId], requestData);
@@ -33,8 +36,11 @@ const dispatch = async (req, res, thermostatsData) => {
             break;  
         case 'set-thermostat-fan-mode': 
             await setThermostatFanMode(req, res, thermostatsData[hubId], requestData);
-            break;            
+            break;
+        case 'add-thermostat': 
+            await setAddThermostatMode(req, res, thermostatsData[hubId], requestData, hubPreferences);        
+            break;        
     }
 }
 
-export default dispatch;
+export default ThermostatServices;

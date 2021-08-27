@@ -18,8 +18,6 @@ const unsetSelectedList = (id) => {
   delete selectedFlagsList[id];
 }
 
-
-
 EventsManager.registerEvent('getSelectedList' ,getSelectedList);
 EventsManager.registerEvent('setSelectedList' ,setSelectedList);
 EventsManager.registerEvent('unsetSelectedList' ,unsetSelectedList);

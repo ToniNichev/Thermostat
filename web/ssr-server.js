@@ -23,6 +23,9 @@ const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 
 let thermostatsData = {};
 //let usersData = [];
+let hubPreferences = {
+  mode: 0
+};
 
 // load users and thermostats data
 ( async () => {
@@ -30,8 +33,6 @@ let thermostatsData = {};
   //console.log("@#@#@#@##@");
   //console.log(usersData);
   const thermostats = await queries.getAllThermostats();
-
-  console.log(">>>>>>>", thermostats);
 
   // sort thermostat data for each hubId
   thermostats.forEach( thermostat => {
@@ -127,7 +128,7 @@ app.get('/Robots.txt', (req, res) => {
 });
 
 app.get('/thermostat-services/*', async (req, res) => {
-  await thermostatServices(req, res, thermostatsData);
+  await thermostatServices(req, res, thermostatsData, hubPreferences);
 });
 
 app.get('/weather-services/*', async (req, res) => {

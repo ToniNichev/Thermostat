@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import styles from './styles.scss';
 import ToggleSwitch from '../ToggleSwitch';
 import BulletPoint from '../BulletPoint';
-import AddFlagPopup from '../AddFlagPopup';
+import AddPopup from './AddPopup';
 import {Poster} from '../../utils/Poster';
 import EditDelete from '../EditDelete';
 import { apiUrl } from '../../utils/getParams';
@@ -215,7 +215,7 @@ class Home extends Component {
             <button className={this.state.flagEditable ? styles.addButtonHidden : styles.addButtonVisible } onClick={() => { this.addFlag()} }>ADD</button>
             <EditDelete flagEditable={ this.state.flagEditable } editFlag={ () => { this.editFlag() } } />
           </div>
-          {this.state.addFlagVisible ? <AddFlagPopup closePopup={ () => {this.closePopup() } } /> : null}
+          {this.state.addFlagVisible ? <AddPopup closePopup={ () => {this.closePopup() } } /> : null}
       </div>
     );
   }
