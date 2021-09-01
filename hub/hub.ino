@@ -8,7 +8,8 @@
 
 #define hubId "AXCS12"
 
-#define addNewThermostatChannel 0
+#define addNewThermostatChannel 10
+//#define communicationChannel 10
 
 char thermostatsData[100] = ""; 
 
@@ -67,25 +68,21 @@ void loop() {
   delay(1000);
 
   
-  if(serverData[1] == '#') {
-    /*
+  if(serverData[1] == '#') { 
+    /*   
     // adding thermostat mode
     Serial.println(" --== Adding thermostat mode ==--");
-    RFCommunicatorSend(serverData, thermostatId);
+    RFCommunicatorSend(serverData, addNewThermostatChannel);
+    delay(2000);
+    RFCommunicatorReset();
+    delay(10);
+    */
     char tempTwo[32] = "";
-    while(RFCommunicatorListen(tempTwo, thermostatId)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
+    while(RFCommunicatorListen(tempTwo, 1)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
       delay(10);
     }
-    Serial.print("⍑ !!!!!");
-    */
-    /*
-    char temp[32] = "";
-     while(RFCommunicatorListen(temp, addNewThermostatChannel)!= true) {
-        delay(10);
-     }
-    Serial.print("⍑ (add) ");
-    Serial.println(temp);
-    */
+    Serial.print("⍑ @@@ replied : ");
+    Serial.println(tempTwo);
     
     delay(5000);
   }
