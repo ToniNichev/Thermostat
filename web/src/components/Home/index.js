@@ -165,7 +165,7 @@ class Home extends Component {
 
   render() {
     const Thermostats = this.thermostatsData;
-    console.log("@#@#@#@@#>>>", Thermostats);
+    //console.log("@#@#@#@@#>>>", Thermostats);
     return (
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>

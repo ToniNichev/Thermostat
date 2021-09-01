@@ -1,42 +1,52 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import styles from './styles.scss';
-import { apiUrl } from '../../../utils/getParams';
+import { thermostatApiUrl } from '../../../utils/getParams';
 import EventsManager from  '../../../containers/EventsManager';
 import {Poster} from '../../../utils/Poster';
 
-const addFlag = async (closePopup) => {
-
-  //const searchReresultsult = await Poster(`${apiUrl}/find`,  {'flagName' : flag.flagName} );    
-
-  /*
-  const flag = {
-    "group": document.getElementById('addFeatureFlag').querySelector("input.group").value,
-    "flagName": document.getElementById('addFeatureFlag').querySelector("input.flagName").value ,
-    "value": document.getElementById('addFeatureFlag').querySelector("input.value").value,
-  };
-
-
-  if(searchResult.length > 0) {
-    EventsManager.callEvent('showPopup')(`Flag with name: ${flag.flagName} already exists!`);
-  }
-  else {
-    //const result = await Poster(`${apiUrl}/add`, flag);
-    closePopup();
-  }
-  */
-}
-
 
 const AddPopup = ({closePopup}) => {  
+
+  let mode = 0;
+  const [msg, setMsg] = useState('...');
+  const [buttonText, setButtonText] = useState('ADD THERMOSTAT');
+
+  const addFlag = async (closePopup) => {
+
+    if(mode == 1) {
+      mode = 0;
+      setMsg('...');
+      setButtonText('ADD THERMOSTAT');      
+      closePopup();
+    }
+    const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
+    const hubId = apiData.hubId;
+    console.log("!@!@!@!: ", hubId);
+    fetch(`${thermostatApiUrl}/add-thermostat?data=["${hubId}"]`)
+      .then(response => response.json())
+      .then(data => { 
+        setMsg('Looking for the new thermostat ...');
+        setButtonText('CANCEL');
+        mode = 1;
+        console.log(">>>>>>>>>>>>>>", data.status);
+        /*
+        fetch(`${thermostatApiUrl}/add-thermostat?data=["${hubId}"]`)
+        .then(response => response.json())
+        .then(data => { 
+        });        
+        */
+
+    });
+  }
+  
+  
   return (
     <div id="addFeatureFlag" className={styles.modal}>
       <div className={styles.modalContent}>
         <span onClick={ () => { closePopup() } } className={styles.close}>&times;</span>
         <div className={styles.flagProperties}>
-          <p><label>FLAG NAME</label> <input className="flagName" type="text" /></p>
-          <p><label>GROOUP</label> <input className="group" type="text" /></p>
-          <p><label>VALUE</label> <input className="value" type="text" /></p>
-          <p><button onClick={ () => { addFlag(closePopup) } }>ADD FLAG</button></p>
+          <p>{msg}</p>
+          <p><button onClick={ () => { addFlag(closePopup) } }>{buttonText}</button></p>
         </div>          
       </div>      
     </div>

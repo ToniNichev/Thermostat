@@ -31,10 +31,11 @@ const getFullReadings = async (req, res, thermostatData) => {
  * @param {*} res 
  */
 const getReadings = async (req, res, thermostatData, thermostatResponse, hubPreferences) => {
-  let result = '';
+  let result = '';  
 
   const l = thermostatData.length < 1 ? 1 : thermostatData.length;
   if(hubPreferences.mode === 1) {
+    // Add thermostat mode - send next available thermostat ID to the HUB
     result = `[#,${l}]`; 
   }
   else {
@@ -50,6 +51,8 @@ const getReadings = async (req, res, thermostatData, thermostatResponse, hubPref
       // get the desired temperature
       result += '[' + thermostatData[i].thermostatId + ',' + thermostatData[i].requiredTemp + ',' + thermostatData[i].mode + ',' + thermostatData[i].fanMode + ']'; 
     }
+    //if(result == '')
+      //result = '[]';    
   }
   sendResponse(res, result);
 }
@@ -88,7 +91,7 @@ const setAddThermostatMode = async (req, res, thermostatData, requestData, hubPr
   const mode = data[1];
   thermostatData[id].fanMode = mode;
   */
-  const result = `{"status": "success"}`;
+  const result = `{"status": "adding"}`;
   hubPreferences.mode = hubPreferences.mode == 1 ? 0 : 1;
   sendResponse(res, result);
 }

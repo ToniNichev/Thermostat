@@ -130,6 +130,35 @@ export default {
       }                
      ];    
      mongoDB.add(usersObj, usersCollectionName, () => {}); 
-   }   
+   },
+   
+   setupOneUser: async () => {
+    mongoDB.dropDB();
+    const thermostatsObj = [];
+   mongoDB.add(thermostatsObj, thermostatCollectionName, () => {}); 
+
+   // create users collection
+   const usersObj = [
+     {
+       "userId": "0",
+       "email" : "toni.nichev@gmail.com",
+       "password": "1234",
+       "group": "some group",
+       "thermostatHubs": [
+         "AXCS12"
+       ]     
+     },
+     {
+       "userId": "1",
+       "email" : "john.smith@gmail.com",
+       "password": "1234",
+       "group": "some group",     
+       "thermostatHubs": [
+         "B2CF62"
+       ]     
+     }                
+    ];    
+    mongoDB.add(usersObj, usersCollectionName, () => {}); 
+  }     
 
 }

@@ -20,6 +20,7 @@ short int thermostatId = 0;
 int len;
 short int programMode = 0;
 short int communicationChannel = 0;
+short int ADD_NEW_THERMOSTAT_COMMUNICATION_CHANNEL = 10;
 
 //Constants
 #define DHTPIN 4     // what pin we're connected to
@@ -53,11 +54,12 @@ void setup() {
   }  
   Serial.println("================== PROGRAM STARTED ======================");
 
-  writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, 0);  
+  writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, -1);  
   short int Id = readIntFromEEPROM(THERMOSTAT_ID_ADDRESS);
   if(Id == -1) {
+    communicationChannel = ADD_NEW_THERMOSTAT_COMMUNICATION_CHANNEL;
     programMode = 1; // set add new thermostat mode
-    Serial.println("Setting up thermostat in Add mode");
+    Serial.println("⍑ is in ADD mode ...");
   }
   else {
     communicationChannel = thermostatId = Id;
@@ -72,7 +74,7 @@ void loop() {
   delay(150);
 
   Serial.print("Waiting for data from the HUB on channel :");
-  Serial.print(thermostatId);
+  Serial.print(communicationChannel);
   Serial.println(); 
 
   char serverData[64] = "";
@@ -87,11 +89,10 @@ void loop() {
   if(programMode == 1) {
     float *serverVals = parseToValues(serverData);
     short int id = (int) serverVals[1];
-    Serial.print(">>>>>>>");    
-    Serial.println(id);
     communicationChannel = thermostatId = id;
 
-    writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, id);        
+    writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, id);    
+    delay(500);    
     char msgToServer = "[added]";
     RFCommunicatorSend(msgToServer, communicationChannel);
     delay(4000);
