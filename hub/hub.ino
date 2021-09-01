@@ -77,6 +77,7 @@ void loop() {
     RFCommunicatorReset();
     delay(10);
     */
+    Serial.println("listening to the thermostat to add!");
     char tempTwo[32] = "";
     while(RFCommunicatorListen(tempTwo, 1)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
       delay(10);
