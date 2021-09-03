@@ -1,13 +1,12 @@
 #include "RFCommunicator.h"
 
 RF24 radio(9, 8);  // CE, CSN
-//const byte RFCommunicatorAddress[][6] = {"00001", "00002", "00003", "00004", "00005", "00006", "00007", "00008", "00009"};
 const byte addresses[][6] = {"00001", "00002"};
 
-void RFCommunicatorSetup() {
+void RFCommunicatorSetup(short int writeAddress, short int readAddress) {
   radio.begin();
-  radio.openWritingPipe(addresses[0]); // 00002
-  radio.openReadingPipe(1, addresses[1]); // 00001
+  radio.openWritingPipe(addresses[writeAddress]); // 00002
+  radio.openReadingPipe(1, addresses[readAddress]); // 00001
   radio.setPALevel(RF24_PA_MIN);
 } 
 
@@ -18,10 +17,10 @@ void RFCommunicatorSend(char sendText[], short int channel) {
   radio.write(&text, sizeof(text));
 }
 
-void RFCommunicatorListen() {  
+void RFCommunicatorListen(char data[]) {  
   radio.startListening();
   while(!radio.available()) {}
   char text[32] = "";
   radio.read(&text, sizeof(text));
-  Serial.println(text);
+  strcpy(data, text);
 }

@@ -10,27 +10,26 @@ void setup() {
   Serial.println();
   Serial.println("PROGRAM STARTED");
   
-  RFCommunicatorSetup();
+  RFCommunicatorSetup(0, 1);
 
 }
 
 void loop() {
 
-  char msg[32] = "[Listener] sending data:";
+  char msg[32] = "[sender] sending data:";
   char arr[10];
   sprintf(arr, "%d", q);
   strcat(msg, arr);
   q ++;
   RFCommunicatorSend(msg, 1);
   Serial.println("-=== Sending ===--");
-  Serial.println(msg);
   Serial.println();
-  delay(3000);
-
-  /*
+  
   Serial.println("-=== Listening ===--");
-  RFCommunicatorListen();
-  */
-
- 
+  char data[32];
+  RFCommunicatorListen(data);
+  Serial.println(data);
+  
+  Serial.println("delaying 2 sec");
+  delay(2000);
 }
