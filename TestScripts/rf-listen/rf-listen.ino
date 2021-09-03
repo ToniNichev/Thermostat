@@ -1,6 +1,6 @@
 #include "RFCommunicator.h"
 short int mode = 0;
-int q = 10;
+int q = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -10,16 +10,17 @@ void setup() {
   Serial.println();
   Serial.println("PROGRAM STARTED");
   
-  RFCommunicatorSetup();
+  RFCommunicatorSetup(1,0);
 
 }
 
 void loop() {
 
   Serial.println("-=== Listening ===--");
-  
-  RFCommunicatorListen();
-
+  char data[32];
+  RFCommunicatorListen(data);
+  Serial.println(data);
+  delay(3000);
   Serial.println("-=== Sending ===--");
 
   char msg[32] = "[Listener] sending data:";
@@ -28,6 +29,7 @@ void loop() {
   strcat(msg, arr);
   q ++;
   RFCommunicatorSend(msg, 1);
-  RFCommunicatorListen();
- 
+
+   Serial.println();
+  //RFCommunicatorListen();
 }
