@@ -70,54 +70,51 @@ void loop() {
   delay(1000);
 
   if(serverData[1] == '#') { 
-    programMode = 1;
-    Serial.println("listening to the thermostat to add!");
+     Serial.println("Sending # to the ⍑");
+     RFCommunicatorSend(serverData, 0);
+    delay(100);
+    Serial.println("waiting for response ...");
     char tempTwo[32] = "";
-    RFCommunicatorListen(tempTwo); // each thermostat communicates on it's unique channel determin by thermostatId
+    RFCommunicatorListen(tempTwo);
     Serial.print("⍑ @@@ replied : ");
     Serial.println(tempTwo);
-    
+    strcat(thermostatsData, tempTwo);
     delay(5000);
   }
-
-  Serial.println("!!!!!!!!!!!!!!!!!!");
-
-
-  switch(programMode) {
-    case 120:
-    for(int i = 0; i < 100; i ++) {
-      if(serverData[i] == '\0')
-        break;
-      data[pos] = serverData[i];
-      pos ++;
-      if(serverData[i] == ']') {      
-        RFCommunicatorSend(data, thermostatId);    
-        Serial.println("@@@@@@@@@@@@@@@@@@");      
-        Serial.print("⌂ >>> ⍑ (");
-        Serial.print(thermostatId);
-        Serial.print(") : ");
-        Serial.print(data);
-        Serial.println();
+  else {
+    switch(programMode) {
+      case 120:
+      for(int i = 0; i < 100; i ++) {
+        if(serverData[i] == '\0')
+          break;
+        data[pos] = serverData[i];
+        pos ++;
+        if(serverData[i] == ']') {      
+          RFCommunicatorSend(data, thermostatId);       
+          Serial.print("⌂ >>> ⍑ (");
+          Serial.print(thermostatId);
+          Serial.print(") : ");
+          Serial.print(data);
+          Serial.println();
+    
+          // clear data
+          memset(data, 0, 32);
+          
+          delay(2000);
+    
+          int loops = 0;
+          char temp[32] = "";
+          short int loopsBeforeGiveUp = 1000;
+          RFCommunicatorListen(temp);
   
-        // clear data
-        memset(data, 0, 32);
-        
-        delay(2000);
-  
-        int loops = 0;
-        char temp[32] = "";
-        short int loopsBeforeGiveUp = 1000;
-        Serial.println("#################");
-        RFCommunicatorListen(temp);
-
-        thermostatId ++;
-        pos = 0;
-        loops = 0;
-      }
-    }    
-    break;
+          thermostatId ++;
+          pos = 0;
+          loops = 0;
+        }
+      }    
+      break;
+    }
   }
-  
   Serial.println("delaying 2 sec before the next cycle ...");
   delay(2000);
 }
