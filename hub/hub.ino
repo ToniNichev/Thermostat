@@ -22,7 +22,7 @@ void setHubId() {
       
 void setup() {
   Serial.begin(9600);
-  RFCommunicatorSetup();
+  RFCommunicatorSetup(0,1);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
@@ -73,9 +73,7 @@ void loop() {
     programMode = 1;
     Serial.println("listening to the thermostat to add!");
     char tempTwo[32] = "";
-    while(RFCommunicatorListen(tempTwo, 1)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
-      delay(10);
-    }
+    RFCommunicatorListen(tempTwo); // each thermostat communicates on it's unique channel determin by thermostatId
     Serial.print("⍑ @@@ replied : ");
     Serial.println(tempTwo);
     
@@ -110,7 +108,7 @@ void loop() {
         char temp[32] = "";
         short int loopsBeforeGiveUp = 1000;
         Serial.println("#################");
-        //RFCommunicatorListen(temp, thermostatId);
+        RFCommunicatorListen(temp);
 
         thermostatId ++;
         pos = 0;
