@@ -1,48 +1,26 @@
 #include "RFCommunicator.h"
 
-RF24 RFCommunicatorRadio(9, 8);  // CE, CSN
-//address through which two modules communicate.
-const byte RFCommunicatorAddress[][6] = {"00001", "00002", "00003", "00004", "00005", "00006", "00007", "00008", "00009", "00010", "00011"};
-short int RFCommunicatorMode = 0;
+RF24 radio(9, 8);  // CE, CSN
+const byte addresses[][6] = {"00001", "00002"};
 
-void RFCommunicatorSetup() {
-  RFCommunicatorRadio.begin();
-}
-
-void RFCommunicatorReset() {
-  RFCommunicatorMode = 0;
-}
-
-bool RFCommunicatorListen(char data[], short int channel) {
-  //Serial.println("........RFCommunicatorListen ...........");
-  //Serial.println(RFCommunicatorMode );
-  if(RFCommunicatorMode == 0) {
-    RFCommunicatorRadio.openReadingPipe(0, RFCommunicatorAddress[channel]);
-    RFCommunicatorRadio.startListening();   
-    //Serial.println("Listening ...");
-    RFCommunicatorMode = 1; // listen
-    return false;
-  }
-  else {
-    if (RFCommunicatorRadio.available())
-    {
-      //Serial.println("Data coming ...");
-      char text[32] = {0};
-      RFCommunicatorRadio.read(&text, sizeof(text));
-      strcpy(data, text);
-      RFCommunicatorMode = 0;
-      return true;
-     }
-  }
-}
+void RFCommunicatorSetup(short int writeAddress, short int readAddress) {
+  radio.begin();
+  radio.openWritingPipe(addresses[writeAddress]); // 00002
+  radio.openReadingPipe(1, addresses[readAddress]); // 00001
+  radio.setPALevel(RF24_PA_MIN);
+} 
 
 void RFCommunicatorSend(char sendText[], short int channel) {
-  //RFCommunicatorRadio.begin();
-  RFCommunicatorRadio.stopListening();  
-  RFCommunicatorRadio.openWritingPipe(RFCommunicatorAddress[channel]);
-  //delay(100);
-
   const char text[32] = {0};
   strcpy(text,sendText);
-  RFCommunicatorRadio.write(&text, sizeof(text));
+  radio.stopListening();
+  radio.write(&text, sizeof(text));
+}
+
+void RFCommunicatorListen(char data[]) {  
+  radio.startListening();
+  while(!radio.available()) {}
+  char text[32] = "";
+  radio.read(&text, sizeof(text));
+  strcpy(data, text);
 }

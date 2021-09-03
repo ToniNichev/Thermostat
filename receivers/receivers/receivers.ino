@@ -48,7 +48,7 @@ void setup() {
   digitalWrite(RELAY_COOL, HIGH);
   digitalWrite(RELAY_HEAT, HIGH);
   
-  RFCommunicatorSetup();
+  RFCommunicatorSetup(1,0);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }  
@@ -78,9 +78,7 @@ void loop() {
   Serial.println(); 
 
   char serverData[64] = "";
-  while(RFCommunicatorListen(serverData, communicationChannel)!=true) {
-    delay(10);
-  }
+  RFCommunicatorListen(serverData);
 
   Serial.print("⌂ >>> ⍑ : "); // Received data from the HUB
   Serial.print(serverData);
@@ -90,13 +88,19 @@ void loop() {
     float *serverVals = parseToValues(serverData);
     short int id = (int) serverVals[1];
     communicationChannel = thermostatId = id;
-
+    Serial.print("New ⍑ #: ");
+    Serial.println(id);
     writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, id);    
-    delay(500);    
-    char msgToServer = "[added]";
-    RFCommunicatorSend(msgToServer, communicationChannel);
+    delay(5000);    
+    char msgToServer[32] = "[added]";
+    RFCommunicatorSend(msgToServer, 0);
+    Serial.println("msg sent!");
     delay(4000);
-    programMode = 0;
+    programMode = 2;
+  }
+  else if(programMode == 2) {
+    Serial.println("do nothing ...");
+    delay(2000);
   }
   else {
     hum = dht.readHumidity();
