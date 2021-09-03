@@ -15,7 +15,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("-=== Sending ===--");
 
   char msg[32] = "[Listener] sending data:";
   char arr[10];
@@ -23,11 +22,15 @@ void loop() {
   strcat(msg, arr);
   q ++;
   RFCommunicatorSend(msg, 1);
-  
+  Serial.println("-=== Sending ===--");
+  Serial.println(msg);
+  Serial.println();
+  delay(3000);
 
+  /*
   Serial.println("-=== Listening ===--");
-  
   RFCommunicatorListen();
+  */
 
  
 }

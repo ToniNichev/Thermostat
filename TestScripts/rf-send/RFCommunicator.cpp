@@ -6,15 +6,15 @@ const byte addresses[][6] = {"00001", "00002"};
 
 void RFCommunicatorSetup() {
   radio.begin();
-  radio.openWritingPipe(addresses[1]); // 00002
-  radio.openReadingPipe(1, addresses[0]); // 00001
+  radio.openWritingPipe(addresses[0]); // 00002
+  radio.openReadingPipe(1, addresses[1]); // 00001
   radio.setPALevel(RF24_PA_MIN);
 } 
 
 void RFCommunicatorSend(char sendText[], short int channel) {
-  radio.stopListening();
   const char text[32] = {0};
   strcpy(text,sendText);
+  radio.stopListening();
   radio.write(&text, sizeof(text));
 }
 
