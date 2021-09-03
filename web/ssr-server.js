@@ -23,9 +23,7 @@ const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 
 let thermostatsData = {};
 //let usersData = [];
-let hubPreferences = {
-  mode: 0
-};
+let hubPreferences = {};
 
 // only on app start - load thermostats data
 ( async () => {
@@ -152,6 +150,9 @@ app.get('/thermostat-services/*',
     const hubId = req.apiData.hubId;
     if(typeof req.apiData.thermostatsData === 'undefined') {
       thermostatsData[hubId] = [];
+      hubPreferences[hubId] = {
+        mode: 0
+      }
     }
     thermostatServices(req, res, thermostatsData, hubPreferences);
 });

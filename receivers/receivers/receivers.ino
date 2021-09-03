@@ -92,7 +92,7 @@ void loop() {
     Serial.println(id);
     writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, id);    
     delay(5000);    
-    char msgToServer[32] = "[added]";
+    char msgToServer[32] = "[\"added\"]";
     RFCommunicatorSend(msgToServer, 0);
     Serial.println("msg sent!");
     delay(4000);
