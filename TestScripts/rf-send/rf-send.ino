@@ -1,30 +1,33 @@
 #include "RFCommunicator.h"
+short int mode = 0;
+int q = 10;
 
-int q = 0;
 void setup() {
-  Serial.begin(9600);  
-  RFCommunicatorSetup();
+  Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
-  }  
+  }
+  Serial.println();
   Serial.println("PROGRAM STARTED");
-
+  
+  RFCommunicatorSetup();
 
 }
 
 void loop() {
-  char msgToServer[32]="";
-  char arr[10];
-  q ++;
-  sprintf( arr, "%d", q ); 
+  Serial.println("-=== Sending ===--");
 
-  char test[] = "sending data :";
-  strcpy(msgToServer,test);    
-  strcat(msgToServer, arr);  
+  char msg[32] = "[Listener] sending data:";
+  char arr[10];
+  sprintf(arr, "%d", q);
+  strcat(msg, arr);
+  q ++;
+  RFCommunicatorSend(msg, 1);
   
-  //Serial.print("SENDING: ");
-  Serial.println(msgToServer);
+
+  Serial.println("-=== Listening ===--");
   
-  RFCommunicatorSend(msgToServer, 0);
-  delay(8000);
+  RFCommunicatorListen();
+
+ 
 }

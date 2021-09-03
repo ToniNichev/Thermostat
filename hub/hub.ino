@@ -12,6 +12,7 @@
 //#define communicationChannel 10
 
 char thermostatsData[100] = ""; 
+short int programMode = 0;
 
 void setHubId() {
   strcpy(thermostatsData, "[\"");
@@ -29,6 +30,7 @@ void setup() {
   Serial.println("PROGRAM STARTED");
   delay(200);
 }
+
 
 void loop() {
   char ethernetURL[150] = "";
@@ -67,16 +69,8 @@ void loop() {
   int pos = 0;
   delay(1000);
 
-  
   if(serverData[1] == '#') { 
-    /*   
-    // adding thermostat mode
-    Serial.println(" --== Adding thermostat mode ==--");
-    RFCommunicatorSend(serverData, addNewThermostatChannel);
-    delay(2000);
-    RFCommunicatorReset();
-    delay(10);
-    */
+    programMode = 1;
     Serial.println("listening to the thermostat to add!");
     char tempTwo[32] = "";
     while(RFCommunicatorListen(tempTwo, 1)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
@@ -87,14 +81,20 @@ void loop() {
     
     delay(5000);
   }
-  else {
+
+  Serial.println("!!!!!!!!!!!!!!!!!!");
+
+
+  switch(programMode) {
+    case 120:
     for(int i = 0; i < 100; i ++) {
       if(serverData[i] == '\0')
         break;
       data[pos] = serverData[i];
       pos ++;
       if(serverData[i] == ']') {      
-        RFCommunicatorSend(data, thermostatId);          
+        RFCommunicatorSend(data, thermostatId);    
+        Serial.println("@@@@@@@@@@@@@@@@@@");      
         Serial.print("⌂ >>> ⍑ (");
         Serial.print(thermostatId);
         Serial.print(") : ");
@@ -109,36 +109,17 @@ void loop() {
         int loops = 0;
         char temp[32] = "";
         short int loopsBeforeGiveUp = 1000;
-        while(RFCommunicatorListen(temp, thermostatId)!= true) { // each thermostat communicates on it's unique channel determin by thermostatId
-          loops ++;
-          delay(10);
-          if(loops > loopsBeforeGiveUp)
-            break;
-        }
-          if(loops > loopsBeforeGiveUp) {
-            Serial.print("⌂  ⃠ ⍑ (");
-            Serial.print(thermostatId);
-            Serial.print(") for more than ");
-            Serial.print(loops);
-            Serial.println(" cycles. Skipping ..."); 
-            RFCommunicatorReset();
-            break;
-          }      
-        else {
-          strcat(thermostatsData, temp);
-          Serial.print("⌂ <<< ⍑ (");
-          Serial.print(thermostatId);
-          Serial.print(") : ");
-          Serial.print(temp);
-          Serial.println();
-          Serial.println();          
-        }
+        Serial.println("#################");
+        //RFCommunicatorListen(temp, thermostatId);
+
         thermostatId ++;
         pos = 0;
         loops = 0;
       }
-    }
+    }    
+    break;
   }
+  
   Serial.println("delaying 2 sec before the next cycle ...");
   delay(2000);
 }
