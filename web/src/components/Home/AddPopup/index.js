@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect, useRef }  from 'react';
 import styles from './styles.scss';
 import { thermostatApiUrl } from '../../../utils/getParams';
 import EventsManager from  '../../../containers/EventsManager';
@@ -6,54 +6,56 @@ import {Poster} from '../../../utils/Poster';
 
 let mode = 0;
 
-const AddPopup = ({closePopup}) => {  
+const AddPopup = ({closePopup, newThermostatAdded}) => {  
 
   const [msg, setMsg] = useState('...');
   const [buttonText, setButtonText] = useState('ADD THERMOSTAT');  
+  //const [isMounted, setIsMounted] = useState(false);
+
+  const mounted = useRef(false);
 
   useEffect(() => {
 
-    if(typeof EventsManager.callEvent('newThermostatAdded') === 'undefined') {
-      EventsManager.registerEvent('newThermostatAdded' , () => {
-
-        //setTimeout( () => {
-          //setMsg('New thermostat was successfuly added!');
-          //setButtonText('DONE');
-          mode = 4;
-          //closePopup();
-        //}, 1000);
-      });
-    }    
-    // Update the document title using the browser API
-    console.log("!!!!!");
-    if(mode == 4) {
+    console.log('USE EFFECT !!!! :');
+    setInterval( () => {
+       console.log('mode :', mode);
+      if(mode == 2 && newThermostatAdded()) {
+        if (!mounted.current) 
+          return;
         setMsg('New thermostat was successfuly added!');
-        setButtonText('DONE');      
-        mode = 3;
-    }
-  });  
+        setButtonText('DONE');   
+        mode = 3;        
 
-  setInterval( () => {
-    if(mode == 4) {
-      setMsg('New thermostat was successfuly added!');
-      setButtonText('DONE');   
-      mode = 3;
-    }
-  }, 4000);
+      }
+    }, 4000);
+
+    mounted.current = true;
+    return () => (mounted.current = false);
+});
+
+
   
 
-  const addFlag = async (closePopup) => {
+  const addFlag = () => {
 
     const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
     const hubId = apiData.hubId;
 
-    if(mode == 1) {
+    if(mode == 1) {      
+      // waiting to finish fetch from mode 0
+    }
+    if(mode == 2) {
+      setMsg('New thermostat was successfuly added!');
+      setButtonText('DONE');   
+      mode = 3;
+    }
+    if(mode == 3) {      
       mode = 0;
       setMsg('...');
       setButtonText('ADD THERMOSTAT');      
       closePopup();
-    }
-    else if(mode == 2) {
+    }    
+    else if(mode == 22) {
       // done 
       mode = 0;
       setMsg('...');
@@ -92,7 +94,7 @@ const AddPopup = ({closePopup}) => {
         <span onClick={ () => { closePopup() } } className={styles.close}>&times;</span>
         <div className={styles.flagProperties}>
           <p>{msg}</p>
-          <p><button onClick={ () => { addFlag(closePopup) } }>{buttonText}</button></p>
+          <p><button onClick={ () => { addFlag() } }>{buttonText}</button></p>
         </div>          
       </div>      
     </div>
