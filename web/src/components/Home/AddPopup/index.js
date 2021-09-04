@@ -1,4 +1,4 @@
-import React, { useState }  from 'react';
+import React, { useState, useEffect }  from 'react';
 import styles from './styles.scss';
 import { thermostatApiUrl } from '../../../utils/getParams';
 import EventsManager from  '../../../containers/EventsManager';
@@ -8,14 +8,39 @@ let mode = 0;
 
 const AddPopup = ({closePopup}) => {  
 
-  EventsManager.registerEvent('newThermostatAdded' , () => {
-    setMsg('New thermostat was successfuly added!');
-    setButtonText('DONE');
-    mode = 3;
-  });
-
   const [msg, setMsg] = useState('...');
-  const [buttonText, setButtonText] = useState('ADD THERMOSTAT');
+  const [buttonText, setButtonText] = useState('ADD THERMOSTAT');  
+
+  useEffect(() => {
+
+    if(typeof EventsManager.callEvent('newThermostatAdded') === 'undefined') {
+      EventsManager.registerEvent('newThermostatAdded' , () => {
+
+        //setTimeout( () => {
+          //setMsg('New thermostat was successfuly added!');
+          //setButtonText('DONE');
+          mode = 4;
+          //closePopup();
+        //}, 1000);
+      });
+    }    
+    // Update the document title using the browser API
+    console.log("!!!!!");
+    if(mode == 4) {
+        setMsg('New thermostat was successfuly added!');
+        setButtonText('DONE');      
+        mode = 3;
+    }
+  });  
+
+  setInterval( () => {
+    if(mode == 4) {
+      setMsg('New thermostat was successfuly added!');
+      setButtonText('DONE');   
+      mode = 3;
+    }
+  }, 4000);
+  
 
   const addFlag = async (closePopup) => {
 
