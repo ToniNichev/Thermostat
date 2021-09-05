@@ -6,7 +6,7 @@ import {Poster} from '../../../utils/Poster';
 
 let mode = 0;
 
-const AddPopup = ({closePopup, newThermostatAdded}) => {  
+const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {  
 
   const [msg, setMsg] = useState('...');
   const [buttonText, setButtonText] = useState('ADD THERMOSTAT');  
@@ -19,9 +19,9 @@ const AddPopup = ({closePopup, newThermostatAdded}) => {
     console.log('USE EFFECT !!!! :');
     setInterval( () => {
        console.log('mode :', mode);
+      if (!mounted.current) 
+        return;      
       if(mode == 2 && newThermostatAdded()) {
-        if (!mounted.current) 
-          return;
         setMsg('New thermostat was successfuly added!');
         setButtonText('DONE');   
         mode = 3;        

@@ -55,9 +55,12 @@ class Home extends Component {
 
   isNewThermostatAdded() {
     const result = this.newThermostatAdded;
-    this.newThermostatAdded = false;
     return result;
   }
+
+  thermostatAddedClear() {
+    this.newThermostatAdded = false;
+  }  
 
   async getThermostatsSettings() { 
     // run this only on client side
