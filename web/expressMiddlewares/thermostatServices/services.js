@@ -1,3 +1,6 @@
+import queries from "../../src/queries";
+
+
 const sendResponse = (res, responseString) => {
 
   //res
@@ -33,10 +36,43 @@ const getFullReadings = async (req, res, thermostatData) => {
 const getReadings = async (req, res, thermostatData, thermostatResponse, hubPreferences) => {
   let result = '';  
 
-  const l = thermostatData.length < 1 ? 1 : thermostatData.length;
+  console.log('hubPreferences :', hubPreferences);
+
+  const hubId = req.hubId;
+  //if(hubPreferences)
+  //const l = thermostatData.length < 1 ? 1 : thermostatData.length;
   if(hubPreferences.mode === 1) {
-    // Add thermostat mode - send next available thermostat ID to the HUB
-    result = `[#,${l}]`; 
+    console.log('>>>>>>>>>>>> req.fullData :', req.fullData);
+    if(req.fullData.length > 1 && req.fullData[1][0] == `added`) {
+      const users = await queries.getUserIdByThermostatId(hubId);
+      const userId = users[0].userId;   
+      
+      const thermostatObj =  {
+        "thermostatId": thermostatData.length.toString(),
+        "userId": userId,
+        "thermostatName" : "test",
+        "hubId": hubId,
+        "group": "My home",        
+        "humidity": "0",
+        "curentTemp": "0",
+        "requiredTemp": "0",
+        "mode": "1",
+        "fanMode": "0"
+      };
+
+      thermostatData.push(thermostatObj);
+      queries.addThermostat(thermostatObj);
+      hubPreferences.mode = 0;
+      result = `[##]`;
+    }
+    else {
+      // Add thermostat mode - send next available thermostat ID to the HUB
+      result = `[#,${thermostatData.length}]`; 
+    }
+  }
+  else if(hubPreferences.mode == 2) {
+    sendResponse(res, '[##, 1]'); // ## - thermostat added, 1 - ok
+    console.log("@#@#@#@#@#");
   }
   else {
     for(let i = 0; i < thermostatData.length; i ++) {

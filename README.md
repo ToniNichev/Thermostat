@@ -65,6 +65,10 @@ A Smart Thermostat project
     * Add new thermostate mode
         http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID][1]
         example: http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[%22AXCS12%22][1]
+        workflow:
+        WEB Page =>  http://localhost:8081/thermostat-services/add-thermostat?data=[%22AXCS12%22]
+        Service => http://localhost:8081/thermostat-services/get-data?data=[%22AXCS12%22] returns [#,NewThermostatId]
+        HUB => http://localhost:8081/thermostat-services/get-data?data=[%22AXCS12%22]["added"]
 
 
 * Architecture

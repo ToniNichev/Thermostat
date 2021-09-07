@@ -10,6 +10,7 @@ import Dialer from '../Dialer';
 import RangeSlider from '../RangeSlider';
 import TemperatureBar from '../TemperatureBar';
 const {WEATHER_API_URL} = process.env;
+import EventsManager from  '../../containers/EventsManager';
 
 class Home extends Component {
   
@@ -24,6 +25,8 @@ class Home extends Component {
     this.setThermostatFanSliderMode = [];
     this.disableFetchData = false;
     this.hubId = null;
+    this.dataLength = 0;
+    this.newThermostatAdded = false;
 
     this.addFlagVisible = false;
     this.state = {
@@ -48,6 +51,15 @@ class Home extends Component {
   closePopup() {
     this.setState({addFlagVisible: false});    
     this.getThermostatsSettings();
+  }  
+
+  isNewThermostatAdded() {
+    const result = this.newThermostatAdded;
+    return result;
+  }
+
+  thermostatAddedClear() {
+    this.newThermostatAdded = false;
   }  
 
   async getThermostatsSettings() { 
@@ -114,7 +126,12 @@ class Home extends Component {
     fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-full-data?data=["${this.hubId}"]`)
       .then(response => response.json())
       .then(data => { 
-
+        if(this.dataLength < data.length) {
+          this.dataLength = data.length;
+          //EventsManager.callEvent("newThermostatAdded")();
+          this.thermostatsData = data;
+          this.newThermostatAdded = true;
+        }
         for(let i = 0; i < data.length; i ++) {
           const id = data[i].id;
           const curentTemp = data[i].curentTemp;
@@ -215,7 +232,7 @@ class Home extends Component {
             <button className={this.state.flagEditable ? styles.addButtonHidden : styles.addButtonVisible } onClick={() => { this.addFlag()} }>ADD</button>
             <EditDelete flagEditable={ this.state.flagEditable } editFlag={ () => { this.editFlag() } } />
           </div>
-          {this.state.addFlagVisible ? <AddPopup closePopup={ () => {this.closePopup() } } /> : null}
+          {this.state.addFlagVisible ? <AddPopup newThermostatAdded={ () =>{ return this.isNewThermostatAdded() } } closePopup={ () => { this.closePopup() } } /> : null}
       </div>
     );
   }

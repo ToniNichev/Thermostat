@@ -4,6 +4,12 @@ const querystring = require('querystring');
 //import queries from '../src/queries';
 
 
+
+const stringToObject = (str) => {
+  const fullString = str == '' ? '[]' : '[' + str.split("][").join("],[") + ']';
+  return JSON.parse(fullString);
+}
+
 const requestDataFromAPI = async (req, res, thermostatsData, next) => {  
   console.log("^^^^^^^^^^^^^^^^^^^^");
   console.log(req.url);
@@ -16,8 +22,11 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
     console.log("ERROR ! NO `data` Query String Param!!!");
     console.log("#####################################################################");
   }
-  const dataString = JSON.parse(parsedQs.data);
-  const hubId = dataString[0];
+
+  const validDataObj = stringToObject(parsedQs.data);
+  req.fullData = validDataObj;
+  const hubId = validDataObj[0];
+  req.hubId = hubId[0];
   // send thermostats data for this specific hub from the request
   const thermostatDataForThisHub = typeof thermostatsData[hubId] !== 'undefined' ? thermostatsData[hubId] : {};
   req.apiData = {"hubId": hubId, "thermostatsData" : thermostatsData[hubId]};

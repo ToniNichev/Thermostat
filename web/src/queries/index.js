@@ -6,6 +6,11 @@ const usersCollectionName = 'users';
 
 export default {
 
+    // User functions 
+    getUserIdByThermostatId: async (thermostatId) => {
+      return mongoDB.find({thermostatHubs: thermostatId}, usersCollectionName);
+    },
+
     // Thermostat functions
 
     getAllThermostats: async () => {
@@ -61,6 +66,10 @@ export default {
    dropdb: async () => {
     const result = mongoDB.dropDB();
     return result;
+   },
+  
+   addThermostat: async (thermostatObject) => {    
+    mongoDB.add(thermostatObject, thermostatCollectionName, () => {}); 
    },
 
    setup: async () => {

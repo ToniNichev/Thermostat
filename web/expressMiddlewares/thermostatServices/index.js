@@ -20,13 +20,18 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => 
     const action = req.params[0];
     const requestData = stringToObject(req.query.data);
     const hubId = requestData[0][0];
+    if(typeof hubPreferences[hubId] === 'undefined') {
+        hubPreferences[hubId] = {
+            mode: 0
+        }
+    }
     console.log(">>>", hubId)
     switch(action) {
         case 'get-full-data':
             await getFullReadings(req, res, thermostatsData[hubId]);
             break;
         case 'get-data':
-            getReadings(req, res, thermostatsData[hubId], requestData, hubPreferences);
+            getReadings(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);
             break;   
         case 'set-desired-temperature': 
             await setDesiredTemperature(req, res, thermostatsData[hubId], requestData);
@@ -38,7 +43,7 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => 
             await setThermostatFanMode(req, res, thermostatsData[hubId], requestData);
             break;
         case 'add-thermostat': 
-            await setAddThermostatMode(req, res, thermostatsData[hubId], requestData, hubPreferences);        
+            await setAddThermostatMode(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);        
             break;        
     }
 }
