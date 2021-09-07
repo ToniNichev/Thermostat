@@ -48,7 +48,6 @@ void setup() {
   digitalWrite(RELAY_COOL, HIGH);
   digitalWrite(RELAY_HEAT, HIGH);
   
-  RFCommunicatorSetup(1,0);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }  
@@ -57,12 +56,17 @@ void setup() {
   //writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, -1);  
   short int Id = readIntFromEEPROM(THERMOSTAT_ID_ADDRESS);
   if(Id == -1) {
+    RFCommunicatorSetup(1,0); // set up on ADD thermostat channel
     communicationChannel = ADD_NEW_THERMOSTAT_COMMUNICATION_CHANNEL;
     programMode = 1; // set add new thermostat mode
     Serial.println("⍑ is in ADD mode ...");
   }
   else {
-    communicationChannel = thermostatId = Id;
+    thermostatId = Id;
+    communicationChannel = 1 + thermostatId;
+    RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
+    Serial.print("Thermostat is starting on chanel :");
+    Serial.println(communicationChannel);
   }
 }
 
@@ -93,7 +97,7 @@ void loop() {
     writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, id);    
     delay(5000);    
     char msgToServer[32] = "[\"added\"]";
-    RFCommunicatorSend(msgToServer, 0);
+    RFCommunicatorSend(msgToServer);
     Serial.println("msg sent!");
     delay(4000);
     programMode = 0;
@@ -133,7 +137,7 @@ void loop() {
     delay(4000);  
     Serial.print("communicationChannel : ");
     Serial.println(communicationChannel);
-    RFCommunicatorSend(msg, communicationChannel);
+    RFCommunicatorSend(msg);
     delay(1000);
   
     float *serverVals = parseToValues(serverData);

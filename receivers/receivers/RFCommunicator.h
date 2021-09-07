@@ -8,7 +8,7 @@
 void RFCommunicatorSetup(short int writeAddress, short int readAddress);
 void RFCommunicatorListen(char data[]);
 
-void RFCommunicatorSend(char sendText[], short int channel);
+void RFCommunicatorSend(char sendText[]);
 
 
 #endif
