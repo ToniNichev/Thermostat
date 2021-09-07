@@ -1,7 +1,7 @@
 #include "RFCommunicator.h"
 
 RF24 radio(9, 8);  // CE, CSN
-const byte addresses[][6] = {"00001", "00002"};
+const byte addresses[][6] = {"00001", "00002", "00003", "00004"};
 
 void RFCommunicatorSetup(short int writeAddress, short int readAddress) {
   radio.begin();
