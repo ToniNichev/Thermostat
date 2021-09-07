@@ -54,7 +54,7 @@ void setup() {
   }  
   Serial.println("================== PROGRAM STARTED ======================");
 
-  writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, -1);  
+  //writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, -1);  
   short int Id = readIntFromEEPROM(THERMOSTAT_ID_ADDRESS);
   if(Id == -1) {
     communicationChannel = ADD_NEW_THERMOSTAT_COMMUNICATION_CHANNEL;
@@ -96,7 +96,7 @@ void loop() {
     RFCommunicatorSend(msgToServer, 0);
     Serial.println("msg sent!");
     delay(4000);
-    programMode = 2;
+    programMode = 0;
   }
   else if(programMode == 2) {
     Serial.println("do nothing ...");

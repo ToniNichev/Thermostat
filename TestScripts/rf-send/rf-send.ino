@@ -8,14 +8,12 @@ void setup() {
     ; // wait for serial port to connect. Needed for native USB port only
   }
   Serial.println();
-  Serial.println("PROGRAM STARTED");
-  
-  RFCommunicatorSetup(0, 1);
-
+  Serial.println("PROGRAM STARTED");  
 }
 
 void loop() {
-
+  RFCommunicatorSetup(0, 1);
+  delay(20);
   char msg[32] = "[sender] sending data:";
   char arr[10];
   sprintf(arr, "%d", q);
