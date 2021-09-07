@@ -79,11 +79,14 @@ void loop() {
     Serial.print("⍑ @@@ replied : ");
     Serial.println(tempTwo);
     strcat(thermostatsData, tempTwo);
+    programMode = 0;
     delay(5000);
   }
   else {
+    Serial.print("programMode: ");
+    Serial.println(programMode);
     switch(programMode) {
-      case 120:
+      case 0:
       for(int i = 0; i < 100; i ++) {
         if(serverData[i] == '\0')
           break;
