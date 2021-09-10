@@ -10,7 +10,7 @@ void RFCommunicatorSetup(short int writeAddress, short int readAddress) {
   radio.setPALevel(RF24_PA_MIN);
 } 
 
-void RFCommunicatorSend(char sendText[], short int channel) {
+void RFCommunicatorSend(char sendText[]) {
   const char text[32] = {0};
   strcpy(text,sendText);
   radio.stopListening();

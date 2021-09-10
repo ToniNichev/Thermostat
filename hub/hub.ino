@@ -22,7 +22,6 @@ void setHubId() {
       
 void setup() {
   Serial.begin(9600);
-  RFCommunicatorSetup(0,1);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
@@ -65,35 +64,54 @@ void loop() {
   setHubId();
       
   char data[32] = "";
-  short int thermostatId = 0;
+  
+  short int thermostatId = 1;
   int pos = 0;
   delay(1000);
 
-  if(serverData[1] == '#') { 
-     Serial.println("Sending # to the ⍑");
-     RFCommunicatorSend(serverData, 0);
-    delay(100);
-    Serial.println("waiting for response ...");
-    char tempTwo[32] = "";
-    RFCommunicatorListen(tempTwo);
-    Serial.print("⍑ @@@ replied : ");
-    Serial.println(tempTwo);
-    strcat(thermostatsData, tempTwo);
-    programMode = 0;
-    delay(5000);
+  if(serverData[1] == '#') {
+    if(serverData[2] == '#') {
+      programMode = 0;
+    }
+    else {
+      // set up hub to add thermostat mode
+      RFCommunicatorSetup(0,1);
+      // send thermostat ID to the thermostat
+      Serial.print("0 | ⌂ >>> ⍑: ");
+      Serial.println(serverData);
+      RFCommunicatorSend(serverData);
+      delay(100);
+      Serial.println("waiting for ⍑ response ...");
+      char tempTwo[32] = "";
+      RFCommunicatorListen(tempTwo);
+      Serial.print("0 | ⍑ >>> ⌂ : ");
+      Serial.println(tempTwo);
+      strcat(thermostatsData, tempTwo);
+      programMode = 0;
+      delay(5000);
+    }
   }
   else {
+    // regular hub mode
     Serial.print("programMode: ");
     Serial.println(programMode);
     switch(programMode) {
       case 0:
       for(int i = 0; i < 100; i ++) {
-        if(serverData[i] == '\0')
+        RFCommunicatorSetup(i,i + 1); // switch to each thermostat chanel
+        
+        delay(100);        
+        if(serverData[i] == '\0') {
           break;
+        }
         data[pos] = serverData[i];
         pos ++;
         if(serverData[i] == ']') {      
-          RFCommunicatorSend(data, thermostatId);       
+          RFCommunicatorSetup(thermostatId, thermostatId + 1);
+          delay(100);
+          RFCommunicatorSend(data);  
+          Serial.print(thermostatId);     
+          Serial.print(" | ");
           Serial.print("⌂ >>> ⍑ (");
           Serial.print(thermostatId);
           Serial.print(") : ");
@@ -109,7 +127,7 @@ void loop() {
           char temp[32] = "";
           short int loopsBeforeGiveUp = 1000;
           RFCommunicatorListen(temp);
-  
+          strcat(thermostatsData, temp);
           thermostatId ++;
           pos = 0;
           loops = 0;
