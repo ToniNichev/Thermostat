@@ -53,12 +53,12 @@ void setup() {
   }  
   Serial.println("================== PROGRAM STARTED ======================");
 
-  //writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, -1);  
+  //writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, -1);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
   short int Id = readIntFromEEPROM(THERMOSTAT_ID_ADDRESS);
   if(Id == -1) {
-    RFCommunicatorSetup(1,0); // set up on ADD thermostat channel
-    communicationChannel = ADD_NEW_THERMOSTAT_COMMUNICATION_CHANNEL;
-    programMode = 1; // set add new thermostat mode
+    communicationChannel = 0;
+    RFCommunicatorSetup(1,0); // set up thermostat to add mode
+    programMode = 1;          // set add new thermostat mode
     Serial.println("⍑ is in ADD mode ...");
   }
   else {
@@ -92,7 +92,7 @@ void loop() {
     float *serverVals = parseToValues(serverData);
     short int id = (int) serverVals[1];
     communicationChannel = thermostatId = id;
-    Serial.print("New ⍑ #: ");
+    Serial.print("Received NEW ⍑ ID: ");
     Serial.println(id);
     writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, id);    
     delay(5000);    
@@ -101,6 +101,8 @@ void loop() {
     Serial.println("msg sent!");
     delay(4000);
     programMode = 0;
+    communicationChannel = id + 1; // switch to regular communication channel.
+    RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
   }
   else if(programMode == 2) {
     Serial.println("do nothing ...");
