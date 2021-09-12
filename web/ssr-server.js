@@ -127,19 +127,6 @@ app.get('/Robots.txt', (req, res) => {
   `)
 });
 
-/*
-app.get('/thermostat-services/*', async (req, res, next) => {
-  //await requestDataFromAPI(req, res, thermostatsData, next);
-  //await thermostatServices(req, res, thermostatsData, hubPreferences);
-  
-  res.status(200);
-  res.removeHeader('X-Powered-By');
-  res.removeHeader('Set-Cookie');
-  res.removeHeader('Connection');
-  res.send('OK !');  
-});
-*/
-
 
 app.get('/thermostat-services/*',
   function (req, res, next) {
@@ -157,9 +144,6 @@ app.get('/thermostat-services/*',
     thermostatServices(req, res, thermostatsData, hubPreferences);
 });
 
-
-
-
 app.get('/weather-services/*', async (req, res) => {
   await weatherServices(req, res);
 });
@@ -167,6 +151,8 @@ app.get('/weather-services/*', async (req, res) => {
 app.post('/services/setup', async (req, res) => {
   //queries.setup();
   queries.setupOneUser();
+  thermostatsData = [];
+
   res
   .status(200)
   .set('Content-Type', 'application/json')
