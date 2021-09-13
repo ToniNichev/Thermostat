@@ -23,6 +23,7 @@ void RFCommunicatorListen(char data[]) {
   radio.startListening();
   listenRepeats = 0;
   while(!radio.available()) {
+    /*
     if(listenRepeats > RECEIVE_TIMEOUT_AFTER) {
       Serial.print("[RFCommunicator]: didn't receive response for more than ");
       Serial.print(listenRepeats);
@@ -30,6 +31,7 @@ void RFCommunicatorListen(char data[]) {
       break;
     }
     listenRepeats ++;
+    */
     delay(10);
   }
   char text[32] = "";
