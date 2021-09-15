@@ -1,4 +1,5 @@
 #include "RFCommunicator.h"
+#define RECEIVE_TIMEOUT_AFTER 200
 
 RF24 radio(9, 8);  // CE, CSN
 const byte addresses[][6] = {"00001", "00002", "00003", "00004"};
@@ -19,7 +20,7 @@ void RFCommunicatorSend(char sendText[]) {
 
 void RFCommunicatorListen(char data[], bool withTimeout) {  
   radio.startListening();
-  listenRepeats = 0;
+  short int listenRepeats = 0;
   while(!radio.available()) {
     if(withTimeout) {
       if(listenRepeats > RECEIVE_TIMEOUT_AFTER) {
