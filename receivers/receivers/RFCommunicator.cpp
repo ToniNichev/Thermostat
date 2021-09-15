@@ -19,19 +19,19 @@ void RFCommunicatorSend(char sendText[]) {
   radio.write(&text, sizeof(text));
 }
 
-void RFCommunicatorListen(char data[]) {  
+void RFCommunicatorListen(char data[], bool withTimeout) {  
   radio.startListening();
   listenRepeats = 0;
   while(!radio.available()) {
-    /*
-    if(listenRepeats > RECEIVE_TIMEOUT_AFTER) {
-      Serial.print("[RFCommunicator]: didn't receive response for more than ");
-      Serial.print(listenRepeats);
-      Serial.println(" cycles. !!! Aborting !!!");
-      break;
+    if(withTimeout) {
+      if(listenRepeats > RECEIVE_TIMEOUT_AFTER) {
+        Serial.print("[RFCommunicator]: didn't receive response for more than ");
+        Serial.print(listenRepeats);
+        Serial.println(" cycles. !!! Aborting !!!");
+        break;
+      }
+      listenRepeats ++;    
     }
-    listenRepeats ++;
-    */
     delay(10);
   }
   char text[32] = "";
