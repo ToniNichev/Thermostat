@@ -83,7 +83,7 @@ void loop() {
       delay(100);
       Serial.println("waiting for ⍑ response ...");
       char tempTwo[32] = "";
-      RFCommunicatorListen(tempTwo);
+      RFCommunicatorListen(tempTwo, false);
       Serial.print("0 | ⍑ >>> ⌂ : ");
       Serial.println(tempTwo);
       strcat(thermostatsData, tempTwo);
@@ -126,7 +126,7 @@ void loop() {
           int loops = 0;
           char temp[32] = "";
           short int loopsBeforeGiveUp = 1000;
-          RFCommunicatorListen(temp);
+          RFCommunicatorListen(temp, true);
           strcat(thermostatsData, temp);
           thermostatId ++;
           pos = 0;
