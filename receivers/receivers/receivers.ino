@@ -82,7 +82,7 @@ void loop() {
   Serial.println(); 
 
   char serverData[64] = "";
-  RFCommunicatorListen(serverData);
+  RFCommunicatorListen(serverData, false);
 
   Serial.print("⌂ >>> ⍑ : "); // Received data from the HUB
   Serial.print(serverData);
