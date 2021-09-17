@@ -98,9 +98,8 @@ void loop() {
     switch(programMode) {
       case 0:
       for(int i = 0; i < 100; i ++) {
-        RFCommunicatorSetup(i,i + 1); // switch to each thermostat chanel
+        //RFCommunicatorSetup(i,i + 1); // switch to each thermostat chanel
         
-        delay(100);        
         if(serverData[i] == '\0') {
           break;
         }
@@ -108,16 +107,10 @@ void loop() {
         pos ++;
         if(serverData[i] == ']') {      
           RFCommunicatorSetup(thermostatId, thermostatId + 1);
-          delay(100);
+          delay(2000);
           RFCommunicatorSend(data);  
-          Serial.print(thermostatId);     
-          Serial.print(" | ");
-          Serial.print("⌂ >>> ⍑ (");
-          Serial.print(thermostatId);
-          Serial.print(") : ");
-          Serial.print(data);
-          Serial.println();
-    
+          printToSerial(thermostatId, data, true);
+ 
           // clear data
           memset(data, 0, 32);
           
@@ -127,6 +120,7 @@ void loop() {
           char temp[32] = "";
           short int loopsBeforeGiveUp = 1000;
           RFCommunicatorListen(temp, true);
+          printToSerial(thermostatId, temp, false);
           strcat(thermostatsData, temp);
           thermostatId ++;
           pos = 0;
@@ -138,4 +132,19 @@ void loop() {
   }
   Serial.println("delaying 2 sec before the next cycle ...");
   delay(2000);
+}
+
+
+
+void printToSerial(short int thermostatId, char data[32], bool hubToThermostat) {
+  Serial.print(thermostatId);     
+  Serial.print(" | ");
+  if(hubToThermostat)
+    Serial.print("⌂ >>> ⍑ (");
+  else
+    Serial.print("⍑ >>> ⌂ (");
+  Serial.print(thermostatId);
+  Serial.print(") : ");
+  Serial.print(data);
+  Serial.println();  
 }
