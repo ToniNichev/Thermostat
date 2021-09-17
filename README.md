@@ -60,15 +60,15 @@ A Smart Thermostat project
         - example call: http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][0,52.80,28.63,0][1,51.90,28.38,0]
 
     * Set desired temperature
-        http://localhost:8081/thermostat-services/set-desired-temperature?data=["AXCS12"][0,21.0]
+        http://toni-develops.com:8061/thermostat-services/set-desired-temperature?data=["AXCS12"][0,21.0]
 
     * Add new thermostate mode
         http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID][NEXT-THERMOSTAT-ID]
         example: http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12"][1]
         workflow:
-        WEB Page =>  http://localhost:8081/thermostat-services/add-thermostat?data=["AXCS12"]
-        Service => http://localhost:8081/thermostat-services/get-data?data=["AXCS12"] returns [#,NewThermostatId]
-        HUB => http://localhost:8081/thermostat-services/get-data?data=["AXCS12"]["added"]
+        WEB Page =>  http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12"]
+        Service => http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"] returns [#,NewThermostatId]
+        HUB => http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]["added"]
 
 
 * Architecture

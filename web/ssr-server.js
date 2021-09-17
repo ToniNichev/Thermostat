@@ -20,6 +20,7 @@ import queries from './src/queries';
 import bodyParser from 'body-parser';
 
 const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
+let test = null;
 
 let thermostatsData = {};
 //let usersData = [];
@@ -179,6 +180,10 @@ app.get('/*',
     requestDataFromAPI(req, res, thermostatsData, next);
   },
   function (req, res, next) {
+    if(test === null) {
+      test = 123;
+      console.log(">>>>>> test");
+    }
    responseWithSourceCode(req, res, req.apiData, req.templateName);
 });
 
