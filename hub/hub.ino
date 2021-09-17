@@ -140,11 +140,11 @@ void printToSerial(short int thermostatId, char data[32], bool hubToThermostat) 
   Serial.print(thermostatId);     
   Serial.print(" | ");
   if(hubToThermostat)
-    Serial.print("⌂ >>> ⍑ (");
+    Serial.print("⌂ >>> ⍑ ");
   else
-    Serial.print("⍑ >>> ⌂ (");
+    Serial.print("⍑ >>> ⌂ ");
   Serial.print(thermostatId);
-  Serial.print(") : ");
+  Serial.print(" : ");
   Serial.print(data);
   Serial.println();  
 }

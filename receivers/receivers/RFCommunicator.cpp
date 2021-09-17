@@ -1,8 +1,8 @@
 #include "RFCommunicator.h"
-#define RECEIVE_TIMEOUT_AFTER 800
+#define RECEIVE_TIMEOUT_AFTER 400
 
 RF24 radio(9, 8);  // CE, CSN
-const byte addresses[][6] = {"00001", "00002", "00003", "00004"};
+const byte addresses[][6] = {"00001", "00002", "00008", "00009"};
 short int listenRepeats;
 
 void RFCommunicatorSetup(short int writeAddress, short int readAddress) {

@@ -75,18 +75,15 @@ void setup() {
 void loop() {
   Serial.println();
   Serial.println();
-  delay(150);
 
   Serial.print("Waiting for data from the HUB on channel :");
   Serial.print(communicationChannel);
   Serial.println(); 
 
-  char serverData[64] = "";
+  char serverData[32] = "";
   RFCommunicatorListen(serverData, false);
+  printToSerial(thermostatId, serverData, true);
 
-  Serial.print("⌂ >>> ⍑ : "); // Received data from the HUB
-  Serial.print(serverData);
-  Serial.println();
 
   if(programMode == 1) {
     float *serverVals = parseToValues(serverData);
@@ -109,6 +106,7 @@ void loop() {
     delay(2000);
   }
   else {
+    // regular program mode
     hum = dht.readHumidity();
     temp = dht.readTemperature();  
   
@@ -210,6 +208,19 @@ void loop() {
 // ##############################################
 // Helper methods
 // ##############################################
+
+
+void printToSerial(short int thermostatId, char data[32], bool hubToThermostat) {
+  Serial.print(thermostatId);     
+  Serial.print(" | ");
+  if(hubToThermostat)
+    Serial.print("⌂ >>> ⍑ ");
+  else
+    Serial.print("⍑ >>> ⌂ ");
+  Serial.print(" : ");
+  Serial.print(data);
+  Serial.println();  
+}
 
 void writeIntIntoEEPROM(int address, int number)
 { 
