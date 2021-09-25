@@ -2,7 +2,7 @@
 #define RECEIVE_TIMEOUT_AFTER 600
 
 RF24 radio(9, 8);  // CE, CSN
-const byte addresses[][6] = {"00001", "00002", "00008", "00009"};
+const byte addresses[][6] = {"00001", "00002", "10008", "10009"};
 
 void RFCommunicatorSetup(short int writeAddress, short int readAddress) {
   radio.begin();
@@ -24,9 +24,9 @@ void RFCommunicatorListen(char data[], bool withTimeout) {
   while(!radio.available()) {
     if(withTimeout) {
       if(listenRepeats > RECEIVE_TIMEOUT_AFTER) {
-        Serial.print("[RFCommunicator]: didn't receive response for more than ");
+        Serial.print(" << [RFCommunicator]: didn't receive response for more than ");
         Serial.print(listenRepeats);
-        Serial.println(" cycles. !!! Aborting !!!");
+        Serial.print(" cycles! Aborting!");
         break;
       }
       listenRepeats ++;    
