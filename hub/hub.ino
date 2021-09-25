@@ -26,7 +26,9 @@ void setup() {
     ; // wait for serial port to connect. Needed for native USB port only
   }
   Serial.println();
+  Serial.println("######################");
   Serial.println("PROGRAM STARTED");
+  Serial.println("######################");
   delay(200);
 }
 
@@ -45,7 +47,7 @@ void loop() {
   strcat(ethernetURL, " HTTP/1.1");
 
   Serial.println();
-  Serial.print("⌂ >>> ♁ :"); // request from the hub to the web server
+  Serial.print("⌂ >>> ♁ :"); // request from the hub to the web server, passing thermostat's readings
   Serial.print(ethernetURL);
   Serial.println();
     
@@ -63,13 +65,16 @@ void loop() {
   // add hub ID
   setHubId();
       
-  char data[32] = "";
-  
-  short int thermostatId = 1;
+  char data[32] = "";  
+  short int thermostatId = 0; // starting from first thermostat
+  short int communicationChannel;
   int pos = 0;
   delay(1000);
 
   if(serverData[1] == '#') {
+    // #########################
+    // add thermostat hub mode
+    // #########################    
     if(serverData[2] == '#') {
       programMode = 0;
     }
@@ -92,44 +97,50 @@ void loop() {
     }
   }
   else {
+    // #########################
     // regular hub mode
+    // #########################
     Serial.print("programMode: ");
     Serial.println(programMode);
     switch(programMode) {
       case 0:
-      for(int i = 0; i < 100; i ++) {
-        //RFCommunicatorSetup(i,i + 1); // switch to each thermostat chanel
-        
-        if(serverData[i] == '\0') {
-          break;
-        }
-        data[pos] = serverData[i];
-        pos ++;
-        if(serverData[i] == ']') {      
-          RFCommunicatorSetup(thermostatId, thermostatId + 1);
-          delay(2000);
-          RFCommunicatorSend(data);  
-          printToSerial(thermostatId, data, true);
- 
-          // clear data
-          memset(data, 0, 32);
-          
-          delay(2000);
-    
-          int loops = 0;
-          char temp[32] = "";
-          short int loopsBeforeGiveUp = 1000;
-          RFCommunicatorListen(temp, true);
-          printToSerial(thermostatId, temp, false);
-          strcat(thermostatsData, temp);
-          thermostatId ++;
-          pos = 0;
-          loops = 0;
-        }
-      }    
-      break;
+        for(int i = 0; i < 100; i ++) {      
+          if(serverData[i] == '\0') {
+            break;
+          }
+          data[pos] = serverData[i];
+          pos ++;
+          if(serverData[i] == ']') {  
+            // sending data to the thermostat
+            communicationChannel = thermostatId + 1;
+
+            RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
+            if(thermostatId == 1) {
+              delay(1000);
+              RFCommunicatorSend(data);  
+              printToSerial(communicationChannel, data, true);
+            }
+            
+            // clear data
+            memset(data, 0, 32);            
+            delay(2000);
+
+            //if(thermostatId == 1) {
+              // listen for data from the thermostat
+              char temp[32] = "";         
+              RFCommunicatorListen(temp, true);
+              printToSerial(communicationChannel, temp, false);
+              strcat(thermostatsData, temp);
+            //}
+            thermostatId ++;
+            pos = 0;
+            Serial.println();
+          }
+        }    
+        break;
     }
   }
+  Serial.println();
   Serial.println("delaying 2 sec before the next cycle ...");
   delay(2000);
 }
@@ -137,6 +148,7 @@ void loop() {
 
 
 void printToSerial(short int thermostatId, char data[32], bool hubToThermostat) {
+  Serial.println();
   Serial.print(thermostatId);     
   Serial.print(" | ");
   if(hubToThermostat)
@@ -146,5 +158,4 @@ void printToSerial(short int thermostatId, char data[32], bool hubToThermostat) 
   Serial.print(thermostatId);
   Serial.print(" : ");
   Serial.print(data);
-  Serial.println();  
 }
