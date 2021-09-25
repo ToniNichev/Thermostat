@@ -129,16 +129,13 @@ void loop() {
     msg[14] = ',';
     msg[15] = '0';
     msg[16] = ']';       
-  
-    Serial.print("⍑ >>> ⌂ : "); // Sending data [ID, HUMIDITY, TEMPERATURE, EMPTY] to the HUB
-    Serial.print(msg);
-    Serial.println();
-  
+
+    printToSerial(thermostatId, msg, false);  
     delay(4000);  
     Serial.print("communicationChannel : ");
     Serial.println(communicationChannel);
     RFCommunicatorSend(msg);
-    delay(1000);
+    delay(100);
   
     float *serverVals = parseToValues(serverData);
     short int fanMode = (int) serverVals[3];  
