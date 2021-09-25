@@ -8,19 +8,15 @@
 #define RELAY_FAN_HIGH 6
 #define RELAY_COOL 5
 #define RELAY_HEAT 3
-
-#define THERMOSTAT_ID_ADDRESS 3
-
+#define THERMOSTAT_EPROM_ADDRESS 3
 
 // thermostat settings
 short int thermostatId = 0;
 
 // program variables
-//char serverData[100] = "";
 int len;
 short int programMode = 0;
 short int communicationChannel = 0;
-short int ADD_NEW_THERMOSTAT_COMMUNICATION_CHANNEL = 10;
 
 //Constants
 #define DHTPIN 4     // what pin we're connected to
@@ -32,6 +28,7 @@ float temp; //Stores temperature value
 char t[4] = "";
 char msg[32] = "";
 short int thermostatMode = 0;
+
 
 void setup() {  
   Serial.begin(9600);
@@ -50,11 +47,14 @@ void setup() {
   
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
-  }  
-  Serial.println("================== PROGRAM STARTED ======================");
+  } 
+  Serial.println(""); 
+  Serial.println("#############################################");
+  Serial.println("⍑ STARTING ...");
 
-  //writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, -1);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
-  short int Id = readIntFromEEPROM(THERMOSTAT_ID_ADDRESS);
+  //writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, -1);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
+  
+  short int Id = readIntFromEEPROM(THERMOSTAT_EPROM_ADDRESS);
   if(Id == -1) {
     communicationChannel = 0;
     RFCommunicatorSetup(1,0); // set up thermostat to add mode
@@ -65,8 +65,11 @@ void setup() {
     thermostatId = Id;
     communicationChannel = 1 + thermostatId;
     RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
-    Serial.print("Thermostat is starting on chanel :");
+    Serial.print("⍑ ID : ");
+    Serial.println(thermostatId);
+    Serial.print("⍑ chanel :");
     Serial.println(communicationChannel);
+    Serial.println("#############################################");
   }
 }
 
@@ -76,22 +79,25 @@ void loop() {
   Serial.println();
   Serial.println();
 
-  Serial.print("Waiting for data from the HUB on channel :");
   Serial.print(communicationChannel);
+  Serial.print(" | ⍑ ... ⌂");
   Serial.println(); 
 
   char serverData[32] = "";
   RFCommunicatorListen(serverData, false);
-  printToSerial(thermostatId, serverData, true);
+  printToSerial(communicationChannel, serverData, true);
 
 
   if(programMode == 1) {
+    // ###########################
+    // adding thermostat mode
+    // ###########################    
     float *serverVals = parseToValues(serverData);
     short int id = (int) serverVals[1];
     communicationChannel = thermostatId = id;
     Serial.print("Received NEW ⍑ ID: ");
     Serial.println(id);
-    writeIntIntoEEPROM(THERMOSTAT_ID_ADDRESS, id);    
+    writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, id);    
     delay(5000);    
     char msgToServer[32] = "[\"added\"]";
     RFCommunicatorSend(msgToServer);
@@ -106,7 +112,9 @@ void loop() {
     delay(2000);
   }
   else {
+    // ###########################
     // regular program mode
+    // ###########################    
     hum = dht.readHumidity();
     temp = dht.readTemperature();  
   
@@ -130,10 +138,8 @@ void loop() {
     msg[15] = '0';
     msg[16] = ']';       
 
-    printToSerial(thermostatId, msg, false);  
-    delay(4000);  
-    Serial.print("communicationChannel : ");
-    Serial.println(communicationChannel);
+    delay(3000);  
+    printToSerial(communicationChannel, msg, false);  
     RFCommunicatorSend(msg);
     delay(100);
   
@@ -141,7 +147,7 @@ void loop() {
     short int fanMode = (int) serverVals[3];  
     short int thermostatMode = (int) serverVals[2];
     float requiredTemperature = serverVals[1];
-  
+    Serial.println();
     
     // Set fan mode
     switch(fanMode) {

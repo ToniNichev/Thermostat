@@ -15,8 +15,6 @@ const stringToObject = (str) => {
 }
 
 const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => {
-    //console.log(">>>>>>> hubMode >>>>>>>>", hubMode);
-    //hubMode = 1;
     const action = req.params[0];
     const requestData = stringToObject(req.query.data);
     const hubId = requestData[0][0];
@@ -25,7 +23,7 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => 
             mode: 0
         }
     }
-    console.log(">>>", hubId)
+
     switch(action) {
         case 'get-full-data':
             await getFullReadings(req, res, thermostatsData[hubId]);

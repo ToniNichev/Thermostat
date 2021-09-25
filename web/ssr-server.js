@@ -31,7 +31,7 @@ let hubPreferences = {};
   const thermostats = await queries.getAllThermostats();
 
   if(thermostats.length === 0) {
-    console.log('Thermostat data at all!');
+    console.log('No thermostat data at all!');
   }
   else {
     // sort thermostat data for each hubId

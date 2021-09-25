@@ -43,6 +43,11 @@ A Smart Thermostat project
 
 * Services
 
+    * Legend:
+        ♁ - web site
+        ⌂ - hub
+        ⍑ - thermostat
+
     * Get Full Data
         http://toni-develops.com:8061/thermostat-services/get-full-data?data=[HUB-ID]
         - get all thermostats data for given hub HUB-ID
@@ -65,10 +70,26 @@ A Smart Thermostat project
     * Add new thermostate mode
         http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID][NEXT-THERMOSTAT-ID]
         example: http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12"][1]
-        workflow:
-        WEB Page =>  http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12"]
-        Service => http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"] returns [#,NewThermostatId]
-        HUB => http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]["added"]
+        
+        * workflow:
+            * User click ADD Thermostat on ♁ (web site)
+                ♁(front end) >>> ♁(server) : http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID][NEXT-THERMOSTAT-ID]
+
+            * hub receives `[#,0]` from the web service
+                0 | ⌂ >>> ♁ http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]
+                    ♁ > ⌂ : [#,0]
+            * hub forwards `[#m,0]` to the thermostat, on chanel `0`, thermostat replies with `["added"]`
+                0 | ⌂ >>> ⍑ : [#,0]
+                0 | ⍑ >>> ⌂ : ["added"]
+
+            * hub forwards `["added"]` to the thermostat on chanel `0`, thermostat acknowledges by replying with `[##]`
+                0 | ⌂ >>> ♁ http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]["added"]
+                    ♁ >>> ⌂ : [##]
+
+            * hub resumes normal operations
+                0 | ⌂ >>> ♁ http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][⍑-ID, HUMIDITY, TEMPERATURE, NOT-IN-USE-YET]
+                    ♁ > ⌂ : [⍑-ID, DESIRED-TEMPERATURE, MODE, FAN-MODE]
+
 
 
 * Architecture

@@ -36,13 +36,8 @@ const getFullReadings = async (req, res, thermostatData) => {
 const getReadings = async (req, res, thermostatData, thermostatResponse, hubPreferences) => {
   let result = '';  
 
-  console.log('hubPreferences :', hubPreferences);
-
   const hubId = req.hubId;
-  //if(hubPreferences)
-  //const l = thermostatData.length < 1 ? 1 : thermostatData.length;
   if(hubPreferences.mode === 1) {
-    console.log('>>>>>>>>>>>> req.fullData :', req.fullData);
     if(req.fullData.length > 1 && req.fullData[1][0] == `added`) {
       const users = await queries.getUserIdByThermostatId(hubId);
       const userId = users[0].userId;   
