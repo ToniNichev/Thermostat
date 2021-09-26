@@ -24,15 +24,14 @@ void setup() {
 }
 
 void loop() {
+  char data[32];
+  RFCommunicatorListen(data, true);
+  printToSerial(communicationChannel, data, false); 
+  
   q ++;
   char msg[32] = {0};
   constructMessage(senderId, q, msg);
   RFCommunicatorSend(msg);
-
-  
-  char data[32];
-  RFCommunicatorListen(data, true);
-  Serial.println(data);
 
   Serial.println();
   Serial.println("delaying 2 sec.");
@@ -53,4 +52,17 @@ void writeIntIntoEEPROM(int address, int number)
 int readIntFromEEPROM(int address)
 {
   return (EEPROM.read(address) << 8) + EEPROM.read(address + 1);
+}
+
+void printToSerial(short int communicationChannel, char data[32], bool hubToThermostat) {
+  Serial.println();
+  Serial.print(communicationChannel);     
+  Serial.print(" | ");
+  if(hubToThermostat)
+    Serial.print("⌂ >>> ⍑ ");
+  else
+    Serial.print("⍑ >>> ⌂ ");
+  Serial.print(communicationChannel);
+  Serial.print(" : ");
+  Serial.print(data);
 }
