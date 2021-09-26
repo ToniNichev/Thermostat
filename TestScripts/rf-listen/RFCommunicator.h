@@ -6,9 +6,9 @@
 
 
 void RFCommunicatorSetup(short int writeAddress, short int readAddress);
-void RFCommunicatorListen(char data[]);
+void RFCommunicatorListen(char data[], bool withTimeout);
 
-void RFCommunicatorSend(char sendText[], short int channel);
+void RFCommunicatorSend(char sendText[]);
 
 
 #endif
