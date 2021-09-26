@@ -4,7 +4,7 @@
 
 short int mode = 0;
 int q = 0;
-short int senderId;
+short int thermostatId;
 short int communicationChannel;
 
 void setup() {
@@ -16,21 +16,22 @@ void setup() {
   Serial.println("PROGRAM STARTED");  
 
 
-  //writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, 0);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
-  senderId = readIntFromEEPROM(THERMOSTAT_EPROM_ADDRESS);
-  communicationChannel = senderId + 1;
+  writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, 0);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
+  thermostatId = readIntFromEEPROM(THERMOSTAT_EPROM_ADDRESS);
+  communicationChannel = thermostatId + 1;
   
   RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
 }
 
 void loop() {
+  Serial.print("⌂ ... ⍑ ");
   char data[32];
-  RFCommunicatorListen(data, true);
-  printToSerial(communicationChannel, data, false); 
+  RFCommunicatorListen(data, false);
+  printToSerial(communicationChannel, "TEST", true); 
   
   q ++;
   char msg[32] = {0};
-  constructMessage(senderId, q, msg);
+  constructMessage(thermostatId, q, msg);
   RFCommunicatorSend(msg);
 
   Serial.println();
@@ -40,8 +41,8 @@ void loop() {
 }
 
 
-void constructMessage(short int senderId, int payload, char msg[32]) {
-  sprintf(msg, "%d | ⌂ >>> ⍑:  %d", senderId, payload);
+void constructMessage(short int thermostatId, int payload, char msg[32]) {
+  sprintf(msg, "%d | ⍑ >>> ⌂:  %d", thermostatId, payload);
 }
 
 void writeIntIntoEEPROM(int address, int number)
@@ -62,7 +63,6 @@ void printToSerial(short int communicationChannel, char data[32], bool hubToTher
     Serial.print("⌂ >>> ⍑ ");
   else
     Serial.print("⍑ >>> ⌂ ");
-  Serial.print(communicationChannel);
   Serial.print(" : ");
   Serial.print(data);
 }
