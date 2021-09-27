@@ -27,7 +27,7 @@ void loop() {
   Serial.print("⌂ ... ⍑ ");
   char data[32];
   RFCommunicatorListen(data, false);
-  printToSerial(communicationChannel, "TEST", true); 
+  printToSerial(communicationChannel, data, true); 
   
   q ++;
   char msg[32] = {0};
