@@ -16,15 +16,18 @@ void setup() {
 }
 
 void loop() {
+  // # 1 - setup
   communicationChannel = thermostatId + 1;
   RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
-    
+
+  // # 2 - send    
   q ++;
   char msg[32] = {0};
   constructMessage(communicationChannel, q, msg);
   RFCommunicatorSend(msg);
   printToSerial(communicationChannel, msg, true);
-  
+
+  // # 3 - receive
   char data[32];
   RFCommunicatorListen(data, true);
   Serial.println(data);
@@ -37,7 +40,7 @@ void loop() {
 
 
 void constructMessage(short int senderId, int payload, char msg[32]) {
-  sprintf(msg, "response( %d | ⍑ >>> ⌂:  %d)", senderId, payload);
+  sprintf(msg, "response ( %d | ⍑ >>> ⌂:  %d)", senderId, payload);
 }
 
 void printToSerial(short int communicationChannel, char data[32], bool hubToThermostat) {
