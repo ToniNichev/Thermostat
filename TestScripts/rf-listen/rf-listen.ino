@@ -16,7 +16,7 @@ void setup() {
   Serial.println("PROGRAM STARTED");  
 
 
-  writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, 0);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
+  writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, 1);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
   thermostatId = readIntFromEEPROM(THERMOSTAT_EPROM_ADDRESS);
   communicationChannel = thermostatId + 1;
   
@@ -42,7 +42,7 @@ void loop() {
 
 
 void constructMessage(short int thermostatId, int payload, char msg[32]) {
-  sprintf(msg, "%d | ⍑ >>> ⌂:  %d", thermostatId, payload);
+  sprintf(msg, "(%d | ⍑ says: payload  %d)", thermostatId, payload);
 }
 
 void writeIntIntoEEPROM(int address, int number)
