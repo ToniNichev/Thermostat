@@ -25,12 +25,13 @@ void loop() {
   char msg[32] = {0};
   constructMessage(communicationChannel, q, msg);
   RFCommunicatorSend(msg);
-  printToSerial(communicationChannel, msg, true);
+  //printToSerial(communicationChannel, msg, true);
 
   // # 3 - receive
   char data[32];
   RFCommunicatorListen(data, true);
-  Serial.println(data);
+  printToSerial(communicationChannel, data, false);
+  //Serial.println(data);
 
   Serial.println();
   Serial.println("delaying 2 sec.");
@@ -39,8 +40,8 @@ void loop() {
 }
 
 
-void constructMessage(short int senderId, int payload, char msg[32]) {
-  sprintf(msg, "response ( %d | ⍑ >>> ⌂:  %d)", senderId, payload);
+void constructMessage(short int communicationChannel, int payload, char msg[32]) {
+  sprintf(msg, "(%d | ⌂ says: payload:  %d)", communicationChannel, payload);
 }
 
 void printToSerial(short int communicationChannel, char data[32], bool hubToThermostat) {
@@ -51,7 +52,6 @@ void printToSerial(short int communicationChannel, char data[32], bool hubToTher
     Serial.print("⌂ >>> ⍑ ");
   else
     Serial.print("⍑ >>> ⌂ ");
-  Serial.print(communicationChannel);
   Serial.print(" : ");
   Serial.print(data);
 }
