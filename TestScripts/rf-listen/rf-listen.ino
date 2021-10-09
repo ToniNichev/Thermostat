@@ -31,7 +31,7 @@ void loop() {
   
   q ++;
   char msg[32] = {0};
-  constructMessage(thermostatId, q, msg);
+  constructMessage(communicationChannel, q, msg);
   RFCommunicatorSend(msg);
 
   Serial.println();
@@ -41,7 +41,7 @@ void loop() {
 }
 
 
-void constructMessage(short int thermostatId, int payload, char msg[32]) {
+void constructMessage(short int communicationChannel, int payload, char msg[32]) {
   sprintf(msg, "(%d | ⍑ says: payload  %d)", thermostatId, payload);
 }
 

@@ -69,7 +69,7 @@ void loop() {
   short int thermostatId = 0; // starting from first thermostat
   short int communicationChannel;
   int pos = 0;
-  delay(1000);
+  delay(200);
 
   if(serverData[1] == '#') {
     // #########################
@@ -85,7 +85,7 @@ void loop() {
       Serial.print("0 | ⌂ >>> ⍑: ");
       Serial.println(serverData);
       RFCommunicatorSend(serverData);
-      delay(100);
+      delay(1000);
       Serial.println("waiting for ⍑ response ...");
       char tempTwo[32] = "";
       RFCommunicatorListen(tempTwo, false);
@@ -93,7 +93,7 @@ void loop() {
       Serial.println(tempTwo);
       strcat(thermostatsData, tempTwo);
       programMode = 0;
-      delay(5000);
+      delay(2000);
     }
   }
   else {
@@ -115,23 +115,21 @@ void loop() {
             communicationChannel = thermostatId + 1;
 
             RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
-            if(thermostatId == 1) {
-              delay(1000);
-              RFCommunicatorSend(data);  
-              printToSerial(communicationChannel, data, true);
-            }
+            delay(2000);
+            RFCommunicatorSend(data);  
+            printToSerial(communicationChannel, data, true);
+
             
             // clear data
             memset(data, 0, 32);            
             delay(2000);
 
-            //if(thermostatId == 1) {
-              // listen for data from the thermostat
-              char temp[32] = "";         
-              RFCommunicatorListen(temp, true);
-              printToSerial(communicationChannel, temp, false);
-              strcat(thermostatsData, temp);
-            //}
+            // listen for data from the thermostat
+            char temp[32] = "";         
+            RFCommunicatorListen(temp, true);
+            printToSerial(communicationChannel, temp, false);
+            strcat(thermostatsData, temp);
+
             thermostatId ++;
             pos = 0;
             Serial.println();
@@ -155,7 +153,6 @@ void printToSerial(short int thermostatId, char data[32], bool hubToThermostat) 
     Serial.print("⌂ >>> ⍑ ");
   else
     Serial.print("⍑ >>> ⌂ ");
-  Serial.print(thermostatId);
   Serial.print(" : ");
   Serial.print(data);
 }
