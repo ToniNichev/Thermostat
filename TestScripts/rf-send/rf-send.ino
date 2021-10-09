@@ -16,30 +16,31 @@ void setup() {
 }
 
 void loop() {
-  // # 1 - setup
-  communicationChannel = thermostatId + 1;
-  RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
-
-  // # 2 - send    
-  q ++;
-  char msg[32] = {0};
-  constructMessage(communicationChannel, q, msg);
-  RFCommunicatorSend(msg);
-  //printToSerial(communicationChannel, msg, true);
-
-  // # 3 - receive
-  char data[32];
-  RFCommunicatorListen(data, true);
-  printToSerial(communicationChannel, data, false);
-  //Serial.println(data);
-
-  Serial.println();
-  Serial.println("delaying 2 sec.");
-  Serial.println();
-  delay(2000);
-  thermostatId ++;
-  if(thermostatId > 1)
-    thermostatId = 0;
+  thermostatId = 0;
+  while(thermostatId < 2) {
+    // # 1 - setup
+    communicationChannel = thermostatId + 1;
+    RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
+  
+    // # 2 - send    
+    q ++;
+    char msg[32] = {0};
+    constructMessage(communicationChannel, q, msg);
+    RFCommunicatorSend(msg);
+    //printToSerial(communicationChannel, msg, true);
+  
+    // # 3 - receive
+    char data[32];
+    RFCommunicatorListen(data, true);
+    printToSerial(communicationChannel, data, false);
+    //Serial.println(data);
+  
+    Serial.println();
+    Serial.println("delaying 2 sec.");
+    Serial.println();
+    delay(2000);
+    thermostatId ++;
+  }
 }
 
 
