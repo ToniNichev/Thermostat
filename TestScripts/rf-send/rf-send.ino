@@ -37,6 +37,9 @@ void loop() {
   Serial.println("delaying 2 sec.");
   Serial.println();
   delay(2000);
+  thermostatId ++;
+  if(thermostatId > 1)
+    thermostatId = 0;
 }
 
 
