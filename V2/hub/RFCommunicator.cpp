@@ -13,7 +13,7 @@ void RFCommunicatorSetup(short int writeAddress, short int readAddress) {
 } 
 
 void RFCommunicatorSend(char sendText[]) {
-  const char text[64] = {0};
+  const char text[32] = {0};
   strcpy(text,sendText);
   radio.stopListening();
   radio.write(&text, sizeof(text));
