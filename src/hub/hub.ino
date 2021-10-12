@@ -112,7 +112,7 @@ void loop() {
           pos ++;
           if(serverData[i] == ']') {  
             // sending data to the thermostat
-            communicationChannel = thermostatId + 1;
+            communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
 
             RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
             delay(2000);
