@@ -16,7 +16,7 @@ void setup() {
   Serial.println("PROGRAM STARTED");  
 
 
-  writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, 1);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
+  writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, 0);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
   thermostatId = readIntFromEEPROM(THERMOSTAT_EPROM_ADDRESS);
   communicationChannel = thermostatId + 1;
   
@@ -25,19 +25,19 @@ void setup() {
 
 void loop() {
   Serial.print("⌂ ... ⍑ ");
-  char data[32];
+  char data[128];
   RFCommunicatorListen(data, false);
   printToSerial(communicationChannel, data, true); 
   
   q ++;
-  char msg[32] = {0};
-  constructMessage(communicationChannel, q, msg);
-  RFCommunicatorSend(msg);
+  //char msg[32] = {0};
+  //constructMessage(communicationChannel, q, msg);
+  //RFCommunicatorSend(msg);
 
   Serial.println();
-  Serial.println("delaying 2 sec.");
+  Serial.println("delaying 1 sec.");
   Serial.println();
-  delay(2000);
+  delay(1000);
 }
 
 
@@ -55,7 +55,7 @@ int readIntFromEEPROM(int address)
   return (EEPROM.read(address) << 8) + EEPROM.read(address + 1);
 }
 
-void printToSerial(short int communicationChannel, char data[32], bool hubToThermostat) {
+void printToSerial(short int communicationChannel, char data[128], bool hubToThermostat) {
   Serial.println();
   Serial.print(communicationChannel);     
   Serial.print(" | ");
