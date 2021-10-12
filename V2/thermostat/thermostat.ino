@@ -18,9 +18,9 @@ void setup() {
 
   writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, 1);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
   thermostatId = readIntFromEEPROM(THERMOSTAT_EPROM_ADDRESS);
-  communicationChannel = thermostatId + 1;
+  communicationChannel = (thermostatId * 2) + 1;
   
-  RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
+  RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
 }
 
 void loop() {
