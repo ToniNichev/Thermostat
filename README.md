@@ -73,16 +73,19 @@ A Smart Thermostat project
         
         * workflow:
             * User click ADD Thermostat on ♁ (web site)
-                ♁(front end) >>> ♁(server) : http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID][NEXT-THERMOSTAT-ID]
+                ♁(front end) >>> ♁(server) : http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID]
+                                    example: http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12"]
 
-            * hub receives `[#,0]` from the web service
-                0 | ⌂ >>> ♁ http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]
+            * hub receives `[#,new-thermostat-id]` from the web service
+                0 | ⌂ >>> ♁ : http://toni-develops.com:8061/thermostat-services/get-data?data=[HUB-ID]
+                    example : http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]
                     ♁ > ⌂ : [#,0]
-            * hub forwards `[#m,0]` to the thermostat, on chanel `0`, thermostat replies with `["added"]`
+            * hub forwards `[#,new-thermostat-id]` to the thermostat, on chanel `0`, thermostat replies with `["added"]`
                 0 | ⌂ >>> ⍑ : [#,0]
                 0 | ⍑ >>> ⌂ : ["added"]
 
-            * hub forwards `["added"]` to the thermostat on chanel `0`, thermostat acknowledges by replying with `[##]`
+            * hub forwards `["added"]` to the web server, server acknowledges by replying with `[##]` 
+                            http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID]["added"]            
                 0 | ⌂ >>> ♁ http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]["added"]
                     ♁ >>> ⌂ : [##]
 

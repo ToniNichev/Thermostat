@@ -79,9 +79,9 @@ void loop() {
       programMode = 0;
     }
     else {
-      // set up hub to add thermostat mode
+      // set up hub to `add thermostat mode`
       RFCommunicatorSetup(0,1);
-      // send thermostat ID to the thermostat
+      // send thermostat ID to the thermostat: [#,0]
       Serial.print("0 | ⌂ >>> ⍑: ");
       Serial.println(serverData);
       RFCommunicatorSend(serverData);
@@ -115,7 +115,7 @@ void loop() {
             communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
 
             RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
-            delay(2000);
+            //delay(2000);
             RFCommunicatorSend(data);  
             printToSerial(communicationChannel, data, true);
 
@@ -132,6 +132,7 @@ void loop() {
 
             thermostatId ++;
             pos = 0;
+            delay(5000);
             Serial.println();
           }
         }    
