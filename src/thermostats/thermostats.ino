@@ -94,7 +94,7 @@ void loop() {
     // ###########################    
     float *serverVals = parseToValues(serverData);
     short int id = (int) serverVals[1];
-    communicationChannel = thermostatId = id;
+    //communicationChannel = thermostatId = id;
     Serial.print("Received NEW ⍑ ID: ");
     Serial.println(id);
     writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, id);    
@@ -104,7 +104,7 @@ void loop() {
     Serial.println("msg sent!");
     delay(2000);
     programMode = 0;
-    communicationChannel = id + 1; // switch to regular communication channel.
+    communicationChannel = (id * 2) + 1; // switch to regular communication channel.
     RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
   }
   else if(programMode == 2) {
