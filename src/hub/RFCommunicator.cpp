@@ -9,7 +9,7 @@ void RFCommunicatorSetup(short int writeAddress, short int readAddress) {
   radio.begin();
   radio.openWritingPipe(addresses[writeAddress]); 
   radio.openReadingPipe(1, addresses[readAddress]); // 00001
-  radio.setPALevel(RF24_PA_MIN);
+  radio.setPALevel(RF24_PA_MAX);
 } 
 
 void RFCommunicatorSend(char sendText[]) {
