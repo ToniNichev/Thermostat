@@ -69,7 +69,6 @@ void loop() {
   short int thermostatId = 0; // starting from first thermostat
   short int communicationChannel;
   int pos = 0;
-  delay(200);
 
   if(serverData[1] == '#') {
     // #########################
@@ -115,24 +114,21 @@ void loop() {
             communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
 
             RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
-            //delay(2000);
+            delay(200);
             RFCommunicatorSend(data);  
-            printToSerial(communicationChannel, data, true);
-
+            printToSerial(communicationChannel, data, true);            
             
             // clear data
             memset(data, 0, 32);            
-            delay(2000);
+            delay(200);
 
             // listen for data from the thermostat
             char temp[32] = "";         
             RFCommunicatorListen(temp, true);
             printToSerial(communicationChannel, temp, false);
             strcat(thermostatsData, temp);
-
             thermostatId ++;
             pos = 0;
-            delay(5000);
             Serial.println();
           }
         }    
@@ -140,8 +136,8 @@ void loop() {
     }
   }
   Serial.println();
-  Serial.println("delaying 2 sec before the next cycle ...");
-  delay(2000);
+  Serial.println("delaying 1 sec before the next cycle ...");
+  delay(1000);
 }
 
 
