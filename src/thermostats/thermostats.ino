@@ -138,10 +138,10 @@ void loop() {
     msg[15] = '0';
     msg[16] = ']';       
 
-    delay(3000);  
+    delay(1000);
+    // ⍑ >>> ⌂ send thermostat readings to the hub
     printToSerial(communicationChannel, msg, false);  
-    RFCommunicatorSend(msg);
-    delay(100);
+    RFCommunicatorSend(msg);     
   
     float *serverVals = parseToValues(serverData);
     short int fanMode = (int) serverVals[3];  
