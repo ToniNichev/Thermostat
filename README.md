@@ -79,7 +79,7 @@ A Smart Thermostat project
             * hub receives `[#,new-thermostat-id]` from the web service
                 0 | ⌂ >>> ♁ : http://toni-develops.com:8061/thermostat-services/get-data?data=[HUB-ID]
                     example : http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]
-                    ♁ > ⌂ : [#,0]
+                    ♁ > ⌂ : [#,0] new thermostat id is '0'
             * hub forwards `[#,new-thermostat-id]` to the thermostat, on chanel `0`, thermostat replies with `["added"]`
                 0 | ⌂ >>> ⍑ : [#,0]
                 0 | ⍑ >>> ⌂ : ["added"]

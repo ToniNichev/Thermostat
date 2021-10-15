@@ -11,9 +11,9 @@ const stringToObject = (str) => {
 }
 
 const requestDataFromAPI = async (req, res, thermostatsData, next) => {  
-  console.log("^^^^^^^^^^^^^^^^^^^^");
-  console.log(req.url);
-  console.log("^^^^^^^^^^^^^^^^^^^^");
+  //console.log("^^^^^^^^^^^^^^^^^^^^");
+  //console.log(req.url);
+  //console.log("^^^^^^^^^^^^^^^^^^^^");
   req.parsedUrl = url.parse(req.url);
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);

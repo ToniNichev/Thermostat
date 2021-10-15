@@ -135,7 +135,7 @@ class Home extends Component {
         for(let i = 0; i < data.length; i ++) {
           const id = data[i].id;
           const curentTemp = data[i].curentTemp;
-          const curentHumidity = data[0].humidity;
+          const curentHumidity = data[i].humidity;
           const requiredTemp = data[i].requiredTemp;
           const mode = data[i].mode;
           const fanMode = data[i].fanMode;
@@ -144,6 +144,7 @@ class Home extends Component {
               this.setTempAndHumidity[i](curentHumidity, curentTemp);
               this.setThermostatSliderMode[i](mode);
               this.setThermostatFanSliderMode[i](fanMode);
+              this.connected = false;
             }
         }        
         setTimeout( () => {
@@ -193,8 +194,9 @@ class Home extends Component {
                 const thermostatModeKey = `thermostat-mode-${id}`;
                 const thermostatFanModeKey = `thermostat-fan-mode-${id}`;
                 const thermostatName = thermostat.thermostatName;
+                const connected = thermostat.connected;
                 return(
-                <div key={key} className={styles.flagWrapper}>
+                <div key={key} className={[styles.flagWrapper, styles.flagWrapperError].join(' ')}  >
                   <BulletPoint flagName={thermostatName} status={this.state.flagEditable} />
                   <span className={styles.roomName}>{thermostatName}</span>                  
 

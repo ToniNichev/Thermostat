@@ -38,6 +38,7 @@ const getReadings = async (req, res, thermostatData, thermostatResponse, hubPref
 
   const hubId = req.hubId;
   if(hubPreferences.mode === 1) {
+    // adding thermostat mode
     if(req.fullData.length > 1 && req.fullData[1][0] == `added`) {
       const users = await queries.getUserIdByThermostatId(hubId);
       const userId = users[0].userId;   
@@ -60,7 +61,7 @@ const getReadings = async (req, res, thermostatData, thermostatResponse, hubPref
       hubPreferences.mode = 0;
       result = `[##]`;
     }
-    else {
+    else {      
       // Add thermostat mode - send next available thermostat ID to the HUB
       result = `[#,${thermostatData.length}]`; 
     }
@@ -70,13 +71,19 @@ const getReadings = async (req, res, thermostatData, thermostatResponse, hubPref
     console.log("@#@#@#@#@#");
   }
   else {
+    //////////////////////////////////////
+    // Normal operationg mode
+    //////////////////////////////////////
+    //debugger;
     for(let i = 0; i < thermostatData.length; i ++) {
       // set up thermostatData with the real data from thermostats
       if(typeof thermostatResponse[i] != 'undefined' && thermostatResponse.length > 1) {
         // thermostatResponse[0][0] is the hub ID
         if(typeof thermostatResponse[i + 1] !== 'undefined') {
-          thermostatData[i].humidity = thermostatResponse[i + 1][1];
-          thermostatData[i].curentTemp = thermostatResponse[i + 1][2];
+          const thermostatId = thermostatResponse[i + 1][0];
+          thermostatData[thermostatId].humidity = thermostatResponse[i + 1][1];
+          thermostatData[thermostatId].curentTemp = thermostatResponse[i + 1][2];
+          thermostatData[thermostatId].lastConnected = new Date();
         }
       }
       // get the desired temperature
@@ -123,7 +130,7 @@ const setAddThermostatMode = async (req, res, thermostatData, requestData, hubPr
   thermostatData[id].fanMode = mode;
   */
   const result = `{"status": "adding"}`;
-  hubPreferences.mode = hubPreferences.mode == 1 ? 0 : 1;
+  hubPreferences.mode = 1; // adding thermostat
   sendResponse(res, result);
 }
 
