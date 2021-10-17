@@ -32,7 +32,7 @@ class Home extends Component {
     this.state = {
       addFlagVisible: false,
       flagEditable: false,
-
+      thermostatBodyCSS: [],
       thermostats: []
     };
     // get api data
@@ -139,13 +139,29 @@ class Home extends Component {
           const requiredTemp = data[i].requiredTemp;
           const mode = data[i].mode;
           const fanMode = data[i].fanMode;
-            if(typeof this.changeRange[i] != 'undefined') {
-              this.changeRange[i](requiredTemp);
-              this.setTempAndHumidity[i](curentHumidity, curentTemp);
-              this.setThermostatSliderMode[i](mode);
-              this.setThermostatFanSliderMode[i](fanMode);
-              this.connected = false;
-            }
+
+          //const newThermostatBodyCSS = typeof this.state.thermostatBodyCSS[i] === 'undefined' ?  [styles.flagWrapper] :  [...this.state.thermostatBodyCSS]; 
+          
+
+          if (typeof data[i].lastConnected === 'undefined' || (new Date() - new Date(data[i].lastConnected)) / 1000 > 10) {
+            
+            const newThermostatBodyCSS =  [...this.state.thermostatBodyCSS]; 
+            newThermostatBodyCSS[i] = [styles.flagWrapper, styles.flagWrapperError];            
+            this.setState({thermostatBodyCSS: newThermostatBodyCSS}); 
+          }
+          else {
+            const newThermostatBodyCSS =  [...this.state.thermostatBodyCSS];
+            newThermostatBodyCSS[i] = [styles.flagWrapper];
+            this.setState({thermostatBodyCSS: newThermostatBodyCSS }); 
+          }
+
+          if(typeof this.changeRange[i] != 'undefined') {
+            this.changeRange[i](requiredTemp);
+            this.setTempAndHumidity[i](curentHumidity, curentTemp);
+            this.setThermostatSliderMode[i](mode);
+            this.setThermostatFanSliderMode[i](fanMode);
+            this.connected = false;
+          }
         }        
         setTimeout( () => {
           this.fetchData();
@@ -194,9 +210,9 @@ class Home extends Component {
                 const thermostatModeKey = `thermostat-mode-${id}`;
                 const thermostatFanModeKey = `thermostat-fan-mode-${id}`;
                 const thermostatName = thermostat.thermostatName;
-                const connected = thermostat.connected;
+                const wrapperClass = typeof this.state.thermostatBodyCSS[tId] === 'undefined' ? [] : this.state.thermostatBodyCSS[tId].join(' ');
                 return(
-                <div key={key} className={[styles.flagWrapper, styles.flagWrapperError].join(' ')}  >
+                <div key={key} className={wrapperClass}  >
                   <BulletPoint flagName={thermostatName} status={this.state.flagEditable} />
                   <span className={styles.roomName}>{thermostatName}</span>                  
 
