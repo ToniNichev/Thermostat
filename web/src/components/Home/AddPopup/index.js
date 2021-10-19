@@ -33,9 +33,6 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
     return () => (mounted.current = false);
 });
 
-
-  
-
   const addFlag = () => {
 
     const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
@@ -49,17 +46,20 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
       setButtonText('DONE');   
       mode = 3;
     }
-    if(mode == 3) {      
+    if(mode == 3) { 
+      // done      
       mode = 0;
       setMsg('...');
       setButtonText('ADD THERMOSTAT');      
+      thermostatAddedClear();
       closePopup();
     }    
     else if(mode == 22) {
-      // done 
+      // done  !!!! remove this not in use
       mode = 0;
       setMsg('...');
       setButtonText('ADD THERMOSTAT');      
+      thermostatAddedClear();
       closePopup();     
       
       fetch(`${thermostatApiUrl}/add-thermostat?data=["${hubId}"]`)
