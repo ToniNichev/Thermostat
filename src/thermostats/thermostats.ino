@@ -94,7 +94,6 @@ void loop() {
     // ###########################    
     float *serverVals = parseToValues(serverData);
     short int id = (int) serverVals[1];
-    //communicationChannel = thermostatId = id;
     Serial.print("Received NEW ⍑ ID: ");
     Serial.println(id);
     writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, id);    
@@ -138,7 +137,7 @@ void loop() {
     msg[15] = '0';
     msg[16] = ']';       
 
-    delay(1000);
+    delay(2000);
     // ⍑ >>> ⌂ send thermostat readings to the hub
     printToSerial(communicationChannel, msg, false);  
     RFCommunicatorSend(msg);     
