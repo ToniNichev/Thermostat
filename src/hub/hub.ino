@@ -129,9 +129,7 @@ void loop() {
           else {
             // sending data to the thermostat
             communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
-            delay(200);
             RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
-            delay(200);
             RFCommunicatorSend(data);  
             printToSerial(communicationChannel, data, true);            
             
@@ -147,7 +145,7 @@ void loop() {
             delay(200);                 
           }
 
-        delay(6000);
+        delay(1000);
         thermostatId ++;
         pos = 0;
         Serial.println();
