@@ -85,14 +85,14 @@ A Smart Thermostat project
                 0 | ⍑ >>> ⌂ : ["added"]
 
             * hub forwards `["added"]` to the web server, server acknowledges by replying with `[##]` 
-                            http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID]["added"]            
+                            http://toni-develops.com:8061/thermostat-services/get-data?data=[HUB-ID]["added"]
                 0 | ⌂ >>> ♁ http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"]["added"]
                     ♁ >>> ⌂ : [##]
 
             * hub resumes normal operations
                 0 | ⌂ >>> ♁ http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][⍑-ID, HUMIDITY, TEMPERATURE, NOT-IN-USE-YET]
                     ♁ > ⌂ : [⍑-ID, DESIRED-TEMPERATURE, MODE, FAN-MODE]
-
+                    example call: http://toni-develops.com:8061/thermostat-services/get-data?data=["AXCS12"][0,52.80,28.63,0][1,51.90,28.38,0]
 
 
 * Architecture
