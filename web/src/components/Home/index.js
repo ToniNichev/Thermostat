@@ -143,7 +143,7 @@ class Home extends Component {
           //const newThermostatBodyCSS = typeof this.state.thermostatBodyCSS[i] === 'undefined' ?  [styles.flagWrapper] :  [...this.state.thermostatBodyCSS]; 
           
 
-          if (typeof data[i].lastConnected === 'undefined' || (new Date() - new Date(data[i].lastConnected)) / 1000 > 10) {
+          if (typeof data[i].lastConnected === 'undefined' || (new Date() - new Date(data[i].lastConnected)) / 1000 > 20) {
             
             const newThermostatBodyCSS =  [...this.state.thermostatBodyCSS]; 
             newThermostatBodyCSS[i] = [styles.flagWrapper, styles.flagWrapperError];            
