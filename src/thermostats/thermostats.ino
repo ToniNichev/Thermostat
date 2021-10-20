@@ -94,6 +94,7 @@ void loop() {
     // ###########################    
     float *serverVals = parseToValues(serverData);
     short int id = (int) serverVals[1];
+    thermostatId = id;
     Serial.print("Received NEW ⍑ ID: ");
     Serial.println(id);
     writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, id);    
