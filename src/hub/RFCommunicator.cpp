@@ -13,14 +13,21 @@ void RFCommunicatorSetup(short int writeAddress, short int readAddress) {
 } 
 
 void RFCommunicatorSend(char sendText[]) {
+  radio.powerUp();
+  delay(100);
   const char text[32] = {0};
   strcpy(text,sendText);
   radio.stopListening();
+  delay(100);
   radio.write(&text, sizeof(text));
+  radio.powerDown();
 }
 
 void RFCommunicatorListen(char data[], bool withTimeout) {  
+  radio.powerUp();
+  delay(100);
   radio.startListening();
+  delay(100);
   listenRepeats = 0;
   while(!radio.available()) {
     if(withTimeout) {
@@ -37,4 +44,6 @@ void RFCommunicatorListen(char data[], bool withTimeout) {
   char text[32] = "";
   radio.read(&text, sizeof(text));
   strcpy(data, text);
+  radio.stopListening();
+  radio.powerDown();
 }

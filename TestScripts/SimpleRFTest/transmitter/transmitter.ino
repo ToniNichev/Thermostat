@@ -11,17 +11,21 @@
 #include <RF24.h>
 RF24 radio(9, 8); // CE, CSN
 const byte address[6] = "00001";
+int q = 0;
 void setup() {
   Serial.begin(9600);
   Serial.println("Program starting ...");
+  
   radio.begin();
   radio.openWritingPipe(address);
   radio.setPALevel(RF24_PA_MIN);
   radio.stopListening();
 }
 void loop() {
-  const char text[] = "Hello World";
+  const char text[32];
+  sprintf(text, "hello world %d", q);
   radio.write(&text, sizeof(text));
   Serial.println(".");
   delay(1000);
+  q ++;
 }
