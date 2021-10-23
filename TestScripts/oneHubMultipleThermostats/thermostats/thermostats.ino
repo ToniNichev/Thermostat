@@ -1,6 +1,6 @@
 /*
 * Arduino Wireless Communication Tutorial
-*     Example 1 - Transmitter Code
+*       Example 1 - Receiver Code
 *                
 * by Dejan Nedelkovski, www.HowToMechatronics.com
 * 
@@ -10,6 +10,7 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 RF24 radio(9, 8); // CE, CSN
+
 const byte addresses[][6] = {"00001", "00010", "00020", "00025", "00030", "00035"};
 
 int id = 0;
@@ -19,21 +20,17 @@ int q = 0;
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Program starting ...");
-  
   radio.begin();
   radio.openWritingPipe(addresses[chanel]);
   radio.openReadingPipe(0, addresses[chanel + 1]);
   radio.setPALevel(RF24_PA_MIN);  
 }
 void loop() {
-
-
+  
   // RECEIVE
   Serial.println("Listening ...");
-  radio.startListening();
-  int listenRepeats = 0;
-  while(!radio.available()) {      
+  radio.startListening();  
+    while(!radio.available()) {      
   }
   char text[32] = "";
   radio.read(&text, sizeof(text));
@@ -45,7 +42,7 @@ void loop() {
   const char textTwo[32];
   sprintf(textTwo, "thermostat %d - %d", id, q);
   radio.write(&textTwo, sizeof(textTwo));
-  Serial.println(".");
+  Serial.println("Sending ...");
 
   delay(1000);
   q ++;
