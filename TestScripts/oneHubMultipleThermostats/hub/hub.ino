@@ -10,34 +10,40 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 RF24 radio(9, 8); // CE, CSN
-//const byte address[6] = "00001";
 const byte addresses[][6] = {"00001", "00010", "00020", "00025", "00030", "00035"};
 
 int q = 0;
 int id = 0;
+int chanel = (id * 2) + 1;
 void setup() {
   Serial.begin(9600);
   Serial.println("Program starting ...");
   
   radio.begin();
-  radio.openWritingPipe(addresses[id]);
-  radio.openReadingPipe(0, addresses[id]);
+  radio.openWritingPipe(addresses[chanel + 1]);
+  radio.openReadingPipe(0, addresses[chanel]);
   radio.setPALevel(RF24_PA_MIN);  
 }
 void loop() {
-  
+
+  // SEND
   radio.stopListening();
   const char text[32];
   sprintf(text, "hello world %d", q);
   radio.write(&text, sizeof(text));
-  Serial.println(".");
+  Serial.println("Sending ...");
+  delay(500);
 
+  // RECEIVE
   radio.startListening();
-  if (radio.available()) {
-    char text[32] = "";
-    radio.read(&text, sizeof(text));
-    Serial.println(text);
+  Serial.println("Listening");
+  int listenRepeats = 0;
+  while(!radio.available()) {    
   }
+  char textTwo[32] = "";
+  radio.read(&textTwo, sizeof(textTwo));
+  Serial.println(textTwo);
+  //radio.stopListening();
 
   
   delay(1000);
