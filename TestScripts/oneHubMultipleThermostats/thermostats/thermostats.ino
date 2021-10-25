@@ -24,7 +24,9 @@ void setup() {
   radio.openWritingPipe(addresses[chanel]);
   radio.openReadingPipe(0, addresses[chanel + 1]);
   radio.setPALevel(RF24_PA_MIN);
-  radio.setRetries(15,15);
+  //radio.setRetries(15,15);
+  radio.setDataRate( RF24_250KBPS );
+  radio.printDetails();
 }
 void loop() {
   
