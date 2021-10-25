@@ -1,10 +1,9 @@
 #include "RFCommunicator.h"
 #include <EEPROM.h>
 
-short int mode = 0;
+
 int q = 0;
-short int thermostatId = 0;
-short int communicationChannel;
+short int id = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -12,40 +11,41 @@ void setup() {
     ; // wait for serial port to connect. Needed for native USB port only
   }
   Serial.println();
-  Serial.println("PROGRAM STARTED");  
-
-    communicationChannel = thermostatId + 1;
-    RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
+  Serial.println("PROGRAM STARTED ....");  
 }
 
 void loop() {
-  thermostatId = 0;
-  //while(thermostatId < 2) {
-    // # 1 - setup
-    //communicationChannel = thermostatId + 1;
-    //RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
+  // set up communication chanel
+  int chanel = (id * 2) + 1;
+  RFCommunicatorSetup(chanel + 1, chanel);
+  char msg[32];
+  sprintf(msg, "receiver %d", id);  
+  Serial.println("=============================");
+  Serial.println(msg);
+  Serial.println("_____________________________");  
   
-    // # 2 - send    
-    q ++;
-    char msg[128] = "thermostat 1234566789011 12 13 14 15 16 16 18 19 20";
-    //constructMessage(communicationChannel, q, msg);
-    RFCommunicatorSend(msg);
-    //printToSerial(communicationChannel, msg, true);
+  // # 2 - send    
+  const char text[32];
+  sprintf(text, "hello world %d", q);
+  RFCommunicatorSend(text);
+  Serial.println("Sending ...");
   
-    // # 3 - receive
-    /*
-    char data[32];
-    RFCommunicatorListen(data, true);
-    printToSerial(communicationChannel, data, false);
-    //Serial.println(data);
-    */
+  // # 3 - receive
+  Serial.println("Listening ...");
+  char data[32];
   
-    Serial.println();
-    Serial.println("delaying 2 sec.");
-    Serial.println();
-    delay(2000);
-    //thermostatId ++;
-  //}
+  if(RFCommunicatorListen(data, true)) {
+    Serial.println("TIMEOUT !!!!!!!!!!!!!!!!!!");
+  } else {
+    char textTwo[32] = "";
+    Serial.println(data);    
+  }
+  
+
+  Serial.println();  
+  delay(2000);
+  q ++;
+  id = id == 1 ? 0 : id + 1;
 }
 
 

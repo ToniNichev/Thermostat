@@ -2,10 +2,10 @@
 #include <EEPROM.h>
 #define THERMOSTAT_EPROM_ADDRESS 3
 
-short int mode = 0;
+
 int q = 0;
-short int thermostatId;
-short int communicationChannel;
+short int id = 0;
+int chanel = (id * 2) + 1;
 
 void setup() {
   Serial.begin(9600);
@@ -14,55 +14,23 @@ void setup() {
   }
   Serial.println();
   Serial.println("PROGRAM STARTED");  
-
-
-  writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, 0);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
-  thermostatId = readIntFromEEPROM(THERMOSTAT_EPROM_ADDRESS);
-  communicationChannel = thermostatId + 1;
-  
-  RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
+  RFCommunicatorSetup(chanel, chanel + 1);
 }
 
 void loop() {
-  Serial.print("⌂ ... ⍑ ");
-  char data[128];
+  // LISTEN
+  Serial.print("Listening ...");
+  char data[32];
   RFCommunicatorListen(data, false);
-  printToSerial(communicationChannel, data, true); 
-  
-  q ++;
-  //char msg[32] = {0};
-  //constructMessage(communicationChannel, q, msg);
-  //RFCommunicatorSend(msg);
+  Serial.println(data); 
 
-  Serial.println();
-  Serial.println("delaying 1 sec.");
-  Serial.println();
+  // SEND  
   delay(1000);
-}
+  const char msg[32];
+  sprintf(msg, "thermostat %d - %d", id, q);
+  RFCommunicatorSend(msg);
 
 
-void constructMessage(short int communicationChannel, int payload, char msg[32]) {
-  sprintf(msg, "(%d | ⍑ says: payload  %d)", thermostatId, payload);
-}
-
-void writeIntIntoEEPROM(int address, int number)
-{ 
-  EEPROM.write(address, number >> 8);
-  EEPROM.write(address + 1, number & 0xFF);
-}
-int readIntFromEEPROM(int address)
-{
-  return (EEPROM.read(address) << 8) + EEPROM.read(address + 1);
-}
-
-void printToSerial(short int communicationChannel, char data[128], bool hubToThermostat) {
-  Serial.println();
-  Serial.print(communicationChannel);     
-  Serial.print(" | ");
-  if(hubToThermostat)
-    Serial.print("⌂ >>> ⍑ ");
-  else
-    Serial.print("⍑ >>> ⌂ ");
-  Serial.print(" : ");
-  Serial.print(data);
+  delay(1000);
+  q++;
 }
