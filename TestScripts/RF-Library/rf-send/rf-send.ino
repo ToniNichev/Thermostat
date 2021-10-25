@@ -43,7 +43,7 @@ void loop() {
   
 
   Serial.println();  
-  delay(2000);
+  delay(1000);
   q ++;
   id = id == 1 ? 0 : id + 1;
 }

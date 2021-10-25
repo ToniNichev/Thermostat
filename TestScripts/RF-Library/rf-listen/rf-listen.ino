@@ -25,7 +25,7 @@ void loop() {
   Serial.println(data); 
 
   // SEND  
-  delay(1000);
+  delay(100);
   const char msg[32];
   sprintf(msg, "thermostat %d - %d", id, q);
   RFCommunicatorSend(msg);
