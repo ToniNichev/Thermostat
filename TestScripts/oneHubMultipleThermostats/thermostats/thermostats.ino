@@ -13,7 +13,7 @@ RF24 radio(9, 8); // CE, CSN
 
 const byte addresses[][6] = {"00001", "00010", "00020", "00025", "00030", "00035"};
 
-int id = 0;
+int id = 1;
 int chanel = (id * 2) + 1;
 int q = 0;
 
@@ -26,7 +26,7 @@ void setup() {
   radio.setPALevel(RF24_PA_MIN);
   //radio.setRetries(15,15);
   radio.setDataRate( RF24_250KBPS );
-  radio.printDetails();
+  //radio.printDetails();
 }
 void loop() {
   
