@@ -13,7 +13,7 @@ RF24 radio(9, 8); // CE, CSN
 
 const byte addresses[][6] = {"00001", "00010", "00020", "00025", "00030", "00035"};
 
-int id = 1;
+int id = 0;
 int chanel = (id * 2) + 1;
 int q = 0;
 
