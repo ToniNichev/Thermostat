@@ -8,8 +8,6 @@
 
 #define hubId "AXCS12"
 
-#define addNewThermostatChannel 10
-//#define communicationChannel 10
 
 char thermostatsData[100] = ""; 
 short int programMode = 0;
@@ -29,7 +27,7 @@ void setup() {
   Serial.println("######################");
   Serial.println("PROGRAM STARTED");
   Serial.println("######################");
-  delay(200);
+  delay(500);
 }
 
 
@@ -84,7 +82,7 @@ void loop() {
       Serial.print("0 | ⌂ >>> ⍑: ");
       Serial.println(serverData);
       RFCommunicatorSend(serverData);
-      delay(2000);
+      delay(100);
       Serial.println("waiting for ⍑ response ...");
       char tempTwo[32] = "";
       RFCommunicatorListen(tempTwo, false);
@@ -92,7 +90,7 @@ void loop() {
       Serial.println(tempTwo);
       strcat(thermostatsData, tempTwo);
       programMode = 0;
-      delay(2000);
+      delay(100);
     }
   }
   else {
@@ -110,42 +108,22 @@ void loop() {
       pos ++;
       if(serverData[i] == ']') {
 
-          //if(thermostatId == 0) {
-            // sending data to the thermostat
-            communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
-            RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
-            RFCommunicatorSend(data);  
-            printToSerial(communicationChannel, data, true);            
-            
-            // clear data
-            memset(data, 0, 32);            
-    
-            // listen for data from the thermostat
-            char temp[32] = "";         
-            RFCommunicatorListen(temp, true);
-            printToSerial(communicationChannel, temp, false);
-            strcat(thermostatsData, temp);
-          /*
-          }
-          else {
-            // sending data to the thermostat
-            communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
-            RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
-            RFCommunicatorSend(data);  
-            printToSerial(communicationChannel, data, true);            
-            
-            // clear data
-            memset(data, 0, 32);            
-            delay(200);
-    
-            // listen for data from the thermostat
-            char temp[32] = "";         
-            RFCommunicatorListen(temp, true);
-            printToSerial(communicationChannel, temp, false);
-            strcat(thermostatsData, temp);
-            delay(200);                 
-          }
-          */
+
+        // sending data to the thermostat
+        communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
+        RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
+        RFCommunicatorSend(data);  
+        printToSerial(communicationChannel, data, true);            
+        
+        // clear data
+        memset(data, 0, 32);            
+
+        // listen for data from the thermostat
+        char temp[32] = "";         
+        RFCommunicatorListen(temp, true);
+        printToSerial(communicationChannel, temp, false);
+        strcat(thermostatsData, temp);
+
 
         delay(1000);
         thermostatId ++;
