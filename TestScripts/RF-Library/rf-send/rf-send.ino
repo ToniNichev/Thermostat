@@ -15,37 +15,40 @@ void setup() {
 }
 
 void loop() {
-  // set up communication chanel
-  int chanel = (id * 2) + 1;
-  RFCommunicatorSetup(chanel + 1, chanel);
-  char msg[32];
-  sprintf(msg, "receiver %d", id);  
-  Serial.println("=============================");
-  Serial.println(msg);
-  Serial.println("_____________________________");  
+  id = 0;
+  while(id != 2) { 
+    // set up communication chanel
+    int chanel = (id * 2) + 1;
+    RFCommunicatorSetup(chanel + 1, chanel);
+    char msg[32];
+    sprintf(msg, "receiver %d", id);  
+    Serial.println("=============================");
+    Serial.println(msg);
+    Serial.println("_____________________________");  
+    
+    // # 2 - send    
+    const char text[32];
+    sprintf(text, "hello world %d", q);
+    RFCommunicatorSend(text);
+    Serial.println("Sending ...");
+    
+    // # 3 - receive
+    Serial.println("Listening ...");
+    char data[32];
+    
+    if(RFCommunicatorListen(data, true)) {
+      Serial.println("TIMEOUT !!!!!!!!!!!!!!!!!!");
+    } else {
+      char textTwo[32] = "";
+      Serial.println(data);    
+    }
+    
   
-  // # 2 - send    
-  const char text[32];
-  sprintf(text, "hello world %d", q);
-  RFCommunicatorSend(text);
-  Serial.println("Sending ...");
-  
-  // # 3 - receive
-  Serial.println("Listening ...");
-  char data[32];
-  
-  if(RFCommunicatorListen(data, true)) {
-    Serial.println("TIMEOUT !!!!!!!!!!!!!!!!!!");
-  } else {
-    char textTwo[32] = "";
-    Serial.println(data);    
+    Serial.println();  
+    delay(1000);
+    q ++;
+    id ++;
   }
-  
-
-  Serial.println();  
-  delay(1000);
-  q ++;
-  id = id == 1 ? 0 : id + 1;
 }
 
 
