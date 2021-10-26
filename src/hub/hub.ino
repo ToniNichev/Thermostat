@@ -90,7 +90,7 @@ void loop() {
       Serial.println(tempTwo);
       strcat(thermostatsData, tempTwo);
       programMode = 0;
-      delay(100);
+      delay(2000);
     }
   }
   else {
@@ -108,21 +108,25 @@ void loop() {
       pos ++;
       if(serverData[i] == ']') {
 
-
         // sending data to the thermostat
         communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
         RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
         RFCommunicatorSend(data);  
-        printToSerial(communicationChannel, data, true);            
+        printToSerial(communicationChannel, data, true);     
+        delay(100);       
         
         // clear data
         memset(data, 0, 32);            
 
         // listen for data from the thermostat
         char temp[32] = "";         
-        RFCommunicatorListen(temp, true);
-        printToSerial(communicationChannel, temp, false);
-        strcat(thermostatsData, temp);
+        if(!RFCommunicatorListen(temp, true)) {
+          printToSerial(communicationChannel, temp, false);
+          strcat(thermostatsData, temp);
+        }
+        else {
+          Serial.println(" ..... Timed out .....");
+        }
 
 
         delay(1000);
