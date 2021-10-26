@@ -2,7 +2,7 @@
 #define RECEIVE_TIMEOUT_AFTER 220
 
 RF24 radio(9, 8);  // CE, CSN
-const byte addresses[][6] = {"00001", "00010", "00020", "00025", "00030", "00035"};
+const byte addresses[][6] = {"00001", "00002", "00003", "00004", "00005", "00006","00007", "00008" };
 short int listenRepeats;
 
 void RFCommunicatorSetup(short int writeAddress, short int readAddress) {
