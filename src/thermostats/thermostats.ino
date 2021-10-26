@@ -52,7 +52,7 @@ void setup() {
   Serial.println("#############################################");
   Serial.println("⍑ STARTING ...");
 
-  writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, -1);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
+  //writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, -1);  // !!!  force to set up thermostat in ADD thermostat mode !!!!
   
   short int Id = readIntFromEEPROM(THERMOSTAT_EPROM_ADDRESS);
   if(Id == -1) {
@@ -76,6 +76,7 @@ void setup() {
 
 
 void loop() {
+  delay(200);
   Serial.println();
   Serial.println();
 
@@ -138,7 +139,7 @@ void loop() {
     msg[15] = '0';
     msg[16] = ']';       
 
-    delay(100);
+    delay(400);
     // ⍑ >>> ⌂ send thermostat readings to the hub
     printToSerial(communicationChannel, msg, false);  
     RFCommunicatorSend(msg);     
