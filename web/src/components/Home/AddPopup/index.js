@@ -8,7 +8,7 @@ let mode = 0;
 
 const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {  
 
-  const [msg, setMsg] = useState('...');
+  const [msg, setMsg] = useState('ADD DEVICE NAME');
   const [buttonText, setButtonText] = useState('ADD THERMOSTAT');  
   //const [isMounted, setIsMounted] = useState(false);
 
@@ -54,30 +54,17 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
       thermostatAddedClear();
       closePopup();
     }    
-    else if(mode == 22) {
-      // done  !!!! remove this not in use
-      mode = 0;
-      setMsg('...');
-      setButtonText('ADD THERMOSTAT');      
-      thermostatAddedClear();
-      closePopup();     
-      
-      fetch(`${thermostatApiUrl}/add-thermostat?data=["${hubId}"]`)
-        .then(response => response.json())
-        .then(data => { 
-          mode = 0;
-      });      
-    }
     else if(mode == 3) {
       // done 
       mode = 0;
       setMsg('...');
-      setButtonText('ADD THERMOSTAT');      
+      setButtonText('ADD DEVICE');      
       closePopup();     
     }    
     else if(mode == 0) {
       mode = 1;
-      fetch(`${thermostatApiUrl}/add-thermostat?data=["${hubId}"]`)
+      const deviceName = document.querySelector("#popup-device-name").value;
+      fetch(`${thermostatApiUrl}/add-thermostat?data=["${hubId}", "${deviceName}"]`)
         .then(response => response.json())
         .then(data => { 
           setMsg('Looking for the new thermostat ...');
@@ -94,6 +81,7 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
         <span onClick={ () => { closePopup() } } className={styles.close}>&times;</span>
         <div className={styles.flagProperties}>
           <p>{msg}</p>
+          <p><input id="popup-device-name" type="text" defaultValue="new device name"/></p>
           <p><button onClick={ () => { addFlag() } }>{buttonText}</button></p>
         </div>          
       </div>      

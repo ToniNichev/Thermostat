@@ -1,5 +1,6 @@
 import queries from "../../src/queries";
 
+let newDeviceName = "NO NAME";
 
 const sendResponse = (res, responseString) => {
 
@@ -46,7 +47,7 @@ const getReadings = async (req, res, thermostatData, thermostatResponse, hubPref
       const thermostatObj =  {
         "thermostatId": thermostatData.length.toString(),
         "userId": userId,
-        "thermostatName" : "test",
+        "thermostatName" : newDeviceName,
         "hubId": hubId,
         "group": "My home",        
         "humidity": "0",
@@ -129,6 +130,7 @@ const setAddThermostatMode = async (req, res, thermostatData, requestData, hubPr
   const mode = data[1];
   thermostatData[id].fanMode = mode;
   */
+  newDeviceName = requestData[0][1];
   const result = `{"status": "adding"}`;
   hubPreferences.mode = 1; // adding thermostat
   sendResponse(res, result);
