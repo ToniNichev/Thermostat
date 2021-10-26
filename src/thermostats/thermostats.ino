@@ -139,7 +139,7 @@ void loop() {
     msg[15] = '0';
     msg[16] = ']';       
 
-    delay(400);
+    delay(200);
     // ⍑ >>> ⌂ send thermostat readings to the hub
     printToSerial(communicationChannel, msg, false);  
     RFCommunicatorSend(msg);     
