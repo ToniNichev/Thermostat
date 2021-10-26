@@ -113,7 +113,7 @@ void loop() {
         RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
         RFCommunicatorSend(data);  
         printToSerial(communicationChannel, data, true);     
-        delay(100);       
+        delay(150);       
         
         // clear data
         memset(data, 0, 32);            
