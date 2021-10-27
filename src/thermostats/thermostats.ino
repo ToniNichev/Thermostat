@@ -9,6 +9,7 @@
 #define RELAY_COOL 5
 #define RELAY_HEAT 3
 #define THERMOSTAT_EPROM_ADDRESS 3
+#define RESET_PIN 2
 
 // thermostat settings
 short int thermostatId = 0;
@@ -31,6 +32,9 @@ short int thermostatMode = 0;
 
 
 void setup() {  
+
+  
+  
   Serial.begin(9600);
   dht.begin();
   // set up 4 relay pins
@@ -38,6 +42,10 @@ void setup() {
   pinMode(RELAY_FAN_HIGH, OUTPUT);
   pinMode(RELAY_COOL, OUTPUT);
   pinMode(RELAY_HEAT, OUTPUT);
+
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  pinMode(RESET_PIN, OUTPUT);
 
   // set up all relays to 0
   digitalWrite(RELAY_FAN_LOW, HIGH);
@@ -71,12 +79,32 @@ void setup() {
     Serial.println(communicationChannel);
     Serial.println("#############################################");
   }
+
+  for(int q = 0; q < 10; q ++) {
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on 
+    delay(500);                       // wait for half a second
+    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off 
+    delay(500); 
+  }  
 }
 
 
 
 void loop() {
   delay(200);
+
+  if(digitalRead(RESET_PIN) == 1) {
+    Serial.println("Resetting ....");
+    writeIntIntoEEPROM(THERMOSTAT_EPROM_ADDRESS, -1);
+    for(int q=0; q< 5; q++) {
+      digitalWrite(RELAY_FAN_LOW, HIGH);
+      delay(1000);
+      digitalWrite(RELAY_FAN_LOW, LOW);
+      delay(1000);
+    }
+  }
+
+  
   Serial.println();
   Serial.println();
 
