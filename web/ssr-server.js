@@ -58,7 +58,7 @@ app.use(express.text())
 app.use(bodyParser.text({ type: 'text/*' }));
 
 app.use(cookieParser());
-app.use('/source-maps', express.static('./source-maps'));
+app.use('/source-maps', express.static('./dist/source-maps'));
 app.use('/server-build', express.static('./server-build'));
 app.use('/dist', express.static('dist')); // to serve frontent prod static files
 app.use('/favicon.ico', express.static('./static-assets/favicon.ico'));
@@ -82,7 +82,6 @@ function responseWithSourceCode(req, res, apiData, templateName) {
   const bundles = getBundles(manifest, modules); 
   const cssBundles = bundles.filter(bundle => bundle && bundle.file.split('.').pop() === 'css');
   const jsBundles = bundles.filter(bundle => bundle && bundle.file.split('.').pop() === 'js');
-
 
   const allJS = (jsBundles.map( ( {publicPath}) => `<script src='${publicPath}'></script>`)).join("\n");
 

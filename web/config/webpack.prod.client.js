@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const Loadable  = require('react-loadable/webpack');
 const getEnvironmentConstants = require('../getEnvironmentConstants');
+const path = require("path");
 
 const publicPath = `${process.env.APP_HOST}:${process.env.ASSETS_SERVER_PORT}/dist/`;
 
@@ -18,8 +19,9 @@ module.exports = {
 
   output: {
     filename: '[name]-bundle.js',
-    sourceMapFilename: '../source-maps/[name]-[chunkhash].js.map',
-    publicPath
+    sourceMapFilename: 'source-maps/[name].js.map',
+    publicPath,
+    //path: path.join(__dirname, "../dist"), // we could customize the output path here.
   },  
 
   module: {

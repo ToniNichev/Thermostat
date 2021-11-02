@@ -31,7 +31,8 @@ module.exports = {
   output: {
     path: `${projectRootPath}/src`,    
     filename: '[name]-bundle.js',
-    publicPath
+    publicPath,
+    path: path.resolve(__dirname, '../dist-folder'),   // this is the output directory, everything will be placed under here
   },  
 
   module: {
