@@ -1,8 +1,6 @@
-import { 
-    getLocalWeather,
-} from './services';
+import { getLocalWeather} from './services';
 
-const dispatch = async (req, res) => {
+const weatherServices = async (req, res) => {
     const action = req.params[0];
     switch(action) {
         case 'get-local-weather':
@@ -11,4 +9,4 @@ const dispatch = async (req, res) => {
     }
 }
 
-export default dispatch;
+export default weatherServices;
