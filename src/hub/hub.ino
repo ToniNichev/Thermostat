@@ -109,7 +109,7 @@ void loop() {
       if(serverData[i] == ']') {
         // sending data to the thermostat
         communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
-        
+
         if(communicationChannel != 7) {
           delay(200);
           thermostatId ++;
