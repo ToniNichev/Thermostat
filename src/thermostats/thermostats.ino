@@ -71,8 +71,7 @@ void setup() {
   }
   else {
     thermostatId = Id;
-    communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 channels: read and write
-    RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
+    RFCommunicatorSetup(3, 2);
     Serial.print("⍑ ID : ");
     Serial.println(thermostatId);
     Serial.print("⍑ chanel :");
@@ -115,7 +114,7 @@ void loop() {
   char serverData[32] = "";
   RFCommunicatorListen(serverData, false);
   printToSerial(communicationChannel, serverData, true);
-
+  delay(1500);
 
   if(programMode == 1) {
     // ###########################
@@ -133,8 +132,7 @@ void loop() {
     Serial.println("msg sent!");
     delay(200);
     programMode = 0;
-    communicationChannel = (id * 2) + 1; // switch to regular communication channel.
-    RFCommunicatorSetup(communicationChannel + 1, communicationChannel);
+    RFCommunicatorSetup(3,2); // switch to regular communication channel.
   }
   else if(programMode == 2) {
     Serial.println("do nothing ...");
@@ -143,96 +141,101 @@ void loop() {
   else {
     // ###########################
     // regular program mode
-    // ###########################    
-    hum = dht.readHumidity();
-    temp = dht.readTemperature();  
-  
-    dtostrf(hum, 4, 2, t); 
-    msg[0] = '[';
-    msg[1] = '0' + thermostatId;    
-    msg[2] = ',';
-    msg[3] = t[0];
-    msg[4] = t[1];
-    msg[5] = t[2];
-    msg[6] = t[3];
-    msg[7] = t[4];
-    msg[8] = ',';
-    dtostrf(temp, 4, 2, t); 
-    msg[9] = t[0];
-    msg[10] = t[1];
-    msg[11] = t[2];
-    msg[12] = t[3];
-    msg[13] = t[4];
-    msg[14] = ',';
-    msg[15] = '0';
-    msg[16] = ']';       
+    // ###########################  
 
-    delay(200);
-    // ⍑ >>> ⌂ send thermostat readings to the hub
-    printToSerial(communicationChannel, msg, false);  
-    RFCommunicatorSend(msg);     
-  
     float *serverVals = parseToValues(serverData);
+    short int _id = serverVals[0];
     short int fanMode = (int) serverVals[3];  
     short int thermostatMode = (int) serverVals[2];
     float requiredTemperature = serverVals[1];
     Serial.println();
+    if(_id == thermostatId) {
+            
+      hum = dht.readHumidity();
+      temp = dht.readTemperature();  
     
-    // Set fan mode
-    switch(fanMode) {
-      case 0:
-        digitalWrite(RELAY_FAN_LOW, HIGH);
-        digitalWrite(RELAY_FAN_HIGH, HIGH);
-        break;
-      case 1:
-        digitalWrite(RELAY_FAN_LOW, LOW);
-        digitalWrite(RELAY_FAN_HIGH, HIGH);    
-        break;
-      case 2:
-        digitalWrite(RELAY_FAN_LOW, HIGH);
-        digitalWrite(RELAY_FAN_HIGH, LOW);    
-        break;      
-    }
-    
-    // Set temperature
-    switch(thermostatMode) {
-      case 1:
-        digitalWrite(RELAY_COOL, HIGH);    
-        digitalWrite(RELAY_HEAT, HIGH);
-        break;
-      case 2:
-        // COOL
-        digitalWrite(RELAY_HEAT, HIGH);      
-        if(temp > requiredTemperature) {
-          digitalWrite(RELAY_COOL, LOW);
-          Serial.println("COOLING: LOW");
-        }
-        else {
-          digitalWrite(RELAY_COOL, HIGH);
-          Serial.println("COOLING: HIGH");
-        }
-        break;
-       case 3:
-        // HEAT
-        digitalWrite(RELAY_COOL, HIGH);      
-        if(temp < requiredTemperature) {
-          digitalWrite(RELAY_HEAT, LOW);
-          Serial.println("HEATING: LOW");
-        }
-        else {
-          digitalWrite(RELAY_HEAT, HIGH);
-          Serial.println("HEATING: HIGH");
-        }     
-        break;
+      dtostrf(hum, 4, 2, t); 
+      msg[0] = '[';
+      msg[1] = '0' + thermostatId;    
+      msg[2] = ',';
+      msg[3] = t[0];
+      msg[4] = t[1];
+      msg[5] = t[2];
+      msg[6] = t[3];
+      msg[7] = t[4];
+      msg[8] = ',';
+      dtostrf(temp, 4, 2, t); 
+      msg[9] = t[0];
+      msg[10] = t[1];
+      msg[11] = t[2];
+      msg[12] = t[3];
+      msg[13] = t[4];
+      msg[14] = ',';
+      msg[15] = '0';
+      msg[16] = ']';       
+  
+      delay(200);
+      // ⍑ >>> ⌂ send thermostat readings to the hub
+      printToSerial(communicationChannel, msg, false);  
+      RFCommunicatorSend(msg);     
+   
       
-        Serial.println("#####################");
-        Serial.print("required temperature: ");
-        Serial.print(requiredTemperature);
-        Serial.println();      
-        Serial.print("curent temp: ");
-        Serial.print(temp);
-        Serial.println();      
-        break;
+      // Set fan mode
+      switch(fanMode) {
+        case 0:
+          digitalWrite(RELAY_FAN_LOW, HIGH);
+          digitalWrite(RELAY_FAN_HIGH, HIGH);
+          break;
+        case 1:
+          digitalWrite(RELAY_FAN_LOW, LOW);
+          digitalWrite(RELAY_FAN_HIGH, HIGH);    
+          break;
+        case 2:
+          digitalWrite(RELAY_FAN_LOW, HIGH);
+          digitalWrite(RELAY_FAN_HIGH, LOW);    
+          break;      
+      }
+      
+      // Set temperature
+      switch(thermostatMode) {
+        case 1:
+          digitalWrite(RELAY_COOL, HIGH);    
+          digitalWrite(RELAY_HEAT, HIGH);
+          break;
+        case 2:
+          // COOL
+          digitalWrite(RELAY_HEAT, HIGH);      
+          if(temp > requiredTemperature) {
+            digitalWrite(RELAY_COOL, LOW);
+            Serial.println("COOLING: LOW");
+          }
+          else {
+            digitalWrite(RELAY_COOL, HIGH);
+            Serial.println("COOLING: HIGH");
+          }
+          break;
+         case 3:
+          // HEAT
+          digitalWrite(RELAY_COOL, HIGH);      
+          if(temp < requiredTemperature) {
+            digitalWrite(RELAY_HEAT, LOW);
+            Serial.println("HEATING: LOW");
+          }
+          else {
+            digitalWrite(RELAY_HEAT, HIGH);
+            Serial.println("HEATING: HIGH");
+          }     
+          break;
+        
+          Serial.println("#####################");
+          Serial.print("required temperature: ");
+          Serial.print(requiredTemperature);
+          Serial.println();      
+          Serial.print("curent temp: ");
+          Serial.print(temp);
+          Serial.println();      
+          break;
+      }
     }
   }
 }
