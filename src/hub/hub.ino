@@ -28,6 +28,7 @@ void setup() {
   Serial.println("PROGRAM STARTED");
   Serial.println("######################");
   delay(500);
+  RFCommunicatorSetup(2, 3);
 }
 
 
@@ -90,6 +91,7 @@ void loop() {
       Serial.println(tempTwo);
       strcat(thermostatsData, tempTwo);
       programMode = 0;
+      RFCommunicatorSetup(2, 3);
       delay(2000);
     }
   }
@@ -108,20 +110,9 @@ void loop() {
       pos ++;
       if(serverData[i] == ']') {
         // sending data to the thermostat
-        communicationChannel = (thermostatId * 2) + 1; // each thermostat uses 2 chanels: read and write
-
-        /*
-        if(communicationChannel != 7) {
-          delay(200);
-          thermostatId ++;
-          pos = 0;
-          continue;
-        }
-        */
-        RFCommunicatorSetup(communicationChannel, communicationChannel + 1);
         RFCommunicatorSend(data);  
         printToSerial(communicationChannel, data, true);     
-        delay(150);       
+        delay(1000);       
         
         // clear data
         memset(data, 0, 32);            
