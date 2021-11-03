@@ -40,6 +40,7 @@ class Home extends Component {
     this.thermostatsData = apiData.thermostatsData;
     this.hubId = apiData.hubId;
     // fetch thermostat and weather data
+    this.fetching = false;
     this.fetchData();
     this.fetchWeatherData();      
   }  
@@ -62,23 +63,6 @@ class Home extends Component {
     this.newThermostatAdded = false;
   }  
 
-  async getThermostatsSettings() { 
-    // run this only on client side
-    /*
-    if(typeof window == 'undefined')
-      return;
-      
-    const result = await Poster(`${apiUrl}/get`, {});
-
-    console.log("getThermostatsSettings!!!!!!!!!!!!!!!");      
-    console.log(result);
-
-    if(JSON.stringify(result) !== JSON.stringify(window.__API_DATA__)) {
-      window.__API_DATA__ = result;
-      this.forceUpdate();
-    } 
-    */
-  }
 
   editFlag() {
     this.setState({flagEditable: !this.state.flagEditable});     
@@ -114,7 +98,8 @@ class Home extends Component {
   }
 
   fetchData = () => {
-    if(typeof window == 'undefined') return;
+    if(typeof window == 'undefined' || this.fetching === true) return;
+    this.fetching = true;
     const refreshRate = 2000;
     if(this.disableFetchData === true) {
       setTimeout( () => {
@@ -162,7 +147,8 @@ class Home extends Component {
             this.setThermostatFanSliderMode[i](fanMode);
             this.connected = false;
           }
-        }        
+        } 
+        this.fetching = false;       
         setTimeout( () => {
           this.fetchData();
         }, refreshRate);        
