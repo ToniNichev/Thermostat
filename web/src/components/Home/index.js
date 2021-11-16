@@ -68,6 +68,10 @@ class Home extends Component {
     this.setState({flagEditable: !this.state.flagEditable});     
   }
 
+  getThermostatsSettings() {
+    // empty for now
+  }
+
   fetchWeatherData = () => {
     if(typeof window == 'undefined') return;
     const refreshRate = 60000;

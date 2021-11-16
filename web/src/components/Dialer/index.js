@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styles from './styles.scss';
 
+let dialerSetUp = false;
 
 /**
  * 
@@ -24,6 +25,7 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, Step, ShowPrecision, SetR
   const max = parseFloat(Max);
   const step = parseFloat(Step);
   const ratio = 360 / (max - min);
+  
 
   const rangeSelectorValueChanged = () => {
     const val = document.querySelectorAll('.labelPrimary')[SliderId].innerText;
@@ -93,6 +95,12 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, Step, ShowPrecision, SetR
   }
 
   useEffect(() => {
+    if(dialerSetUp) {
+      return;
+    }
+    dialerSetUp = true;
+    console.log("useEffect");
+
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('touchstart', e => {
       dialerPressed();
     });    
