@@ -203,7 +203,7 @@ class Home extends Component {
                 const wrapperClass = typeof this.state.thermostatBodyCSS[tId] === 'undefined' ? [] : this.state.thermostatBodyCSS[tId].join(' ');
                 return(
                 <div key={key} className={wrapperClass}  >
-                  <BulletPoint flagName={thermostatName} status={this.state.flagEditable} />
+                  <BulletPoint flagName={thermostatName} flagId={id} status={this.state.flagEditable} />
                   <span className={styles.roomName}>{thermostatName}</span>                  
 
                   <RangeSlider 
@@ -238,7 +238,7 @@ class Home extends Component {
           </div>      
           <div className={styles.rightRail}>
             <button className={this.state.flagEditable ? styles.addButtonHidden : styles.addButtonVisible } onClick={() => { this.addFlag()} }>ADD</button>
-            <EditDelete flagEditable={ this.state.flagEditable } editFlag={ () => { this.editFlag() } } />
+            <EditDelete flagEditable={ this.state.flagEditable } editFlag={ () => { this.editFlag() } } hubId={ this.hubId } />
           </div>
           {this.state.addFlagVisible ? <AddPopup newThermostatAdded={ () =>{ return this.isNewThermostatAdded() } } thermostatAddedClear={ () => { this.thermostatAddedClear() } } closePopup={ () => { this.closePopup() } } /> : null}
       </div>

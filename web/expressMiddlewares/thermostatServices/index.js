@@ -4,7 +4,8 @@ import {
     setDesiredTemperature,
     setThermostatMode,
     setThermostatFanMode,
-    setAddThermostatMode
+    setAddThermostatMode,
+    deleteThermostat
 } from './services';
 
 
@@ -31,6 +32,10 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => 
         case 'get-data':
             getReadings(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);
             break;   
+            case 'delete-thermostat': 
+            debugger;
+            await deleteThermostat(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);
+            break;            
         case 'set-desired-temperature': 
             await setDesiredTemperature(req, res, thermostatsData[hubId], requestData);
             break;

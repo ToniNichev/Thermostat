@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './styles.scss';
 
-let dialerSetUp = false;
 
 /**
  * 
@@ -17,6 +16,9 @@ let dialerSetUp = false;
  * 
  * @returns 
  */
+
+let dialerSetUp = [];
+
 const Dialer = ({onChangeCallback, SliderId, Min, Max, Step, ShowPrecision, SetRangeValue, setTempAndHumidity, onEditingMode}) => {  
 
   let beginDrag = false;
@@ -95,10 +97,10 @@ const Dialer = ({onChangeCallback, SliderId, Min, Max, Step, ShowPrecision, SetR
   }
 
   useEffect(() => {
-    if(dialerSetUp) {
+    if(dialerSetUp[SliderId]) {
       return;
     }
-    dialerSetUp = true;
+    dialerSetUp[SliderId] = true;
     console.log("useEffect");
 
     document.querySelectorAll('.circle > .dot')[SliderId].addEventListener('touchstart', e => {

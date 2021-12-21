@@ -69,18 +69,21 @@ const getReadings = async (req, res, thermostatData, thermostatResponse, hubPref
   }
   else if(hubPreferences.mode == 2) {
     sendResponse(res, '[##, 1]'); // ## - thermostat added, 1 - ok
-    console.log("@#@#@#@#@#");
+    console.log("Thermostat added!");
   }
+  else if(hubPreferences.mode == 3) {
+    sendResponse(res, '[##, 1]'); // ## - thermostat deleted, 1 - ok
+    console.log("Thermostat deleted!");
+  }  
   else {
     //////////////////////////////////////
     // Normal operationg mode
     //////////////////////////////////////
-    //debugger;
     for(let i = 0; i < thermostatData.length; i ++) {
       // set up thermostatData with the real data from thermostats
       if(typeof thermostatResponse[i] != 'undefined' && thermostatResponse.length > 1) {
         // thermostatResponse[0][0] is the hub ID
-        if(typeof thermostatResponse[i + 1] !== 'undefined') {
+        if(typeof thermostatResponse[i + 1] !== 'undefined' && typeof thermostatResponse[i + 1] == 'object') {
           const thermostatId = thermostatResponse[i + 1][0];
           thermostatData[thermostatId].humidity = thermostatResponse[i + 1][1];
           thermostatData[thermostatId].curentTemp = thermostatResponse[i + 1][2];
@@ -136,11 +139,22 @@ const setAddThermostatMode = async (req, res, thermostatData, requestData, hubPr
   sendResponse(res, result);
 }
 
+const deleteThermostat = async (req, res, thermostatData, requestData, hubPreferences) => {
+  console.log("hubPreferences:", hubPreferences);
+  console.log("thermostatData:", thermostatData);
+  debugger;
+  const result = `{"status": "deleting"}`;
+  console.log(hubPreferences);
+  //hubPreferences.mode = 3; // deleting thermostat
+  sendResponse(res, result);
+}
+
 export { 
   getFullReadings,
   getReadings,
   setDesiredTemperature,
   setThermostatMode,
   setThermostatFanMode,
-  setAddThermostatMode
+  setAddThermostatMode,
+  deleteThermostat
 };
