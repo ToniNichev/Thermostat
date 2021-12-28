@@ -1,4 +1,5 @@
 import { 
+    getThermostatListFromDB,
     getReadings,
     getFullReadings,
     setDesiredTemperature,
@@ -32,9 +33,9 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => 
         case 'get-data':
             getReadings(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);
             break;   
-            case 'delete-thermostat': 
-            debugger;
+        case 'delete-thermostat': 
             await deleteThermostat(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);
+            thermostatsData[hubId] = await getThermostatListFromDB(hubId);
             break;            
         case 'set-desired-temperature': 
             await setDesiredTemperature(req, res, thermostatsData[hubId], requestData);

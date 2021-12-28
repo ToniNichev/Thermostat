@@ -84,7 +84,7 @@ void loop() {
       Serial.println(serverData);
       RFCommunicatorSend(serverData);
       delay(100);
-      Serial.println("waiting for ⍑ response ...");
+      Serial.println("(adding thermostat) waiting for ⍑ response ...");
       char tempTwo[32] = "";
       RFCommunicatorListen(tempTwo, false);
       Serial.print("0 | ⍑ >>> ⌂ : ");

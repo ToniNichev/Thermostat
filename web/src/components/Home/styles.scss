@@ -47,8 +47,7 @@
 }
 
 .rightRail {
-  width: 10%;
-  min-width: 100px;
+  display: flex;
   button {
     width: 100%;
     padding: 5px;

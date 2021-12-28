@@ -6,12 +6,12 @@ function cookiesManagement(req, res, next) {
     // no: set a new cookie
     var randomNumber = new Date().toDateString();
     res.cookie('testCookie',randomNumber, { maxAge: 900000, httpOnly: true });
-    console.log('cookie created successfully');
+    //console.log('cookie created successfully');
   } 
   else
   {
     // cookie was already present 
-    console.log('cookie exists', cookie);
+    //console.log('cookie exists', cookie);
   } 
   next(); // !Importat to continue execution.
 }

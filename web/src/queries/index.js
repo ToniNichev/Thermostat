@@ -24,6 +24,13 @@ export default {
     },
 
 
+    remove: async (flagData) => {
+      mongoDB.remove(flagData, thermostatCollectionName, () => {
+        return true;
+      });     
+     },      
+
+
     // Users functions
     getAllUsers: async (userId) => {
       const result = await mongoDB.find({}, usersCollectionName);
@@ -39,14 +46,13 @@ export default {
      * 
      * @returns thermostatsObject
      */
-    getThermostatData: async (thermostatId) => {
+    getThermostatData: async () => {
       const result = await mongoDB.find({}, thermostatCollectionName);
       return result;     
      },    
     
-   getFeatureFlags: async () => {
-    const result = await mongoDB.find({}, thermostatCollectionName);
-    console.log(result);
+    getThermostatDataForHubId: async (hubId) => {
+      const result = await mongoDB.find({ hubId: hubId }, thermostatCollectionName);
     return result;     
    },
 
@@ -61,7 +67,8 @@ export default {
     mongoDB.add(flagData, thermostatCollectionName, () => {
       return true;
     });     
-   }, 
+   },   
+
 
    dropdb: async () => {
     const result = mongoDB.dropDB();
@@ -100,7 +107,6 @@ export default {
         "mode": "1",
         "fanMode": "0"
       },
-
       
       {
         "thermostatId": "1",
@@ -113,7 +119,20 @@ export default {
         "requiredTemp": "0",
         "mode": "1",
         "fanMode": "0"
-      },     
+      },  
+      
+      {
+        "thermostatId": "2",
+        "userId": "0",
+        "thermostatName" : "BlueRoom thermostat",
+        "hubId": "AXCS12",
+        "group": "My Home",        
+        "humidity": "0",
+        "curentTemp": "0",
+        "requiredTemp": "0",
+        "mode": "1",
+        "fanMode": "0"
+      },      
      ];
     mongoDB.add(thermostatsObj, thermostatCollectionName, () => {}); 
 

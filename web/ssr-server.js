@@ -133,7 +133,7 @@ app.get('/thermostat-services/*',
     requestDataFromAPI(req, res, thermostatsData, next);
   },
   function (req, res, next) {
-    console.log('req.apiData :', req.apiData );
+    //console.log('req.apiData :', req.apiData );
     const hubId = req.apiData.hubId;
     if(typeof req.apiData.thermostatsData === 'undefined') {
       thermostatsData[hubId] = [];
@@ -146,6 +146,18 @@ app.get('/thermostat-services/*',
 
 app.get('/weather-services/*', async (req, res) => {
   await weatherServices(req, res);
+});
+
+app.post('/services/setup-full', async (req, res) => {
+  queries.setup();
+  thermostatsData = [];
+
+  res
+  .status(200)
+  .set('Content-Type', 'application/json')
+  .set('Access-Control-Allow-Origin', '*')
+  .set('Access-Control-Allow-Headers', '*')
+  .send('{"status": "sucess"}');  
 });
 
 app.post('/services/setup', async (req, res) => {

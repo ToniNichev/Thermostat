@@ -3,16 +3,18 @@ import styles from './styles.scss';
 import EventsManager from '../../containers/EventsManager';
 import GenralPopup from '../GeneralPopup';
 
-const deleteFlag = (hubId, deletelist) => {
+const deleteFlag = (hubId, deletelist, editFlag) => {
   const list = JSON.stringify(deletelist);
   fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/delete-thermostat?data=["${hubId}"]${list}`)
   .then(response => response.json())
   .then(data => {
 
+    EventsManager.callEvent('thermostats-deleted')();
+    editFlag();
   });  
 }
 
-const deleteFlags = (hubId) => {
+const deleteFlags = (hubId, editFlag) => {
   const list = EventsManager.callEvent('getSelectedList')();
   let deletelist = [];
   for(var index in list) {
@@ -20,7 +22,7 @@ const deleteFlags = (hubId) => {
       deletelist.push(index);
     }
   }
-  deleteFlag(hubId, deletelist);
+  deleteFlag(hubId, deletelist, editFlag);
 }
 
 
@@ -32,8 +34,8 @@ const EditDelete = ({flagEditable, editFlag, hubId}) => {
   }
   else {
     return (
-      <div>
-        <button className={styles.deleteButton} onClick={() => { deleteFlags( hubId )} }>DELETE</button>
+      <div className={styles.editDelete}>
+        <button className={styles.deleteButton} onClick={() => { deleteFlags( hubId, editFlag )} }>DELETE</button>
         <button onClick={() => { editFlag()} }>CANCEL</button>
       </div>
     );

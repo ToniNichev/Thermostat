@@ -17,6 +17,11 @@ const sendResponse = (res, responseString) => {
   res.send(responseString);  
 }
 
+const getThermostatListFromDB = async (hubId) => {
+  const response = await queries.getThermostatDataForHubId(hubId);
+  return response;
+}
+
 /**
  * getFullReadings - returns all thermostat data
  * @param {*} req 
@@ -42,6 +47,9 @@ const getReadings = async (req, res, thermostatData, thermostatResponse, hubPref
     // adding thermostat mode
     if(req.fullData.length > 1 && req.fullData[1][0] == `added`) {
       const users = await queries.getUserIdByThermostatId(hubId);
+      if(users.length === 0) {
+        sendResponse(res, "{'error': 'no user data'}");
+      }
       const userId = users[0].userId;   
       
       const thermostatObj =  {
@@ -127,12 +135,6 @@ const setThermostatFanMode = async (req, res, thermostatData, requestData) => {
 }
 
 const setAddThermostatMode = async (req, res, thermostatData, requestData, hubPreferences) => {
-  /*
-  const data = requestData[1];
-  const id = data[0];
-  const mode = data[1];
-  thermostatData[id].fanMode = mode;
-  */
   newDeviceName = requestData[0][1];
   const result = `{"status": "adding"}`;
   hubPreferences.mode = 1; // adding thermostat
@@ -140,16 +142,25 @@ const setAddThermostatMode = async (req, res, thermostatData, requestData, hubPr
 }
 
 const deleteThermostat = async (req, res, thermostatData, requestData, hubPreferences) => {
-  console.log("hubPreferences:", hubPreferences);
-  console.log("thermostatData:", thermostatData);
-  debugger;
-  const result = `{"status": "deleting"}`;
-  console.log(hubPreferences);
-  //hubPreferences.mode = 3; // deleting thermostat
+
+  const hubId = requestData[0][0];
+  const removeThermostatList = requestData[1];
+
+  for(var i in thermostatData) {
+    const data = thermostatData[i];
+    const tId = data.thermostatId;
+    
+    if(removeThermostatList.indexOf(tId) !== -1 ) {
+        queries.remove({ thermostatId: tId }, );        
+    }
+}
+  thermostatData = await queries.getThermostatDataForHubId(hubId);
+  const result = `{"status": "deleted"}`;
   sendResponse(res, result);
 }
 
 export { 
+  getThermostatListFromDB,
   getFullReadings,
   getReadings,
   setDesiredTemperature,

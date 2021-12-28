@@ -10,7 +10,8 @@ const publicPath = `${process.env.APP_HOST}:${process.env.ASSETS_SERVER_PORT}/di
 console.log(`Assets will be served from: ${process.env.APP_HOST} ${process.env.ASSETS_SERVER_PORT}`);
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
+
   devtool: 'source-map',
 
   entry: [

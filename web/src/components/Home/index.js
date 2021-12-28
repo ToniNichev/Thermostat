@@ -3,6 +3,7 @@ import styles from './styles.scss';
 import ToggleSwitch from '../ToggleSwitch';
 import BulletPoint from '../BulletPoint';
 import AddPopup from './AddPopup';
+import MessagePopup from '../MessagePopup';
 import {Poster} from '../../utils/Poster';
 import EditDelete from '../EditDelete';
 import { apiUrl } from '../../utils/getParams';
@@ -29,8 +30,11 @@ class Home extends Component {
     this.newThermostatAdded = false;
 
     this.addFlagVisible = false;
+    
     this.state = {
       addFlagVisible: false,
+      messagePopup: false,   
+      messagePopupText: '',      
       flagEditable: false,
       thermostatBodyCSS: [],
       thermostats: []
@@ -43,6 +47,10 @@ class Home extends Component {
     this.fetching = false;
     this.fetchData();
     this.fetchWeatherData();      
+    EventsManager.registerEvent('thermostats-deleted', () => {
+      this.setState({messagePopupText: '<h2>Selected Thermostats removed!</h2><hr/><p>Make sure that you reset all erased thermostats to set them up into add mode so you will be able to add them later.</p>'});
+      this.setState({messagePopup: true});
+    });
   }  
 
   addFlag() {
@@ -53,6 +61,11 @@ class Home extends Component {
     this.setState({addFlagVisible: false});    
     this.getThermostatsSettings();
   }  
+
+  closeMessagePopup() {
+    //this.setState({messagePopup: false});    
+    window.location.reload();    
+  }
 
   isNewThermostatAdded() {
     const result = this.newThermostatAdded;
@@ -194,6 +207,10 @@ class Home extends Component {
       <div className={styles.wrapper}>
           <div className={styles.leftRail}>
             <div className={[styles.weatherTitle, 'weatherTitle'].join(' ')}>...</div>
+            <div className={styles.rightRail}>
+              <button className={this.state.flagEditable ? styles.addButtonHidden : styles.addButtonVisible } onClick={() => { this.addFlag()} }>ADD</button>
+              <EditDelete flagEditable={ this.state.flagEditable } editFlag={ () => { this.editFlag() } } hubId={ this.hubId } />
+            </div>
               {Thermostats && Thermostats.map( (thermostat, tId) => {
                 const id = parseInt(thermostat.thermostatId);
                 const key = `thermostat-control-${id}`;
@@ -236,11 +253,8 @@ class Home extends Component {
                 </div>);}
               )}
           </div>      
-          <div className={styles.rightRail}>
-            <button className={this.state.flagEditable ? styles.addButtonHidden : styles.addButtonVisible } onClick={() => { this.addFlag()} }>ADD</button>
-            <EditDelete flagEditable={ this.state.flagEditable } editFlag={ () => { this.editFlag() } } hubId={ this.hubId } />
-          </div>
           {this.state.addFlagVisible ? <AddPopup newThermostatAdded={ () =>{ return this.isNewThermostatAdded() } } thermostatAddedClear={ () => { this.thermostatAddedClear() } } closePopup={ () => { this.closePopup() } } /> : null}
+          {this.state.messagePopup ? <MessagePopup msg={ this.state.messagePopupText } closeMessagePopup = { () =>{ this.closeMessagePopup() } } />: null }
       </div>
     );
   }

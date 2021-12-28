@@ -39,6 +39,7 @@ A Smart Thermostat project
         http://toni-develops.com:8061/home?data=["AXCS12"]
 
     * setup
+        http://toni-develops.com:8061/setup?data=["AXCS12"]
         http://localhost:8081/setup?data=["AXCS12"]
 
 * Services
@@ -67,14 +68,14 @@ A Smart Thermostat project
     * Set desired temperature
         http://toni-develops.com:8061/thermostat-services/set-desired-temperature?data=["AXCS12"][0,21.0]
 
-    * Add new thermostate mode
+    * Add new thermostat mode
         http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID][NEXT-THERMOSTAT-ID]
         example: http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12"][1]
         
         * workflow:
             * User click ADD Thermostat on ♁ (web site)
-                ♁(front end) >>> ♁(server) : http://toni-develops.com:8061/thermostat-services/add-thermostat?data=[HUB-ID]
-                                    example: http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12"]
+                ♁(front end) >>> ♁(server) : http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["HUB-ID", "new device name"] 
+                                    example: http://toni-develops.com:8061/thermostat-services/add-thermostat?data=["AXCS12", "new device name"]
 
             * hub receives `[#,new-thermostat-id]` from the web service
                 0 | ⌂ >>> ♁ : http://toni-develops.com:8061/thermostat-services/get-data?data=[HUB-ID]
