@@ -116,3 +116,7 @@ Reset PTAC security code
 6. While fan button is down, press and release [COOL] button.
 7. Release the fan button.
 8. Wait a bit and try to enter REMOTE mode.
+
+==================================================
+New Amana Thermostat Wiring Harness - PWHK01C
+==================================================
