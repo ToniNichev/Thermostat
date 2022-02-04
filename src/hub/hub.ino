@@ -6,7 +6,8 @@
 #define ethernetUrl "GET /thermostat-services/get-data?data="
 #define ethernetPort 8061
 
-#define hubId "AXCS12"
+//#define hubId "AXCS12"
+#define hubId "B2CF62"
 
 
 char thermostatsData[100] = ""; 

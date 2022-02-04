@@ -27,3 +27,4 @@ api-secrets.txt
 .env
 .env.production
 web/.env
+source-maps/
