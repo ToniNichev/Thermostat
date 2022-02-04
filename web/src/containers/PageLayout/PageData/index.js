@@ -1,4 +1,18 @@
 export default {
+  '/sign-in' : {
+    template: "Html",    
+    layout: [ 
+      {
+        span: 12,
+        components:[
+          {
+            name: "SignIn",
+            props: {}
+          }
+        ] 
+      }         
+    ]    
+  },  
   '/about' : {
     template: "Html",    
     layout: [ 

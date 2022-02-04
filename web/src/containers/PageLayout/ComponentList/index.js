@@ -17,9 +17,15 @@ const Setup = Loadable({
   loader: () => import ('../../../components/Setup'),
   loading: Loading
 });
+const SignIn = Loadable({
+  loader: () => import ('../../../components/SignIn'),
+  loading: Loading
+});
 export default {
   Home,
   About,
   Setup,
   Header,
+  SignIn
+
 }

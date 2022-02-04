@@ -4,15 +4,17 @@ import PageData from './PageData';
 const styles = require('./styles.scss');
 class PageLayout extends Component {
     constructor(props) {
-      super(props);      
+      super(props);    
+      this.user = null;  
     } 
   
     render() {
-      const url = this.props.location.pathname;
+      const url = this.user === null ? '/sign-in' : this.props.location.pathname;
+      //const url = this.props.location.pathname;
       const page = PageData[url];
 
       const allLayout = page.layout.map((layoutList) => {
-        const layout = layoutList.components.map((component, id , components) => {
+        const layout = layoutList.components.map((component, id , components) => {          
           const componentName = component.name;    
           const props = component.props;    
           const ChildComponent = ComponentList[componentName];

@@ -48,7 +48,7 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => 
             break;
         case 'add-thermostat': 
             await setAddThermostatMode(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);        
-            break;        
+            break;       
     }
 }
 

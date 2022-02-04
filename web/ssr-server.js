@@ -15,6 +15,7 @@ import requestDataFromAPI from './expressMiddlewares/requestDataFromAPI';
 const publicPath = `${process.env.APP_HOST}:${process.env.ASSETS_SERVER_PORT}/dist/`;
 // import pageData from './expressMiddlewares/pageData';
 import thermostatServices from './expressMiddlewares/thermostatServices';
+import userServices from './expressMiddlewares/userServices';
 import weatherServices from './expressMiddlewares/WeatherServices';
 import queries from './src/queries';
 import bodyParser from 'body-parser';
@@ -26,9 +27,10 @@ let thermostatsData = {};
 //let usersData = [];
 let hubPreferences = {};
 
-// only on app start - load thermostats data
+// only on app start - load thermostats data !!! To-do get rid of this and request thermostat data for the specific user
 ( async () => {
   const thermostats = await queries.getAllThermostats();
+  //console.log(">>>>>>>>>: thermostats: ", thermostats);
 
   if(thermostats.length === 0) {
     console.log('No thermostat data at all!');
@@ -127,6 +129,9 @@ app.get('/Robots.txt', (req, res) => {
   `)
 });
 
+// #############################################################
+//  register thermostat services route
+// #############################################################
 
 app.get('/thermostat-services/*',
   function (req, res, next) {
@@ -143,6 +148,18 @@ app.get('/thermostat-services/*',
     }
     thermostatServices(req, res, thermostatsData, hubPreferences);
 });
+
+// #############################################################
+//  register user services route
+// #############################################################
+
+app.post('/user-services/*', async (req, res) => {
+  userServices(req, res);
+});
+
+// #############################################################
+//  register weather services route
+// #############################################################
 
 app.get('/weather-services/*', async (req, res) => {
   await weatherServices(req, res);
