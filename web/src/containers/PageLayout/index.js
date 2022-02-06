@@ -9,7 +9,10 @@ class PageLayout extends Component {
     } 
   
     render() {
-      const url = this.user === null ? '/sign-in' : this.props.location.pathname;
+      let url = this.props.location.pathname;
+      if(typeof window !== 'undefined') {
+        url = typeof window?.user === 'undefined' ? '/sign-in' : this.props.location.pathname;
+      }
       //const url = this.props.location.pathname;
       const page = PageData[url];
 

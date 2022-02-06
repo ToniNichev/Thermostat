@@ -6,13 +6,9 @@ const usersCollectionName = 'users';
 
 export default {
 
-    // User functions 
-    getUserIdByThermostatId: async (thermostatId) => {
-      return mongoDB.find({thermostatHubs: thermostatId}, usersCollectionName);
-    },
-
+    // #######################################
     // Thermostat functions
-
+    // #######################################
     getAllThermostats: async () => {
       const result = await mongoDB.find({}, thermostatCollectionName);
       return result;
@@ -30,8 +26,21 @@ export default {
       });     
      },      
 
-
+    // #######################################
     // Users functions
+    // #######################################
+
+    getUser: async (searchObject) => {
+      const result = await mongoDB.find(searchObject, usersCollectionName);
+      return result;
+    },  
+
+    addUser: async (userObject) => {    
+      const result = await mongoDB.add(userObject, usersCollectionName);
+      return result;
+     },
+
+
     getAllUsers: async (userId) => {
       const result = await mongoDB.find({}, usersCollectionName);
       return result;
@@ -40,7 +49,12 @@ export default {
     getUserByUserId: async (userId) => {
       const result = await mongoDB.find({ "UserId": userId }, thermostatCollectionName);
       return result;
+    },
+
+    getUserIdByThermostatId: async (thermostatId) => {
+      return mongoDB.find({thermostatHubs: thermostatId}, usersCollectionName);
     },    
+
 
     /**
      * 

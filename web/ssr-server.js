@@ -73,6 +73,8 @@ function responseWithSourceCode(req, res, apiData, templateName) {
 
   // Prepare to get list of all modules that have to be loaded for this route
   let modules = [];
+
+  console.log(">>>>>>>>>>>> 11111:", req.cookies);
   ReactDOMServer.renderToString(
     <Loadable.Capture report={moduleName => modules.push(moduleName)}>
       <App req={req} />
@@ -208,11 +210,7 @@ app.get('/*',
     requestDataFromAPI(req, res, thermostatsData, next);
   },
   function (req, res, next) {
-    if(test === null) {
-      test = 123;
-      console.log(">>>>>> test");
-    }
-   responseWithSourceCode(req, res, req.apiData, req.templateName);
+    responseWithSourceCode(req, res, req.apiData, req.templateName);
 });
 
 

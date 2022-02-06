@@ -1,5 +1,6 @@
 import { 
-    registerUser
+    registerUser,
+    logIn
 } from './services';
 
 const stringToObject = (str) => {
@@ -18,6 +19,9 @@ const UserServices = async (req, res ) => {
         case 'register-user':
             await registerUser(req, res);
             break;
+        case 'log-in':
+            await logIn(req, res);
+            break;            
     }
 }
 
