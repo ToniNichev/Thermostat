@@ -30,6 +30,14 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
   }
 
   const validDataObj = stringToObject(parsedQs.data); // thermostat(s) ids
+  if(typeof validDataObj === 'undefined' ) {
+    // user does not have this thermostat ID
+    req.error = {
+      code : 'invalid_thermostat_id'
+    }
+    req.templateName = 'InternalError'; 
+    return;
+  }
   const hubId = validDataObj[0][0];
   const isValidHubIdForThisUser = userFromCookie?.thermostatHubs?.find(element => element === hubId);
 
