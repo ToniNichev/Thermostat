@@ -106,8 +106,14 @@ A Smart Thermostat project
 
 
 ================================================
+Adding new thermostat - follow exactly 
+================================================
+1. on the WEB ui click ADD
+2. Enter the name and click DONE
+3. Grab a thermostat that is in ADD mode, and power it up
+================================================
 Reset PTAC security code
-
+================================================
 1. Switch off AC
 2. Turn [MASTER SWITCH] off
 3. Press and hold [FAN SPEED] button.

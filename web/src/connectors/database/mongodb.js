@@ -71,6 +71,26 @@ export default {
     return result;  
   },
 
+	updateOneField: async (searchObject, newObject, collectionName) => {
+    let client;
+    let result;
+
+    try  {
+      client = await MongoClient.connect(url);
+      console.log("Connected correctly to server");
+  
+      const db = client.db(dbName);
+      result = await db.collection(collectionName).updateOne(searchObject, {$set:newObject} );
+    }
+    catch (err) {
+      console.log(err.stack);
+    }    
+    // Close connection
+    if(client)
+      client.close();
+    return result;
+  },    
+
 	update: async (searchObject, newObject, collectionName) => {
     let client;
     let result;
@@ -81,7 +101,7 @@ export default {
   
       const db = client.db(dbName);
 
-      result = await db.collection(collectionName).update(searchObject, newObject).toArray();
+      result = await db.collection(collectionName).update(searchObject, { $set: newObject }).toArray();
     }
     catch (err) {
       console.log(err.stack);

@@ -48,8 +48,8 @@ const logIn = async (req, res) => {
   delete(user.password);
   var name = `${user.email}salt${user.userId}`;
   var hash = crypto.createHash('md5').update(name).digest('hex');
-  user.hash = hash;
-  debugger;
+  user.accessToken = hash;
+  await queries.updateUser({email: email, password: password}, {accessToken: hash});
   if( typeof global?.users && typeof global?.users[hash]) {
     global.users[hash] = user;
   }

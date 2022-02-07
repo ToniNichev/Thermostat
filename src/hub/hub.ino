@@ -83,6 +83,10 @@ void loop() {
       // send thermostat ID to the thermostat: [#,0]
       Serial.print("0 | ⌂ >>> ⍑: ");
       Serial.println(serverData);
+
+      Serial.println("!!!!!!!!!!!!!!!");
+      Serial.println(serverData);
+      
       RFCommunicatorSend(serverData);
       delay(100);
       Serial.println("(adding thermostat) waiting for ⍑ response ...");

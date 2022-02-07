@@ -40,6 +40,11 @@ export default {
       return result;
      },
 
+     updateUser: async (searchObject, updateObject) => {
+       
+      const result = await mongoDB.updateOneField(searchObject, updateObject, usersCollectionName);
+      return result;
+    },       
 
     getAllUsers: async (userId) => {
       const result = await mongoDB.find({}, usersCollectionName);

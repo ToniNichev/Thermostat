@@ -1,7 +1,7 @@
 import PageData from '../src/containers/PageLayout/PageData'; 
 const url = require('url');
 const querystring = require('querystring');
-//import queries from '../src/queries';
+import queries from '../src/queries';
 
 
 
@@ -11,8 +11,15 @@ const stringToObject = (str) => {
 }
 
 const requestDataFromAPI = async (req, res, thermostatsData, next) => {  
-
   const userFromCookie = typeof req.cookies.user === 'undefined' ? undefined : JSON.parse(req.cookies.user);
+  
+  if(typeof userFromCookie !== 'undefined' && typeof global?.users[userFromCookie.hash] === 'undefined') {
+    const user = queries.getUser({email: userFromCookie.email, userFromCookie: userFromCookie.accessToken});
+    const accessToken = userFromCookie.accessToken;
+    global.users[accessToken] = user;
+  }
+
+
   req.parsedUrl = url.parse(req.url);
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);
