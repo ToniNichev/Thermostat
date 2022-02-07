@@ -13,7 +13,6 @@ const stringToObject = (str) => {
 const UserServices = async (req, res ) => {
     const action = req.params[0];
 
-
     
     switch(action) {
         case 'register-user':
@@ -21,7 +20,7 @@ const UserServices = async (req, res ) => {
             break;
         case 'log-in':
             await logIn(req, res);
-            break;            
+            break;   
     }
 }
 

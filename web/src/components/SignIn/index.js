@@ -10,6 +10,7 @@ class SignIn extends Component {
 
   constructor(props) {    
     super(props);
+    this.cookies = new Cookies();
     this.state = {
       popupVisible: false,
       popupMessage: '',
@@ -47,8 +48,7 @@ class SignIn extends Component {
     }    
     const result = await Poster(`${userApiUrl}/log-in`, postData);
     const user = JSON.stringify(result);
-    const cookies = new Cookies();
-    Zcookies.set('user', user, { path: '/' });
+    this.cookies.set('user', user, { path: '/' });
   }
 
   render() {

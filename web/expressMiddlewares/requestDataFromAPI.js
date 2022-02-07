@@ -11,9 +11,8 @@ const stringToObject = (str) => {
 }
 
 const requestDataFromAPI = async (req, res, thermostatsData, next) => {  
-  //console.log("^^^^^^^^^^^^^^^^^^^^");
-  //console.log(req.url);
-  //console.log("^^^^^^^^^^^^^^^^^^^^");
+
+  const userFromCookie = typeof req.cookies.user === 'undefined' ? undefined : JSON.parse(req.cookies.user);
   req.parsedUrl = url.parse(req.url);
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);
@@ -23,15 +22,26 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
     console.log("#####################################################################");
   }
 
-  const validDataObj = stringToObject(parsedQs.data);
-  req.fullData = validDataObj;
-  const hubId = validDataObj[0];
-  req.hubId = hubId[0];
-  // send thermostats data for this specific hub from the request
-  const thermostatDataForThisHub = typeof thermostatsData[hubId] !== 'undefined' ? thermostatsData[hubId] : {};
-  req.apiData = {"hubId": hubId, "thermostatsData" : thermostatsData[hubId]};
-  const templateName = typeof PageData[pathname] != 'undefined' ? PageData[pathname].template : '';    
-  req.templateName = templateName;
+  const validDataObj = stringToObject(parsedQs.data); // thermostat(s) ids
+  const hubId = validDataObj[0][0];
+  const isValidHubIdForThisUser = userFromCookie?.thermostatHubs?.find(element => element === hubId);
+
+  if(typeof isValidHubIdForThisUser === 'undefined' && typeof userFromCookie !== 'undefined') {
+    // user does not have this thermostat ID
+    req.error = {
+      code : 'invalid_thermostat_id'
+    }
+    req.templateName = 'InternalError';
+  }
+  else {  
+    req.fullData = validDataObj;
+    req.hubId = hubId;
+    // send thermostats data for this specific hub from the request
+    const thermostatDataForThisHub = typeof thermostatsData[hubId] !== 'undefined' ? thermostatsData[hubId] : {};
+    req.apiData = {"hubId": hubId, "thermostatsData" : thermostatsData[hubId]};
+    const templateName = typeof PageData[pathname] != 'undefined' ? PageData[pathname].template : '';    
+    req.templateName = templateName;
+  }
   next(); // continue once the data is available.
 
 }

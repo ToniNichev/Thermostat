@@ -46,10 +46,13 @@ const logIn = async (req, res) => {
   const users = await queries.getUser({email: email, password: password });
   let user = users[0];
   delete(user.password);
-
-  var name = 'braitsch';
+  var name = `${user.email}salt${user.userId}`;
   var hash = crypto.createHash('md5').update(name).digest('hex');
   user.hash = hash;
+  debugger;
+  if( typeof global?.users && typeof global?.users[hash]) {
+    global.users[hash] = user;
+  }
 
   sendResponse(res, user);  
 }

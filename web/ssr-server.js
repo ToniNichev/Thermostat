@@ -23,6 +23,8 @@ import bodyParser from 'body-parser';
 const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 let test = null;
 
+// create users object so we won't jump to DB every time to validate tokens
+global.users ={};
 let thermostatsData = {};
 //let usersData = [];
 let hubPreferences = {};
@@ -73,8 +75,6 @@ function responseWithSourceCode(req, res, apiData, templateName) {
 
   // Prepare to get list of all modules that have to be loaded for this route
   let modules = [];
-
-  console.log(">>>>>>>>>>>> 11111:", req.cookies);
   ReactDOMServer.renderToString(
     <Loadable.Capture report={moduleName => modules.push(moduleName)}>
       <App req={req} />
@@ -132,7 +132,7 @@ app.get('/Robots.txt', (req, res) => {
 });
 
 // #############################################################
-//  register thermostat services route
+//  thermostat services route
 // #############################################################
 
 app.get('/thermostat-services/*',
@@ -152,7 +152,7 @@ app.get('/thermostat-services/*',
 });
 
 // #############################################################
-//  register user services route
+//  user services route
 // #############################################################
 
 app.post('/user-services/*', async (req, res) => {
@@ -160,7 +160,7 @@ app.post('/user-services/*', async (req, res) => {
 });
 
 // #############################################################
-//  register weather services route
+//  weather services route
 // #############################################################
 
 app.get('/weather-services/*', async (req, res) => {

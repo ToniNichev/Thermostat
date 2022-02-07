@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import ComponentList from './ComponentList';
 import PageData from './PageData';
+import Cookies from 'universal-cookie';
 const styles = require('./styles.scss');
 class PageLayout extends Component {
     constructor(props) {
       super(props);    
+      this.cookies = new Cookies();
       this.user = null;  
     } 
   
-    render() {
+    render() {      
       let url = this.props.location.pathname;
-      if(typeof window !== 'undefined') {
-        url = typeof window?.user === 'undefined' ? '/sign-in' : this.props.location.pathname;
+      if(typeof this.cookies.get('user') == 'undefined') {
+        url = '/sign-in';
       }
-      //const url = this.props.location.pathname;
       const page = PageData[url];
 
       const allLayout = page.layout.map((layoutList) => {

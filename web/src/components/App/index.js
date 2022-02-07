@@ -4,13 +4,15 @@ import PageLayout from '../../containers/PageLayout';
 import styles from './styles.scss';
 
 
-const client = (props) => ( 
-  <Router>
-    <Switch>
-      <Route exact path="*" render={(props) => <PageLayout {...props} />} />
-    </Switch>
-  </Router>
-);
+const client = (props) => {
+  return ( 
+    <Router>
+      <Switch>
+        <Route exact path="*" render={(props) => <PageLayout {...props} />} />
+      </Switch>
+    </Router>
+  );
+}
 
 const context = {};
 
@@ -33,8 +35,10 @@ const server = (props) => {
 );
 }
 
-export default ( {req} ) => (
-  <div className={styles.appWrapper}>
-    {typeof window == 'undefined' ? server(req) :client(req)}
-  </div>   
-)
+export default ( {req} ) => {
+  return (
+    <div className={styles.appWrapper}>
+      {typeof window == 'undefined' ? server(req) :client(req)}
+    </div>   
+  );
+}
