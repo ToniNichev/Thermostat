@@ -40,7 +40,7 @@ class Home extends Component {
       thermostats: []
     };
     // get api data
-    const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
+    const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : typeof window === 'undefined' ? {} : window.__API_DATA__;
     this.thermostatsData = apiData.thermostatsData;
     this.hubId = apiData.hubId;
     // fetch thermostat and weather data

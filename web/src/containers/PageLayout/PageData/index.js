@@ -59,6 +59,29 @@ export default {
       },        
     ]
   },
+  '/sign-out' : {
+    template: "Html",    
+    layout: [ 
+      {
+        span: 12,        
+        components: [
+          {
+            name: "Header",
+            props: {}
+          }
+        ]
+      },
+      {
+        span: 12,
+        components:[
+          {
+            name: "SignOut",
+            props: {}
+          }
+        ] 
+      },        
+    ]
+  },  
   '/setup' : {
     template: "Html",    
     layout: [ 

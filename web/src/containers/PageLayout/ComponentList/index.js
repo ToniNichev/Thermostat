@@ -21,11 +21,15 @@ const SignIn = Loadable({
   loader: () => import ('../../../components/SignIn'),
   loading: Loading
 });
+const SignOut = Loadable({
+  loader: () => import ('../../../components/SignOut'),
+  loading: Loading
+});
 export default {
   Home,
   About,
   Setup,
   Header,
-  SignIn
-
+  SignIn,
+  SignOut
 }

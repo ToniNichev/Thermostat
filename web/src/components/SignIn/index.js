@@ -46,38 +46,54 @@ class SignIn extends Component {
       email: document.querySelector('input[type="text"][name="email"]').value,
       password: document.querySelector('input[type="password"][name="password"]').value,
     }    
+    
     const result = await Poster(`${userApiUrl}/log-in`, postData);
+    if(typeof result.error !== 'undefined') {
+      this.setState({popupMessage: result.message});
+      this.setState({popupVisible: true});
+      return;
+    }
     const user = JSON.stringify(result);
+    const hubId = result.thermostatHubs[0];
     this.cookies.set('user', user, { path: '/' });
+    this.setState({popupMessage: (<p>Welcome!</p>
+                                    <p><button onclick="">OK</button></p>) );
+    this.setState({popupVisible: true});
+    this.forceUpdate();
+  }
+
+
+  async registerUser() {
+    if(document.querySelector('input[type="password"][name="password"]').value === '') {
+      this.setState({popupMessage: 'Please enter password!'});
+      this.setState({popupVisible: true});        
+      return;
+    }
+    if(document.querySelector('input[type="text"][name="email"]').value === '') {
+      this.setState({popupMessage: 'Please enter valid e-mail!'});
+      this.setState({popupVisible: true});        
+      return;
+    }
+    if(document.querySelector('input[type="text"][name="hubId"]').value === '') {
+      this.setState({popupMessage: 'Please enter valid hub id!'});
+      this.setState({popupVisible: true});        
+      return;
+    }            
+    const postData = {
+      email: document.querySelector('input[type="text"][name="email"]').value,
+      password: document.querySelector('input[type="password"][name="password"]').value,
+      hubId: document.querySelector('input[type="text"][name="hubId"]').value
+    }
+    const result = await Poster(`${userApiUrl}/register-user`, postData);
+    let popupMsg = result.message;
+    if(typeof result.errorCode === 'undefined') {
+      popupMsg += '<p><button onclick="location.reload()">SIGN IN</button></p>';
+    }
+    this.setState({popupMessage: popupMsg});
+    this.setState({popupVisible: true});
   }
 
   render() {
-
-    const registerUser = async () => {
-      if(document.querySelector('input[type="password"][name="password"]').value === '') {
-        this.setState({popupMessage: 'Please enter password!'});
-        this.setState({popupVisible: true});        
-        return;
-      }
-      if(document.querySelector('input[type="text"][name="email"]').value === '') {
-        this.setState({popupMessage: 'Please enter valid e-mail!'});
-        this.setState({popupVisible: true});        
-        return;
-      }
-      if(document.querySelector('input[type="text"][name="thermostatId"]').value === '') {
-        this.setState({popupMessage: 'Please enter thermostat id!'});
-        this.setState({popupVisible: true});        
-        return;
-      }            
-      const postData = {
-        email: document.querySelector('input[type="text"][name="email"]').value,
-        password: document.querySelector('input[type="password"][name="password"]').value,
-        thermostatId: document.querySelector('input[type="text"][name="thermostatId"]').value
-      }
-      const result = await Poster(`${userApiUrl}/register-user`, postData);
-      this.setState({popupMessage: result.message});
-      this.setState({popupVisible: true});
-    }
 
     return (
       <div className={styles.wrapper}>
@@ -91,12 +107,10 @@ class SignIn extends Component {
               <label>Password</label>
               <input type="password" placeholder="Enter Password" name="password" required />            
 
-              <label>Thermostat ID</label>
-              <input type="text" placeholder="Enter thermostat ID" name="thermostatId" required />            
+              <label>Hub ID</label>
+              <input type="text" placeholder="Enter hub ID" name="hubId" required />            
 
-              <button type="button" onClick={ () => { registerUser() }} >REGISTER</button>
-              { this.state.popupVisible && <MessagePopup msg={this.state.popupMessage} closeMessagePopup={ () => this.closeMessagePopup() }/>}
-
+              <button type="button" onClick={ () => { this.registerUser() }} >REGISTER</button>
               <p><a href="#" onClick={() =>{ this.showLogInPopup() }}>Log In</a></p>
           </div>
         </div>}
@@ -116,6 +130,7 @@ class SignIn extends Component {
                 <p><a href="#" onClick={() =>{ this.showSignInPopup() }}>Sign In</a></p>                               
             </div>
         </div>}
+        { this.state.popupVisible && <MessagePopup msg={this.state.popupMessage} closeMessagePopup={ () => this.closeMessagePopup() }/>}
     </div>)
   }
 }

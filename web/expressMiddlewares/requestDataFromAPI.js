@@ -12,6 +12,7 @@ const stringToObject = (str) => {
 
 const requestDataFromAPI = async (req, res, thermostatsData, next) => {  
   const userFromCookie = typeof req.cookies.user === 'undefined' ? undefined : JSON.parse(req.cookies.user);
+
   
   if(typeof userFromCookie !== 'undefined' && typeof global?.users[userFromCookie.hash] === 'undefined') {
     const user = queries.getUser({email: userFromCookie.email, userFromCookie: userFromCookie.accessToken});
@@ -23,6 +24,17 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
   req.parsedUrl = url.parse(req.url);
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);
+  
+  
+  if(pathname === '/setup' || typeof parsedQs.data === 'undefined') {
+    // shortcut to run setup without credentials !!! REMOVE IT ONCE DONE !
+    req.templateName = 'Html'; 
+    req.apiData = {};
+    next();
+    return;
+  }
+
+
   if(typeof parsedQs.data === 'undefined') {
     console.log("#####################################################################");
     console.log("ERROR ! NO `data` Query String Param!!!");
@@ -30,6 +42,8 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
   }
 
   const validDataObj = stringToObject(parsedQs.data); // thermostat(s) ids
+
+  
   if(typeof validDataObj === 'undefined' ) {
     // user does not have this thermostat ID
     req.error = {

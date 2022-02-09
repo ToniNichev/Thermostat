@@ -32,7 +32,8 @@ const Header = ( {title} ) => {
         <ul>
           <li><Link to={`/home${search}`}>THERMOSTATS</Link></li>
           <li><Link to={`/setup${search}`}>SETTINGS</Link></li>       
-        <li><Link to={`/about${search}`}>ABOUT</Link></li>
+          <li><Link to={`/about${search}`}>ABOUT</Link></li>
+          <li><Link to={`/sign-out${search}`}>SIGN OUT</Link></li>
         </ul>
       </div>
       <GenralPopup showPopup={false} />

@@ -3,8 +3,23 @@ import mongoDB  from'../connectors/database/mongodb';
 
 const thermostatCollectionName = 'thermostat';
 const usersCollectionName = 'users';
+const hubsCollectionName = 'hubs';
 
 export default {
+
+    // #######################################
+    // Hub functions
+    // #######################################  
+
+    getHub: async (searchObject) => {
+      const result = await mongoDB.find(searchObject, hubsCollectionName);
+      return result;
+    },     
+
+    updateHub: async (searchObject, updateObject) => {       
+      const result = await mongoDB.updateOneField(searchObject, updateObject, hubsCollectionName);
+      return result;
+    },     
 
     // #######################################
     // Thermostat functions
@@ -40,8 +55,7 @@ export default {
       return result;
      },
 
-     updateUser: async (searchObject, updateObject) => {
-       
+     updateUser: async (searchObject, updateObject) => {       
       const result = await mongoDB.updateOneField(searchObject, updateObject, usersCollectionName);
       return result;
     },       
@@ -206,6 +220,20 @@ export default {
      }                
     ];    
     mongoDB.add(usersObj, usersCollectionName, () => {}); 
+
+    const hubs = [
+      {
+        "id": "AXCS12",
+        "registered": false,
+        "partition": 1
+      },
+      {
+        "id": "B2CF62",
+        "registered": false,
+        "partition": 1
+      }      
+    ];
+    mongoDB.add(hubs, hubsCollectionName, () => {}); 
   }     
 
 }

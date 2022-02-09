@@ -26,13 +26,14 @@ if(typeof document != 'undefined') {
 
 
 const server = (props) => {
- return (
-  <StaticRouter location={ props.url } context={context}>
-    <Switch>
-      <Route exact path="*" render={(props) => <PageLayout {...props} />} />  
-    </Switch>            
-  </StaticRouter>
-);
+  const cookies = props.cookies;
+  return (
+    <StaticRouter location={ props.url } serverCookies={cookies}  context={context}>
+      <Switch>
+        <Route exact path="*" render={(props) => <PageLayout serverCookies={cookies} {...props} />} />  
+      </Switch>            
+    </StaticRouter>
+  );
 }
 
 export default ( {req} ) => {

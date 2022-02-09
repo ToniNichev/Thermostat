@@ -4,17 +4,40 @@ import PageData from './PageData';
 import Cookies from 'universal-cookie';
 const styles = require('./styles.scss');
 class PageLayout extends Component {
-    constructor(props) {
+    constructor(props) {      
       super(props);    
       this.cookies = new Cookies();
-      this.user = null;  
+      this.user = null;
     } 
   
     render() {      
-      let url = this.props.location.pathname;
-      if(typeof this.cookies.get('user') == 'undefined') {
-        url = '/sign-in';
+      let url = this.props.location.pathname;  
+
+      if(typeof window === 'undefined') {
+        // server side redirects
+        console.log("server side redirects");
+        const userString = this.props.serverCookies.user;
+        const user = typeof userString === 'undefined' ? undefined : JSON.parse(userString);
+        const hubId = user?.thermostatHubs[0];
+        if(url !== '/sign-in' && typeof user === 'undefined')  {
+          url = '/sign-in';
+        }
+
+      } else {
+        // client side redirects
+        console.log("client side redirects");
+        const user = this.cookies.get('user');
+        const hubId = user?.thermostatHubs[0];
+        if(url !== '/sign-in') {
+          if(typeof user === 'undefined') {
+            url = '/sign-in';
+          }
+        }
+        else if(typeof hubId !== 'undefined') {
+          location.href = `/home?data=["${hubId}"]`;
+        }
       }
+      
       const page = PageData[url];
 
       const allLayout = page.layout.map((layoutList) => {

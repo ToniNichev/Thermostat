@@ -2,13 +2,6 @@ import queries from "../../src/queries";
 var crypto = require('crypto');
 
 const sendResponse = (res, responseString) => {
-
-  //res
-  //.status(200)
-  //.set('Content-Type', 'application/json')
-  //.set('Access-Control-Allow-Origin', '*')
-  //.set('Access-Control-Allow-Headers', '*')  
-
   res.status(200);
   res.removeHeader('X-Powered-By');
   res.removeHeader('Set-Cookie');
@@ -17,11 +10,11 @@ const sendResponse = (res, responseString) => {
 }
 
 const registerUser = async (req, res) => {
-  const requestObj = JSON.parse(req.body);
+  let requestObj = JSON.parse(req.body);
   const email = requestObj.email;
   const password = requestObj.password;
-  const thermostatId = requestObj.thermostatId;
-  if(email === '' && password === '' && thermostatId ==='') {
+  const hubId = requestObj.hubId;
+  if(email === '' && password === '' && hubId ==='') {
     sendResponse(res, {message: 'Some of fields are empty!', errorCode: 1});  
     return;
   }
@@ -30,9 +23,21 @@ const registerUser = async (req, res) => {
     sendResponse(res, {message: 'Email exists!', errorCode: 1});  
     return;
   } 
+  const hubResult = await queries.getHub({id: hubId});
+  if(hubResult.length === 0) {
+    sendResponse(res, {message: 'Cannot find purchased hub with this id!', errorCode: 2});  
+    return;
+  }  
+
+  const updateHubResult = await queries.updateHub({id: hubId}, {registered: true});
+
+  requestObj.id = hubId + '-u';
+  requestObj.group = 'user';
+  requestObj.thermostatHubs = [hubId];
   const resultUpdate = await queries.addUser(requestObj);
   if(resultUpdate.result.ok === 1) {
     sendResponse(res, {message: `User addded !`});
+
   }
   else {
     sendResponse(res, {message: `Unknown error !`, errorCode: 1});
@@ -44,6 +49,10 @@ const logIn = async (req, res) => {
   const email = requestObj.email;
   const password = requestObj.password;
   const users = await queries.getUser({email: email, password: password });
+  if(users.length === 0) {
+    sendResponse(res, {error:1, message: 'Username or password do not match!'});  
+    return;
+  }
   let user = users[0];
   delete(user.password);
   var name = `${user.email}salt${user.userId}`;
