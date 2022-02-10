@@ -11,8 +11,8 @@ class SignIn extends Component {
   constructor(props) {    
     super(props);
     if(typeof window !== 'undefined') {
-      window.redirect = () => {
-        location.href='/home?data=["AXCS12"]';
+      window.redirect = (hubId) => {
+        location.href=`/home?data=["${hubId}"]`;
       }
     }
     this.cookies = new Cookies();
@@ -60,10 +60,10 @@ class SignIn extends Component {
       return;
     }
     const user = JSON.stringify(result);
-    //const hubId = result.thermostatHubs[0];
+    const hubId = result.thermostatHubs[0];
     this.cookies.set('user', user, { path: '/' });
     //const l = 
-    this.setState({popupMessage: `<p>Welcome!</p><p><button onclick="window.redirect()">OK</button></p>`});
+    this.setState({popupMessage: `<p>Welcome!</p><p><button onclick="window.redirect('${hubId}')">OK</button></p>`});
     this.setState({popupVisible: true});
     this.forceUpdate();
   }

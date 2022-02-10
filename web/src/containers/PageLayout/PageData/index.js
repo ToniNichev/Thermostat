@@ -36,6 +36,29 @@ export default {
       }         
     ]    
   },
+  '/account' : {
+    template: "Html",    
+    layout: [ 
+      {
+        span: 12,
+        components: [
+          {
+            name: "Header",
+            props: {}
+          }
+        ]
+      },
+      {
+        span: 12,
+        components:[
+          {
+            name: "Account",
+            props: {}
+          }
+        ] 
+      }         
+    ]    
+  },  
   '/home' : {
     template: "Html",              
     layout: [ 

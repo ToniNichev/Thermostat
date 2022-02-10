@@ -25,11 +25,16 @@ const SignOut = Loadable({
   loader: () => import ('../../../components/SignOut'),
   loading: Loading
 });
+const Account = Loadable({
+  loader: () => import ('../../../components/Account'),
+  loading: Loading
+});
 export default {
   Home,
   About,
   Setup,
   Header,
   SignIn,
-  SignOut
+  SignOut,
+  Account
 }
