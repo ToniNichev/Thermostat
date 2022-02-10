@@ -10,6 +10,11 @@ class SignIn extends Component {
 
   constructor(props) {    
     super(props);
+    if(typeof window !== 'undefined') {
+      window.redirect = () => {
+        location.href='/home?data=["AXCS12"]';
+      }
+    }
     this.cookies = new Cookies();
     this.state = {
       popupVisible: false,
@@ -29,6 +34,7 @@ class SignIn extends Component {
   showSignInPopup() {
     this.setState({logInPopupVisible: false});
   }
+
 
   async logIn() {
     if(document.querySelector('input[type="password"][name="password"]').value === '') {
@@ -54,10 +60,10 @@ class SignIn extends Component {
       return;
     }
     const user = JSON.stringify(result);
-    const hubId = result.thermostatHubs[0];
+    //const hubId = result.thermostatHubs[0];
     this.cookies.set('user', user, { path: '/' });
-    this.setState({popupMessage: (<p>Welcome!</p>
-                                    <p><button onclick="">OK</button></p>) );
+    //const l = 
+    this.setState({popupMessage: `<p>Welcome!</p><p><button onclick="window.redirect()">OK</button></p>`});
     this.setState({popupVisible: true});
     this.forceUpdate();
   }
