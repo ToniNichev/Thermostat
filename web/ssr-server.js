@@ -140,11 +140,13 @@ app.get('/thermostat-services/*',
     requestDataFromAPI(req, res, thermostatsData, next);
   },
   function (req, res, next) {
-    const hubId = req.apiData.hubId;
-    if(typeof req.apiData.thermostatsData === 'undefined') {
-      thermostatsData[hubId] = [];
-      hubPreferences[hubId] = {
-        mode: 0
+    if(typeof req?.apiData?.thermostatsData === 'undefined') {
+      if(typeof req?.apiData?.hubId !== 'undefined') {
+        const hubId = req.apiData.hubId;
+        thermostatsData[hubId] = [];
+        hubPreferences[hubId] = {
+          mode: 0
+        }
       }
     }
     thermostatServices(req, res, thermostatsData, hubPreferences);

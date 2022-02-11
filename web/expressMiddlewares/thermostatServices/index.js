@@ -17,6 +17,13 @@ const stringToObject = (str) => {
 }
 
 const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => {
+    if(typeof req?.query?.data === 'undefined') {
+        res.status(200);
+        res.removeHeader('X-Powered-By');
+        res.removeHeader('Set-Cookie');
+        res.removeHeader('Connection');
+        res.send({error: 1, message: 'missing `data` parameter.'});          
+    }
     const action = req.params[0];
     const requestData = stringToObject(req.query.data);
     const hubId = requestData[0][0];

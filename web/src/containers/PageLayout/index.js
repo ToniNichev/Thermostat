@@ -29,7 +29,7 @@ class PageLayout extends Component {
         const user = this.cookies.get('user');
         const hubId = user?.thermostatHubs[0];
         if(url !== '/sign-in') {
-          if(typeof user === 'undefined') {
+          if(typeof user?.id === 'undefined') {
             url = '/sign-in';
           }
         }

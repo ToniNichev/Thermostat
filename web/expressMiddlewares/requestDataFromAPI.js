@@ -17,6 +17,7 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
   if(typeof userFromCookie !== 'undefined' && typeof global?.users[userFromCookie.hash] === 'undefined') {
     const user = queries.getUser({email: userFromCookie.email, userFromCookie: userFromCookie.accessToken});
     const accessToken = userFromCookie.accessToken;
+    debugger;
     global.users[accessToken] = user;
   }
 
