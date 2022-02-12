@@ -12,20 +12,16 @@ const stringToObject = (str) => {
 
 const requestDataFromAPI = async (req, res, thermostatsData, next) => {  
   const userFromCookie = typeof req.cookies.user === 'undefined' ? undefined : JSON.parse(req.cookies.user);
-
   
   if(typeof userFromCookie !== 'undefined' && typeof global?.users[userFromCookie.hash] === 'undefined') {
     const user = queries.getUser({email: userFromCookie.email, userFromCookie: userFromCookie.accessToken});
     const accessToken = userFromCookie.accessToken;
-    debugger;
     global.users[accessToken] = user;
   }
-
 
   req.parsedUrl = url.parse(req.url);
   const pathname = req.parsedUrl.pathname;  
   const parsedQs = querystring.parse(req.parsedUrl.query);
-  
   
   if(pathname === '/setup' || typeof parsedQs.data === 'undefined') {
     // shortcut to run setup without credentials !!! REMOVE IT ONCE DONE !
@@ -34,7 +30,6 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
     next();
     return;
   }
-
 
   if(typeof parsedQs.data === 'undefined') {
     console.log("#####################################################################");
@@ -67,8 +62,13 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
   else {  
     req.fullData = validDataObj;
     req.hubId = hubId;
+    if(typeof thermostatsData[hubId] === 'undefined') {
+      // get thermostats for this hub from DB if i's not fetched yet.
+      const thermostatFromDB = await queries.getThermostatsBySearchTerm({hubId: hubId});
+      thermostatsData[hubId] =thermostatFromDB;
+    }
+
     // send thermostats data for this specific hub from the request
-    const thermostatDataForThisHub = typeof thermostatsData[hubId] !== 'undefined' ? thermostatsData[hubId] : {};
     req.apiData = {"hubId": hubId, "thermostatsData" : thermostatsData[hubId]};
     const templateName = typeof PageData[pathname] != 'undefined' ? PageData[pathname].template : '';    
     req.templateName = templateName;

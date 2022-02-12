@@ -15,8 +15,6 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
   const mounted = useRef(false);
 
   useEffect(() => {
-
-    console.log('USE EFFECT !!!! :');
     setInterval( () => {
        console.log('mode :', mode);
       if (!mounted.current) 

@@ -39,6 +39,7 @@ let hubPreferences = {};
   }
   else {
     // sort thermostat data for each hubId
+    /*
     thermostats.forEach( thermostat => {
       var hubId = thermostat.hubId;
       if(typeof thermostatsData[hubId] === 'undefined') {
@@ -48,6 +49,7 @@ let hubPreferences = {};
         thermostatsData[hubId].push(thermostat);
       }
     });
+    */
   }
 })();
 

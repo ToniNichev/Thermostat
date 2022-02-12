@@ -16,13 +16,17 @@ const stringToObject = (str) => {
     return JSON.parse(fullString);
 }
 
+const sendResponse = (res, responseString) => {
+    res.status(200);
+    res.removeHeader('X-Powered-By');
+    res.removeHeader('Set-Cookie');
+    res.removeHeader('Connection');
+    res.send(responseString);  
+}
+
 const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => {
     if(typeof req?.query?.data === 'undefined') {
-        res.status(200);
-        res.removeHeader('X-Powered-By');
-        res.removeHeader('Set-Cookie');
-        res.removeHeader('Connection');
-        res.send({error: 1, message: 'missing `data` parameter.'});          
+        sendResponse(res, {error: 1, message: 'missing `data` parameter.'});
     }
     const action = req.params[0];
     const requestData = stringToObject(req.query.data);

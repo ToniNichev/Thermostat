@@ -29,8 +29,8 @@ export default {
       return result;
     }, 
 
-    getThermostatsByUserId: async (userId) => {
-      const result = await mongoDB.find({ "UserId": userId }, thermostatCollectionName);
+    getThermostatsBySearchTerm: async (searchObject) => {
+      const result = await mongoDB.find(searchObject, thermostatCollectionName);
       return result;
     },
 
