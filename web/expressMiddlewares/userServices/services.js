@@ -44,7 +44,7 @@ const registerUser = async (req, res) => {
   }
 }
 
-const logIn = async (req, res) => {
+const logIn = async (req, res, usersData) => {
   const requestObj = JSON.parse(req.body);
   const email = requestObj.email;
   const password = requestObj.password;
@@ -55,12 +55,13 @@ const logIn = async (req, res) => {
   }
   let user = users[0];
   delete(user.password);
-  var name = `${user.email}salt${user.userId}`;
-  var hash = crypto.createHash('md5').update(name).digest('hex');
+  const name = `${user.email}salt${user.userId}`;
+  const hash = crypto.createHash('md5').update(name).digest('hex');
+  const userId = user.id;
   user.accessToken = hash;
   await queries.updateUser({email: email, password: password}, {accessToken: hash});
-  if( typeof global?.users && typeof global?.users[hash]) {
-    global.users[hash] = user;
+  if( typeof usersData[userId] === 'undefined') {
+    usersData[userId] = user;
   }
 
   sendResponse(res, user);  

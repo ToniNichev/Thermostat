@@ -24,9 +24,8 @@ const {APP_HOST, SERVER_PORT, ENVIRONMENT} = process.env;
 let test = null;
 
 // create users object so we won't jump to DB every time to validate tokens
-global.users ={};
+let usersData ={};
 let thermostatsData = {};
-//let usersData = [];
 let hubPreferences = {};
 
 // only on app start - load thermostats data !!! To-do get rid of this and request thermostat data for the specific user
@@ -123,10 +122,6 @@ function responseWithSourceCode(req, res, apiData, templateName) {
   res.end();
 }
 
-
-// adding cookie middleware
-app.use(cookiesManagement);
-
 app.get('/Robots.txt', (req, res) => {   
   res.send(`
   User-agent: * Disallow: /
@@ -134,14 +129,20 @@ app.get('/Robots.txt', (req, res) => {
 });
 
 // #############################################################
+// adding cookie middleware
+// #############################################################
+app.use(cookiesManagement);
+
+// #############################################################
 //  thermostat services route
 // #############################################################
 
 app.get('/thermostat-services/*',
   function (req, res, next) {
-    requestDataFromAPI(req, res, thermostatsData, next);
+    requestDataFromAPI(req, res, thermostatsData, usersData, next);
   },
   function (req, res, next) {
+    debugger;
     if(typeof req?.apiData?.thermostatsData === 'undefined') {
       if(typeof req?.apiData?.hubId !== 'undefined') {
         const hubId = req.apiData.hubId;
@@ -159,7 +160,7 @@ app.get('/thermostat-services/*',
 // #############################################################
 
 app.post('/user-services/*', async (req, res) => {
-  userServices(req, res);
+  userServices(req, res, usersData);
 });
 
 // #############################################################
@@ -170,6 +171,20 @@ app.get('/weather-services/*', async (req, res) => {
   await weatherServices(req, res);
 });
 
+// #############################################################
+// All page requests
+// #############################################################
+app.get('/*', 
+  function (req, res, next) {
+    requestDataFromAPI(req, res, thermostatsData, usersData, next);
+  },
+  function (req, res, next) {
+    responseWithSourceCode(req, res, req.apiData, req.templateName);
+});
+
+// #############################################################
+//  setup services
+// #############################################################
 app.post('/services/setup-full', async (req, res) => {
   queries.setup();
   thermostatsData = [];
@@ -204,18 +219,6 @@ app.post('/services/dropdb', async (req, res) => {
   .set('Access-Control-Allow-Headers', '*')
   .send(respond);  
 });
-
-
-// All page requests
-
-app.get('/*', 
-  function (req, res, next) {
-    requestDataFromAPI(req, res, thermostatsData, next);
-  },
-  function (req, res, next) {
-    responseWithSourceCode(req, res, req.apiData, req.templateName);
-});
-
 
 Loadable.preloadAll().then(() => {
 

@@ -3,20 +3,20 @@ const url = require('url');
 const querystring = require('querystring');
 import queries from '../src/queries';
 
-
-
 const stringToObject = (str) => {
   const fullString = str == '' ? '[]' : '[' + str.split("][").join("],[") + ']';
   return JSON.parse(fullString);
 }
 
-const requestDataFromAPI = async (req, res, thermostatsData, next) => {  
+const requestDataFromAPI = async (req, res, thermostatsData, usersData, next) => {  
   const userFromCookie = typeof req.cookies.user === 'undefined' ? undefined : JSON.parse(req.cookies.user);
+
   
-  if(typeof userFromCookie !== 'undefined' && typeof global?.users[userFromCookie.hash] === 'undefined') {
-    const user = queries.getUser({email: userFromCookie.email, userFromCookie: userFromCookie.accessToken});
+  if(typeof userFromCookie !== 'undefined') {
+    //const user = queries.getUser({email: userFromCookie.email, userFromCookie: userFromCookie.accessToken});
+    const userId = userFromCookie.id;
     const accessToken = userFromCookie.accessToken;
-    global.users[accessToken] = user;
+    usersData[userId] = userFromCookie;
   }
 
   req.parsedUrl = url.parse(req.url);
@@ -63,7 +63,7 @@ const requestDataFromAPI = async (req, res, thermostatsData, next) => {
     req.fullData = validDataObj;
     req.hubId = hubId;
     if(typeof thermostatsData[hubId] === 'undefined') {
-      // get thermostats for this hub from DB if i's not fetched yet.
+      // get thermostats for this hub from DB if it's not fetched yet.
       const thermostatFromDB = await queries.getThermostatsBySearchTerm({hubId: hubId});
       thermostatsData[hubId] =thermostatFromDB;
     }
