@@ -38,8 +38,10 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences, use
     }
 
     const userFromCookie = typeof req.cookies.user === 'undefined' ? undefined : JSON.parse(req.cookies.user);
-    console.log(">>>>", usersData);
-    debugger;
+    const userId = userFromCookie.id;
+    if(userFromCookie.accessToken !=== usersData[userId].accessToken) {
+        console.log("Invalid accessToken");
+    }
     //if(userFromCookie.accessToken !== usersData)
 
     switch(action) {
