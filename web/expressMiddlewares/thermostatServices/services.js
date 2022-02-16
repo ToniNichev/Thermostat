@@ -23,6 +23,7 @@ const getThermostatListFromDB = async (hubId) => {
  * @param {*} thermostatData 
  */
 const getFullReadings = async (req, res, thermostatData) => {
+  debugger;
   const response = JSON.stringify(thermostatData);
   sendResponse(res, response);
 }

@@ -10,7 +10,7 @@ const stringToObject = (str) => {
 
 
 
-const UserServices = async (req, res, users) => {
+const UserServices = async (req, res, usersData) => {
     const action = req.params[0];
 
     
@@ -19,7 +19,7 @@ const UserServices = async (req, res, users) => {
             await registerUser(req, res);
             break;
         case 'log-in':
-            await logIn(req, res, users);
+            await logIn(req, res, usersData);
             break;   
     }
 }

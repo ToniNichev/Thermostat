@@ -142,7 +142,6 @@ app.get('/thermostat-services/*',
     requestDataFromAPI(req, res, thermostatsData, usersData, next);
   },
   function (req, res, next) {
-    debugger;
     if(typeof req?.apiData?.thermostatsData === 'undefined') {
       if(typeof req?.apiData?.hubId !== 'undefined') {
         const hubId = req.apiData.hubId;
@@ -152,7 +151,7 @@ app.get('/thermostat-services/*',
         }
       }
     }
-    thermostatServices(req, res, thermostatsData, hubPreferences);
+    thermostatServices(req, res, thermostatsData, hubPreferences, usersData);
 });
 
 // #############################################################
@@ -219,6 +218,11 @@ app.post('/services/dropdb', async (req, res) => {
   .set('Access-Control-Allow-Headers', '*')
   .send(respond);  
 });
+
+
+// #############################################################
+//  starting server
+// #############################################################
 
 Loadable.preloadAll().then(() => {
 

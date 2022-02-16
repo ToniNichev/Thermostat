@@ -24,7 +24,7 @@ const sendResponse = (res, responseString) => {
     res.send(responseString);  
 }
 
-const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => {
+const ThermostatServices = async (req, res, thermostatsData, hubPreferences, usersData) => {
     if(typeof req?.query?.data === 'undefined') {
         sendResponse(res, {error: 1, message: 'missing `data` parameter.'});
     }
@@ -37,8 +37,14 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences) => 
         }
     }
 
+    const userFromCookie = typeof req.cookies.user === 'undefined' ? undefined : JSON.parse(req.cookies.user);
+    console.log(">>>>", usersData);
+    debugger;
+    //if(userFromCookie.accessToken !== usersData)
+
     switch(action) {
         case 'get-full-data':
+            debugger;
             await getFullReadings(req, res, thermostatsData[hubId]);
             break;
         case 'get-data':

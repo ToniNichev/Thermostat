@@ -15,7 +15,7 @@ const requestDataFromAPI = async (req, res, thermostatsData, usersData, next) =>
   if(typeof userFromCookie !== 'undefined') {
     //const user = queries.getUser({email: userFromCookie.email, userFromCookie: userFromCookie.accessToken});
     const userId = userFromCookie.id;
-    const accessToken = userFromCookie.accessToken;
+    //const accessToken = userFromCookie.accessToken;
     usersData[userId] = userFromCookie;
   }
 
