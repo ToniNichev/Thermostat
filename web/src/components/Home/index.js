@@ -128,6 +128,10 @@ class Home extends Component {
     fetch(`${process.env.APP_HOST}:${process.env.SERVER_PORT}/thermostat-services/get-full-data?data=["${this.hubId}"]`)
       .then(response => response.json())
       .then(data => { 
+        if(data?.error) {
+          debugger;
+          window.location = '/sign-out';
+        }
         if(this.dataLength < data.length) {
           this.dataLength = data.length;
           //EventsManager.callEvent("newThermostatAdded")();

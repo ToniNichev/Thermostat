@@ -67,8 +67,49 @@ const logIn = async (req, res, usersData) => {
   sendResponse(res, user);  
 }
 
+const updateUser = async (req, res, usersData) => {
+  let requestObj = JSON.parse(req.body);
+
+  const userFromCookie = JSON.parse(req.cookies.user);
+  if(userFromCookie.accessToken !== requestObj.accessToken || userFromCookie.email !== requestObj.email) {
+    sendResponse(res, {message: 'Invalid access token while updating user data!', errorCode: 1});  
+    return;
+  }
+
+
+  const searchObj = {
+    email: userFromCookie.email,
+    accessToken: userFromCookie.accessToken
+  }
+
+  let updateObj = {};
+  if(typeof requestObj?.password !== 'undefined') {
+    updateObj.password = requestObj.password
+  }
+  if(typeof requestObj?.hubId !== 'undefined') {
+    const hub = await queries.getHub({id: requestObj.hubId});    
+    if(hub.length === 0 ) {
+      sendResponse(res, {message: `Can't find this hub id !`, errorCode: 1});
+      return;
+    }
+    if(hub[0].registered === true ) {
+      sendResponse(res, {message: `Hub with this id is already registered !`, errorCode: 1});
+      return;
+    }
+    updateObj.thermostatHubs = [];
+    updateObj.thermostatHubs[0] = requestObj.hubId
+  }  
+  const result = await queries.updateUser(searchObj, updateObj);
+  if( result.matchedCount !== 1) {
+    sendResponse(res, {message: `Unknown error !`, errorCode: 1});
+  }
+  else 
+    sendResponse(res, {message: `success!`});
+}
+
 
 export { 
   registerUser,
-  logIn
+  logIn,
+  updateUser
 };

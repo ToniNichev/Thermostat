@@ -37,16 +37,36 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences, use
         }
     }
 
-    const userFromCookie = typeof req.cookies.user === 'undefined' ? undefined : JSON.parse(req.cookies.user);
-    const userId = userFromCookie.id;
-    if(userFromCookie.accessToken !=== usersData[userId].accessToken) {
+    let userFromCookie;
+    if(typeof req.cookies.user === 'undefined') {
+        req.cookies.user  = undefined;
+     }
+     else {
+        try {
+            userFromCookie = JSON.parse(req.cookies.user);
+        }catch(e) {
+            req.cookies.user  = undefined;
+            sendResponse(res,  {error:1, message: "Invalid json request"});
+            return;
+        }
+     }
+
+    const userId = userFromCookie?.id;
+    if( typeof userId === 'undefined' ) {
         console.log("Invalid accessToken");
+        sendResponse(res, {error:1, message: "Invalid json user object"});
+        return;
+    }
+    if(userFromCookie.accessToken !== usersData[userId].accessToken) {
+        debugger;
+        console.log("Invalid accessToken");
+        sendResponse(res, {error:1, message: "Invalid token"});
+        return;
     }
     //if(userFromCookie.accessToken !== usersData)
 
     switch(action) {
         case 'get-full-data':
-            debugger;
             await getFullReadings(req, res, thermostatsData[hubId]);
             break;
         case 'get-data':

@@ -8,8 +8,19 @@ const stringToObject = (str) => {
   return JSON.parse(fullString);
 }
 
-const requestDataFromAPI = async (req, res, thermostatsData, usersData, next) => {  
-  const userFromCookie = typeof req.cookies.user === 'undefined' ? undefined : JSON.parse(req.cookies.user);
+const requestDataFromAPI = async (req, res, thermostatsData, usersData, next) => { 
+  
+  let userFromCookie;
+  if(typeof req.cookies.user === 'undefined') {
+  req.cookies.user  = undefined;
+   }
+   else {
+      try {
+        userFromCookie = JSON.parse(req.cookies.user);
+      }catch(e) {
+          req.cookies.user  = undefined;
+      }
+   }
 
   
   if(typeof userFromCookie !== 'undefined') {

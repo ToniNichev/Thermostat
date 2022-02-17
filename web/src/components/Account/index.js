@@ -36,66 +36,24 @@ class SignIn extends Component {
   }
 
 
-  async logIn() {
-    if(document.querySelector('input[type="password"][name="password"]').value === '') {
-      this.setState({popupMessage: 'Please enter password!'});
-      this.setState({popupVisible: true});        
-      return;
-    }
-    if(document.querySelector('input[type="text"][name="email"]').value === '') {
-      this.setState({popupMessage: 'Please enter valid e-mail!'});
-      this.setState({popupVisible: true});        
-      return;
-    }
-
+  async updateUser() {
+          
+    const userFromCookie = this.cookies.get('user');
     const postData = {
-      email: document.querySelector('input[type="text"][name="email"]').value,
       password: document.querySelector('input[type="password"][name="password"]').value,
-    }    
-    
-    const result = await Poster(`${userApiUrl}/log-in`, postData);
-    if(typeof result.error !== 'undefined') {
-      this.setState({popupMessage: result.message});
-      this.setState({popupVisible: true});
-      return;
-    }
-    const user = JSON.stringify(result);
-    const hubId = result.thermostatHubs[0];
-    this.cookies.set('user', user, { path: '/' });
-    //const l = 
-    this.setState({popupMessage: `<p>Welcome!</p><p><button onclick="window.redirect('${hubId}')">OK</button></p>`});
-    this.setState({popupVisible: true});
-    this.forceUpdate();
-  }
+      hubId: document.querySelector('input[type="text"][name="hubId"]').value,
 
+      email: userFromCookie.email,
+      accessToken: userFromCookie.accessToken
+    }
 
-  async registerUser() {
-    if(document.querySelector('input[type="password"][name="password"]').value === '') {
-      this.setState({popupMessage: 'Please enter password!'});
-      this.setState({popupVisible: true});        
-      return;
-    }
-    if(document.querySelector('input[type="text"][name="email"]').value === '') {
-      this.setState({popupMessage: 'Please enter valid e-mail!'});
-      this.setState({popupVisible: true});        
-      return;
-    }
-    if(document.querySelector('input[type="text"][name="hubId"]').value === '') {
-      this.setState({popupMessage: 'Please enter valid hub id!'});
-      this.setState({popupVisible: true});        
-      return;
-    }            
-    const postData = {
-      email: document.querySelector('input[type="text"][name="email"]').value,
-      password: document.querySelector('input[type="password"][name="password"]').value,
-      hubId: document.querySelector('input[type="text"][name="hubId"]').value
-    }
-    const result = await Poster(`${userApiUrl}/register-user`, postData);
+    const result = await Poster(`${userApiUrl}/update-user`, postData);
     let popupMsg = result.message;
     if(typeof result.errorCode === 'undefined') {
       popupMsg += '<p><button onclick="location.reload()">SIGN IN</button></p>';
     }
-    this.setState({popupMessage: popupMsg});
+
+    this.setState({popupMessage: popupMessage});
     this.setState({popupVisible: true});
   }
 
@@ -106,8 +64,6 @@ class SignIn extends Component {
         <div className={['signIn']}>
           <h1>Account</h1>
           <div className={styles.userFieldsContainer}>
-              <label>User e-mail</label>
-              <input type="text" placeholder="Enter Username" name="email" required />
 
               <label>Password</label>
               <input type="password" placeholder="Enter Password" name="password" required />            
@@ -115,8 +71,7 @@ class SignIn extends Component {
               <label>Hub ID</label>
               <input type="text" placeholder="Enter hub ID" name="hubId" required />            
 
-              <button type="button" onClick={ () => { this.registerUser() }} >UPDATE</button>
-              <p><a href="#" onClick={() =>{ this.showLogInPopup() }}>Log In</a></p>
+              <button type="button" onClick={ () => { this.updateUser() }} >UPDATE</button>
           </div>
         </div>
         { this.state.popupVisible && <MessagePopup msg={this.state.popupMessage} closeMessagePopup={ () => this.closeMessagePopup() }/>}

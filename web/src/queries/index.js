@@ -55,7 +55,7 @@ export default {
       return result;
      },
 
-     updateUser: async (searchObject, updateObject) => {       
+     updateUser: async (searchObject, updateObject) => {    
       const result = await mongoDB.updateOneField(searchObject, updateObject, usersCollectionName);
       return result;
     },       
