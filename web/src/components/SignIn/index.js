@@ -132,7 +132,6 @@ class SignIn extends Component {
                 <input type="password" placeholder="Enter Password" name="password" required /> 
 
                 <button type="button" onClick={ () => { this.logIn() }} >LOG IN</button>    
-
                 <p><a href="#" onClick={() =>{ this.showSignInPopup() }}>Sign In</a></p>                               
             </div>
         </div>}

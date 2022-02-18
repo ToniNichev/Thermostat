@@ -129,7 +129,6 @@ class Home extends Component {
       .then(response => response.json())
       .then(data => { 
         if(data?.error) {
-          debugger;
           window.location = '/sign-out';
         }
         if(this.dataLength < data.length) {

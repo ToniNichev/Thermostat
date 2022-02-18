@@ -29,14 +29,18 @@ class PageLayout extends Component {
         const user = this.cookies.get('user');
         //const hubId = user?.thermostatHubs[0];
         const hubId = typeof user?.thermostatHubs === 'undefined' || user?.thermostatHubs.length === 0  ? undefined : user?.thermostatHubs[0];
-        if(url !== '/sign-in') {
-          if(typeof user?.id === 'undefined') {
-            url = '/sign-in';
+
+        if(url !== '/setup') {
+          if(url !== '/sign-in') {
+            if(typeof user === 'undefined') {
+              url = '/sign-in';
+            }
+          }
+          else if(typeof hubId !== 'undefined') {
+            location.href = `/home?data=["${hubId}"]`;
           }
         }
-        else if(typeof hubId !== 'undefined') {
-          location.href = `/home?data=["${hubId}"]`;
-        }
+
       }
       
       const page = PageData[url];

@@ -114,6 +114,21 @@ export default {
 
    setup: async () => {
      mongoDB.dropDB();
+
+     const hubs = [
+      {
+        "id": "AXCS12",
+        "registered": false,
+        "partition": 1
+      },
+      {
+        "id": "B2CF62",
+        "registered": false,
+        "partition": 1
+      }      
+    ];
+    mongoDB.add(hubs, hubsCollectionName, () => {}); 
+         
      const thermostatsObj = [
       {
         "thermostatId": "0",
@@ -172,6 +187,54 @@ export default {
     // create users collection
     const usersObj = [
       {
+        "id": "AXCS12-u",
+        "email" : "toni.nichev@gmail.com",
+        "password": "1234",
+        "group": "some group",
+        "thermostatHubs": [
+          "AXCS12"
+        ]     
+      },
+      {
+        "id": "B2CF62",
+        "email" : "john.smith@gmail.com",
+        "password": "1234",
+        "group": "some group",     
+        "thermostatHubs": [
+          "B2CF62"
+        ]     
+      }                
+     ];    
+     mongoDB.add(usersObj, usersCollectionName, () => {}); 
+   },
+
+   setupHubsDb: async () => {
+    mongoDB.dropDB();
+    const thermostatsObj = [{ONE:1}];
+    mongoDB.add(thermostatsObj, thermostatCollectionName, () => {}); 
+    const hubs = [
+      {
+        "id": "AXCS12",
+        "registered": false,
+        "partition": 1
+      },
+      {
+        "id": "B2CF62",
+        "registered": false,
+        "partition": 1
+      }      
+    ];
+    mongoDB.add(hubs, hubsCollectionName, () => {});     
+   },
+   
+   setupOneUser: async () => {
+    mongoDB.dropDB();
+    const thermostatsObj = [];
+    mongoDB.add(thermostatsObj, thermostatCollectionName, () => {}); 
+
+    // create users collection
+    const usersObj = [
+      {
         "userId": "0",
         "email" : "toni.nichev@gmail.com",
         "password": "1234",
@@ -189,35 +252,6 @@ export default {
           "B2CF62"
         ]     
       }                
-     ];    
-     mongoDB.add(usersObj, usersCollectionName, () => {}); 
-   },
-   
-   setupOneUser: async () => {
-    mongoDB.dropDB();
-    const thermostatsObj = [];
-   mongoDB.add(thermostatsObj, thermostatCollectionName, () => {}); 
-
-   // create users collection
-   const usersObj = [
-     {
-       "userId": "0",
-       "email" : "toni.nichev@gmail.com",
-       "password": "1234",
-       "group": "some group",
-       "thermostatHubs": [
-         "AXCS12"
-       ]     
-     },
-     {
-       "userId": "1",
-       "email" : "john.smith@gmail.com",
-       "password": "1234",
-       "group": "some group",     
-       "thermostatHubs": [
-         "B2CF62"
-       ]     
-     }                
     ];    
     mongoDB.add(usersObj, usersCollectionName, () => {}); 
 

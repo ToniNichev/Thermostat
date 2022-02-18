@@ -5,6 +5,12 @@
   width: 80%; /* Could be more or less, depending on screen size */
   color: black;
 
+  button {
+    padding: 5px;
+    border: 1px solid #888;
+    cursor: pointer;
+  }
+
 
   .userFieldsContainer {
     padding: 16px;

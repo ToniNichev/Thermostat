@@ -23,6 +23,7 @@ const getThermostatListFromDB = async (hubId) => {
  * @param {*} thermostatData 
  */
 const getFullReadings = async (req, res, thermostatData) => {
+  debugger;
   const response = JSON.stringify(thermostatData);
   sendResponse(res, response);
 }
@@ -34,7 +35,7 @@ const getFullReadings = async (req, res, thermostatData) => {
  */
 const getReadings = async (req, res, thermostatData, thermostatResponse, hubPreferences) => {
   let result = '';  
-
+  debugger;
   const hubId = req.hubId;
   if(hubPreferences.mode === 1) {
     // adding thermostat mode

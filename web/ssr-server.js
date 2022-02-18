@@ -196,6 +196,16 @@ app.post('/services/setup-full', async (req, res) => {
   .send('{"status": "sucess"}');  
 });
 
+app.post('/services/setup-hubs-db', async (req, res) => {
+  queries.setupHubsDb();
+  res
+  .status(200)
+  .set('Content-Type', 'application/json')
+  .set('Access-Control-Allow-Origin', '*')
+  .set('Access-Control-Allow-Headers', '*')
+  .send('{"status": "sucess"}');  
+});
+
 app.post('/services/setup', async (req, res) => {
   //queries.setup();
   queries.setupOneUser();

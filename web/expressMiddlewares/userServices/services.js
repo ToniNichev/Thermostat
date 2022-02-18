@@ -96,6 +96,7 @@ const updateUser = async (req, res, usersData) => {
       sendResponse(res, {message: `Hub with this id is already registered !`, errorCode: 1});
       return;
     }
+    const hubUpdateResult = await queries.updateHub({id: requestObj.hubId}, {registered: true});
     updateObj.thermostatHubs = [];
     updateObj.thermostatHubs[0] = requestObj.hubId
   }  

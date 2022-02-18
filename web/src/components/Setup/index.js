@@ -13,6 +13,11 @@ const setupDatabase = async () => {
   console.log(result);
 }
 
+const setupHubsDatabase = async () => {
+  const result = await Poster(`${apiUrl}/setup-hubs-db`, {});
+  console.log(result);
+}
+
 const dropDatabase = async () => {
   const result = await Poster(`${apiUrl}/dropdb`, {});
   console.log(result);
@@ -21,6 +26,7 @@ const dropDatabase = async () => {
 function Greetings({props}) {
   return(<div className={styles.wrapper}>
           <p><button onClick={ () => { dropDatabase() }}>DROP DATABASE</button></p>
+          <p><button onClick={ () => { setupHubsDatabase() }}>CREATE TWO UNREGISTERED HUBS DATABASE</button></p>
           <p><button onClick={ () => { setupDatabase() }}>CREATE DATABASE</button></p>
           <p><button onClick={ () => { setupFullDatabase() }}>CREATE AND POPULATE DATABASE</button></p>
         </div>);

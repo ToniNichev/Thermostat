@@ -39,13 +39,20 @@ class SignIn extends Component {
   async updateUser() {
           
     const userFromCookie = this.cookies.get('user');
-    const postData = {
-      password: document.querySelector('input[type="password"][name="password"]').value,
-      hubId: document.querySelector('input[type="text"][name="hubId"]').value,
-
+    let postData = {
       email: userFromCookie.email,
       accessToken: userFromCookie.accessToken
     }
+    const password = document.querySelector('input[type="password"][name="password"]').value;
+    const hubId = document.querySelector('input[type="text"][name="hubId"]').value;
+
+    if(password !== '') {
+      postData.password = password;
+    }
+    if(hubId !== '') {
+      postData.hubId = hubId;
+    }
+
 
     const result = await Poster(`${userApiUrl}/update-user`, postData);
     let popupMsg = result.message;
@@ -53,7 +60,7 @@ class SignIn extends Component {
       popupMsg += '<p><button onclick="location.reload()">SIGN IN</button></p>';
     }
 
-    this.setState({popupMessage: popupMessage});
+    this.setState({popupMessage: popupMsg});
     this.setState({popupVisible: true});
   }
 
@@ -66,10 +73,10 @@ class SignIn extends Component {
           <div className={styles.userFieldsContainer}>
 
               <label>Password</label>
-              <input type="password" placeholder="Enter Password" name="password" required />            
+              <input type="password" placeholder="Change Password" name="password" required />            
 
               <label>Hub ID</label>
-              <input type="text" placeholder="Enter hub ID" name="hubId" required />            
+              <input type="text" placeholder="change hub ID" name="hubId" required />            
 
               <button type="button" onClick={ () => { this.updateUser() }} >UPDATE</button>
           </div>
