@@ -126,6 +126,12 @@ const setThermostatFanMode = async (req, res, thermostatData, requestData) => {
   sendResponse(res, result);
 }
 
+const cancelAddThermostatMode = async (req, res, thermostatData, requestData, hubPreferences) => {
+  const result = `{"status": "adding canceled"}`;
+  hubPreferences.mode = 0; // adding thermostat
+  sendResponse(res, result);
+}
+
 const setAddThermostatMode = async (req, res, thermostatData, requestData, hubPreferences) => {
   newDeviceName = requestData[0][1];
   const result = `{"status": "adding"}`;
@@ -159,5 +165,6 @@ export {
   setThermostatMode,
   setThermostatFanMode,
   setAddThermostatMode,
+  cancelAddThermostatMode,
   deleteThermostat
 };

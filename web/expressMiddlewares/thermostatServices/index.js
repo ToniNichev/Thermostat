@@ -6,6 +6,7 @@ import {
     setThermostatMode,
     setThermostatFanMode,
     setAddThermostatMode,
+    cancelAddThermostatMode,
     deleteThermostat
 } from './services';
 
@@ -88,7 +89,10 @@ const ThermostatServices = async (req, res, thermostatsData, hubPreferences, use
             break;
         case 'add-thermostat': 
             await setAddThermostatMode(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);        
-            break;       
+            break;     
+            case 'cancel-add-thermostat': 
+            await cancelAddThermostatMode(req, res, thermostatsData[hubId], requestData, hubPreferences[hubId]);        
+            break;                
     }
 }
 

@@ -32,7 +32,6 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
 });
 
   const addFlag = () => {
-
     const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : window.__API_DATA__;
     const hubId = apiData.hubId;
 
@@ -40,9 +39,21 @@ const AddPopup = ({closePopup, newThermostatAdded, thermostatAddedClear}) => {
       // waiting to finish fetch from mode 0
     }
     if(mode == 2) {
-      setMsg('New thermostat was successfuly added!');
-      setButtonText('DONE');   
-      mode = 3;
+      if(document.querySelector('#addFeatureFlag > div > div button').innerHTML === 'CANCEL') {
+        fetch(`${thermostatApiUrl}/cancel-add-thermostat?data=["${hubId}"]`)
+        .then(response => response.json())
+        .then(data => { 
+          closePopup();
+          mode = 0;
+      });
+        mode = 0;
+        return;
+      }
+      else {
+        setMsg('New thermostat was successfuly added!');
+        setButtonText('DONE');   
+        mode = 3;
+      }
     }
     if(mode == 3) { 
       // done      

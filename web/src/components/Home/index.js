@@ -43,6 +43,9 @@ class Home extends Component {
     const apiData = typeof global.__API_DATA__ !== 'undefined' ? global.__API_DATA__ : typeof window === 'undefined' ? {} : window.__API_DATA__;
     this.thermostatsData = apiData.thermostatsData;
     this.hubId = apiData.hubId;
+    if( typeof window !== 'undefined' && typeof this.hubId === 'undefined') {
+      window.location = '/sign-in';
+    }
     // fetch thermostat and weather data
     this.fetching = false;
     this.fetchData();
