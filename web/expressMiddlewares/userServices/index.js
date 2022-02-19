@@ -1,6 +1,7 @@
 import { 
     registerUser,
     logIn,
+    logOut,
     updateUser,
 } from './services';
 
@@ -22,6 +23,9 @@ const UserServices = async (req, res, usersData) => {
         case 'log-in':
             await logIn(req, res, usersData);
             break;   
+            case 'log-out':
+                await logOut(req, res, usersData);
+                break;               
         case 'update-user':
             await updateUser(req, res, usersData);
     }

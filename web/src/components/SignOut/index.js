@@ -11,12 +11,35 @@ class SignOut extends Component {
   constructor(props) {    
     super(props);
     this.cookies = new Cookies();
-    this.cookies.remove('user');
+    if(typeof window !== 'undefined') {
+      this.logOutUser();
+    }
     this.state = {
       popupVisible: false,
       popupMessage: '',
       logInPopupVisible: true
     }
+  }
+
+  async logOutUser() {
+    // runs only on client side
+    const user = this.cookies.get('user');
+    const postData = {
+      accessToken: user.accessToken,
+      email: user.email,
+    }
+    
+    const result = await Poster(`${userApiUrl}/log-out`, postData);
+    if(typeof result.error === 'undefined') {
+      this.cookies = new Cookies();
+      this.cookies.remove('user');
+      
+
+      this.setState({popupMessage: result.message});
+      this.setState({popupVisible: true});
+      return;
+    }
+    
   }
 
   closeMessagePopup() {

@@ -38,19 +38,24 @@ class SignIn extends Component {
 
   async updateUser() {
           
+    if(document.querySelector('input[type="password"][name="oldPassword"]').value === '') {
+      this.setState({popupMessage: 'Please enter the old password!'});
+      this.setState({popupVisible: true});        
+      return;
+    }
+
+    if(document.querySelector('input[type="password"][name="newPassword"]').value === '') {
+      this.setState({popupMessage: 'Please enter the new password!'});
+      this.setState({popupVisible: true});        
+      return;
+    }    
+        
     const userFromCookie = this.cookies.get('user');
     let postData = {
       email: userFromCookie.email,
-      accessToken: userFromCookie.accessToken
-    }
-    const password = document.querySelector('input[type="password"][name="password"]').value;
-    const hubId = document.querySelector('input[type="text"][name="hubId"]').value;
-
-    if(password !== '') {
-      postData.password = password;
-    }
-    if(hubId !== '') {
-      postData.hubId = hubId;
+      accessToken: userFromCookie.accessToken,
+      oldPassword: document.querySelector('input[type="password"][name="oldPassword"]').value,
+      newPassword: document.querySelector('input[type="password"][name="newPassword"]').value
     }
 
 
@@ -69,14 +74,14 @@ class SignIn extends Component {
     return (
       <div className={styles.wrapper}>
         <div className={['signIn']}>
-          <h1>Account</h1>
+          <h1>Update password</h1>
           <div className={styles.userFieldsContainer}>
 
-              <label>Password</label>
-              <input type="password" placeholder="Change Password" name="password" required />            
+              <label>Old Password</label>
+              <input type="password" placeholder="Old Password" name="oldPassword" required />                        
 
-              <label>Hub ID</label>
-              <input type="text" placeholder="change hub ID" name="hubId" required />            
+              <label>New Password</label>
+              <input type="password" placeholder="New Password" name="newPassword" required />            
 
               <button type="button" onClick={ () => { this.updateUser() }} >UPDATE</button>
           </div>

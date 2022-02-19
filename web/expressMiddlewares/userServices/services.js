@@ -67,12 +67,37 @@ const logIn = async (req, res, usersData) => {
   sendResponse(res, user);  
 }
 
+const logOut = async (req, res, usersData) => {
+  const requestObj = JSON.parse(req.body);
+  const email = requestObj.email;
+  const accessToken = requestObj.accessToken;
+  const users = await queries.getUser({email: email });
+  const userId = users[0].id;
+  usersData[userId].accessToken = '';
+  if(users.length === 0) {
+    sendResponse(res, {error:1, message: 'Username can`t be found!'});  
+    return;
+  }
+  if(accessToken !== requestObj.accessToken) {
+    sendResponse(res, {error:1, message: 'Access token is invalid'});  
+    return;    
+  }
+
+  queries.updateUser({email: email, accessToken: accessToken}, {accessToken: ''});
+  sendResponse(res, {message: "You are logged out !"});  
+}
+
 const updateUser = async (req, res, usersData) => {
   let requestObj = JSON.parse(req.body);
 
   const userFromCookie = JSON.parse(req.cookies.user);
   if(userFromCookie.accessToken !== requestObj.accessToken || userFromCookie.email !== requestObj.email) {
     sendResponse(res, {message: 'Invalid access token while updating user data!', errorCode: 1});  
+    return;
+  }
+
+  if(userFromCookie.password !== requestObj.oldPassword) {
+    sendResponse(res, {message: 'Invalid password!', errorCode: 1});  
     return;
   }
 
@@ -84,7 +109,7 @@ const updateUser = async (req, res, usersData) => {
 
   let updateObj = {};
   if(typeof requestObj?.password !== 'undefined') {
-    updateObj.password = requestObj.password
+    updateObj.password = requestObj.newPassword
   }
   if(typeof requestObj?.hubId !== 'undefined') {
     const hub = await queries.getHub({id: requestObj.hubId});    
@@ -112,5 +137,6 @@ const updateUser = async (req, res, usersData) => {
 export { 
   registerUser,
   logIn,
+  logOut,
   updateUser
 };
