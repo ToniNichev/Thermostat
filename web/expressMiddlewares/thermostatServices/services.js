@@ -11,6 +11,8 @@ const sendResponse = (res, responseString) => {
   res.send(responseString);  
 }
 
+const validateAccessToken = () => {}
+
 const getThermostatListFromDB = async (hubId) => {
   const response = await queries.getThermostatDataForHubId(hubId);
   return response;

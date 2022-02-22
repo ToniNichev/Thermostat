@@ -6,8 +6,8 @@
 #define ethernetUrl "GET /thermostat-services/get-data?data="
 #define ethernetPort 8061
 
-//#define hubId "AXCS12"
-#define hubId "B2CF62"
+#define hubId "AXCS12"
+//#define hubId "B2CF62"
 
 
 char thermostatsData[100] = ""; 
@@ -58,6 +58,7 @@ void loop() {
   }
 
   Serial.print("⌂ <<< ♁ :"); // response from the web server to the hub
+  Serial.print("Server data:");
   Serial.print(serverData);
   Serial.println();
   Serial.println();
@@ -84,8 +85,6 @@ void loop() {
       Serial.print("0 | ⌂ >>> ⍑: ");
       Serial.println(serverData);
 
-      Serial.println("!!!!!!!!!!!!!!!");
-      Serial.println(serverData);
       
       RFCommunicatorSend(serverData);
       delay(100);
